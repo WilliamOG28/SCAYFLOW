@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <title>Nuevo proyecto</title>
+        <!-- Required meta tags -->
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+        <!-- Bootstrap CSS v5.2.1 -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous"/>
+        <link rel="stylesheet" href="style.css">
+        <!-- Bootstrap JavaScript Libraries -->
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"  integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+    </head>
+    <body>
+        <header>
+            <!-- place navbar here -->
+        </header>
+        <main>
+                <div class="container ">
+                    <h1 class="mt-5">Detalles del proyecto</h1>
+                    <form>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="projectName" class="form-label">Nombre del Proyecto</label>
+                                    <input type="text" class="form-control" id="projectName" placeholder="Ingrese el nombre del proyecto" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="client" class="form-label">Cliente</label>
+                                    <input type="text" class="form-control" id="client" placeholder="Ingrese el nombre del cliente" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="status" class="form-label">Estado</label>
+                                    <input type="text" class="form-control" id="status" placeholder="Ingrese el estado del proyecto" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="startDate" class="form-label">Fecha de Inicio</label>
+                                    <input type="date" class="form-control" id="startDate" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="endDate" class="form-label">Fecha Fin</label>
+                                    <input type="date" class="form-control" id="endDate" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="sector" class="form-label">Sector</label>
+                                    <input type="text" class="form-control" id="sector" placeholder="Ingrese el sector" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="baseCost" class="form-label">Costo base</label>
+                                    <input type="number" class="form-control" id="baseCost" placeholder="Ingrese el costo base" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="rate" class="form-label">Tarifa (%)</label>
+                                    <input type="number" class="form-control" id="rate" placeholder="Ingrese la tarifa (%)" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="amountPaid" class="form-label">Monto pagado ($)</label>
+                                    <input type="number" class="form-control" id="amountPaid" placeholder="Ingrese el monto pagado" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="description" class="form-label">Descripción</label>
+                                    <input type="text" class="form-control" id="description" placeholder="Ingrese la descripción" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="note" class="form-label">Nota</label>
+                                    <input type="text" class="form-control" id="note" placeholder="Ingrese una nota" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-end gap-2">
+                            <button type="submit" class="btn btn-primary">Guardar</button>
+                            <button type="reset" class="btn btn-secondary">Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="container">
+                    <h1 class="mt-5">Agregar trámites al proyecto</h1>
+                    <form>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="procedureName" class="form-label">Nombre del Trámite</label>
+                                    <input type="text" class="form-control" id="procedureName" placeholder="Ingrese el nombre del trámite" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="procedureType" class="form-label">Tipo de trámite</label>
+                                    <input type="text" class="form-control" id="procedureType" placeholder="Ingrese el tipo de trámite" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="procedureStatus" class="form-label">Estado</label>
+                                    <input type="text" class="form-control" id="procedureStatus" placeholder="Ingrese el estado del trámite" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="procedureStartDate" class="form-label">Fecha de Inicio</label>
+                                    <input type="date" class="form-control" id="procedureStartDate" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="procedureEndDate" class="form-label">Fecha Fin</label>
+                                    <input type="date" class="form-control" id="procedureEndDate" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="procedureBaseCost" class="form-label">Costo base ($)</label>
+                                    <input type="number" class="form-control" id="procedureBaseCost" placeholder="Ingrese el costo base" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="procedureRate" class="form-label">Tarifa (%)</label>
+                                    <input type="number" class="form-control" id="procedureRate" placeholder="Ingrese la tarifa (%)" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="procedureDescription" class="form-label">Descripción</label>
+                                    <input type="text" class="form-control" id="procedureDescription" placeholder="Ingrese la descripción" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="procedureNote" class="form-label">Nota</label>
+                                    <input type="text" class="form-control" id="procedureNote" placeholder="Ingrese una nota" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-end gap-2">
+                            <button type="submit" class="btn btn-primary">Agregar trámite</button>
+                            <button type="reset" class="btn btn-secondary">Limpiar</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="container">
+                    <h1 class="mt-5">Previsualización final del proyecto</h1>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Información Completa del Proyecto</label>
+                                <!-- Aquí puedes mostrar un resumen dinámico del proyecto y sus trámites -->
+                            </div>
+                        </div>
+                    </div>
+        </main>
+        <footer>
+            <!-- place footer here -->
+        </footer>
+    </body>
+</html>
