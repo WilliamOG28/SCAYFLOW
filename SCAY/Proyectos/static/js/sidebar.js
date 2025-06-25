@@ -17,12 +17,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Active state for sidebar links
     links.forEach(link => {
-        link.addEventListener('click', function (e) {
-            // Si es un enlace real, puedes quitar el preventDefault
-            e.preventDefault();
-            links.forEach(l => l.classList.remove('selected'));
-            this.classList.add('selected');
-        });
+    link.addEventListener('click', function (e) {
+    // Solo prevenir el default si el href es '#'
+    if (this.getAttribute('href') === '#') {
+    e.preventDefault();
+    }
+    links.forEach(l => l.classList.remove('selected'));
+    this.classList.add('selected');
+    });
     });
 
     // Cierra el sidebar en móvil al hacer click fuera
