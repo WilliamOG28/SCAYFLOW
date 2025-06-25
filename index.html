@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SCAYFLOW</title>
+    <link rel="stylesheet" href="css/index_style.css">
+</head>
+<body>
+    <header class="navbar" role="banner">
+        <div class="navbar-left">
+            <button class="menu-toggle" aria-label="Abrir menú lateral" aria-controls="sidebar" aria-expanded="false">
+                <span class="menu-bar"></span>
+                <span class="menu-bar"></span>
+                <span class="menu-bar"></span>
+            </button>
+            <div class="brand">
+                <img src="logo.png" alt="Logo" class="brand-logo" height="32"/>
+                <span class="brand-title">SCAYFLOW</span>
+            </div>
+        </div>
+        <div class="navbar-right">
+            <!-- Aquí puedes agregar botones de usuario, notificaciones, etc. -->
+        </div>
+    </header>
+    <aside class="sidebar collapsed" id="sidebar" role="navigation" aria-label="Menú principal">
+        <nav>
+            <ul>
+                <li>
+                    <a href="#" class="selected">
+                        <span class="icon">
+                            <!-- Home icon -->
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+                        </span>
+                        <span class="label">Home</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <span class="icon">
+                            <!-- Proyectos icon -->
+                            <svg class="icon-display" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M19,3H14.82C14.4,1.84 13.3,1 12,1C10.7,1 9.6,1.84 9.18,3H5A2,2 0 0,0 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5A2,2 0 0,0 19,3M12,3A1,1 0 0,1 13,4A1,1 0 0,1 12,5A1,1 0 0,1 11,4A1,1 0 0,1 12,3M7,7H17V9H7V7M7,11H17V13H7V11M7,15H13V17H7V15Z"/>
+                            </svg>                        
+                        </span>
+                        <span class="label">Proyectos</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <span class="icon">
+                            <!-- Clientes icon -->
+                            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="7" r="4"/><path d="M5.5 21a7.5 7.5 0 0 1 13 0"/></svg>
+                        </span>
+                        <span class="label">Clientes</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <span class="icon">
+                            <!-- Trámites icon -->
+                            <svg class="icon-display" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                            </svg>                        
+                        </span>
+                        <span class="label">Trámites</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <span class="icon">
+                            <!-- Pagos icon -->
+                           <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/>
+                            </svg>
+                        </span>
+                        <span class="label">Pagos</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+    <script src="js/sidebar.js"></script>
+</body>
+</html>
