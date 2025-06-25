@@ -15,4 +15,9 @@ urlpatterns = [
     path('clientes', views.clientes, name='clientes'),
     path('clientes/nuevo', views.nuevo_cliente, name='nuevo_cliente'),
     path('clientes/lista', views.lista_clientes, name='lista_clientes'),
+
+     #Urls para tramites
+    #path('tramites', views.tramites, name='tramites'),
+    path('tramites/nuevo', views.nuevo_tramite, name='nuevo_tramite'),
+    path('tramites/lista', views.lista_tramites, name='lista_tramites'),
     ]

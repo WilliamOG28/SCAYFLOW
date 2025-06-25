@@ -22,3 +22,11 @@ def nuevo_cliente(request):
     return render(request,'clientes/nuevo_cliente.html')
 def lista_clientes(request):
     return render(request,'clientes/lista_clientes.html')
+
+#Vistas para tramites
+#def tramites(request):
+    #return render(request,'tramites/tramites.html')
+def nuevo_tramite(request):
+    return render(request,'tramites/nuevo_tramite.html')
+def lista_tramites(request):
+    return render(request,'tramites/lista_tramites.html')

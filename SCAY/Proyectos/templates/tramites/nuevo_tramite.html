@@ -1,0 +1,73 @@
+{% extends "tramites/tramites.html" %}
+{% block title %} Nuevo Tramite {% endblock %}
+
+{% block tramites_content %}
+    <section>
+        <!-- Sección: Agregar trámites al proyecto -->
+        <h1 class="mb-4 fw-bold mt-5">Agregar trámites</h1>
+        <!-- Formulario para agregar trámites -->
+        <form id="procedureForm">
+            <div class="row">
+                <div class="col-md-6">
+                    <!-- Nombre del Trámite -->
+                    <div class="mb-3">
+                        <label for="procedureName" class="form-label fw-bold">Nombre del Trámite</label>
+                        <input type="text" class="form-control" id="procedureName" placeholder="Ingrese el nombre del trámite" required>
+                    </div>
+                     <!-- Proyecto del trámite -->
+                    <div class="mb-3">
+                        <label for="procedureStatus" class="form-label fw-bold">Proyecto</label>
+                        <input type="text" class="form-control" id="procedureStatus" placeholder="Ingrese el proyecto" required>
+                    </div>
+                    <!-- Tipo de trámite -->
+                    <div class="mb-3">
+                        <label for="procedureType" class="form-label fw-bold">Tipo de trámite</label>
+                        <input type="text" class="form-control" id="procedureType" placeholder="Ingrese el tipo de trámite" required>
+                    </div>
+                    <!-- Estado del trámite -->
+                    <div class="mb-3">
+                        <label for="procedureStatus" class="form-label fw-bold">Estado</label>
+                        <input type="text" class="form-control" id="procedureStatus" placeholder="Ingrese el estado del trámite" required>
+                    </div>
+                    <!-- Fecha de Inicio del trámite -->
+                    <div class="mb-3">
+                        <label for="procedureStartDate" class="form-label fw-bold">Fecha de Inicio</label>
+                        <input type="date" class="form-control" id="procedureStartDate" required>
+                    </div>
+                    <!-- Fecha Fin del trámite -->
+                    <div class="mb-3">
+                        <label for="procedureEndDate" class="form-label fw-bold">Fecha Fin</label>
+                        <input type="date" class="form-control" id="procedureEndDate" required>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <!-- Costo base del trámite -->
+                    <div class="mb-3">
+                        <label for="procedureBaseCost" class="form-label fw-bold">Costo base ($)</label>
+                        <input type="number" class="form-control" id="procedureBaseCost" placeholder="Ingrese el costo base" required>
+                    </div>
+                    <!-- Tarifa (%) del trámite -->
+                    <div class="mb-3">
+                        <label for="procedureRate" class="form-label fw-bold">Tarifa (%)</label>
+                        <input type="number" class="form-control" id="procedureRate" placeholder="Ingrese la tarifa (%)" required>
+                    </div>
+                    <!-- Descripción del trámite -->
+                    <div class="mb-3">
+                        <label for="procedureDescription" class="form-label fw-bold">Descripción</label>
+                        <input type="text" class="form-control" id="procedureDescription" placeholder="Ingrese la descripción" required>
+                    </div>
+                    <!-- Nota del trámite -->
+                    <div class="mb-3">
+                        <label for="procedureNote" class="form-label fw-bold">Nota</label>
+                        <input type="text" class="form-control" id="procedureNote" placeholder="Ingrese una nota" required>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!-- Botones para guardar o cancelar el proyecto -->
+        <div class="d-flex justify-content-end gap-2">
+            <button type="submit" class="btn btn-primary">Guardar</button>
+            <button type="reset" class="btn btn-secondary">Cancelar</button>
+        </div>
+    </section>
+{% endblock %}

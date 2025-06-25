@@ -65,7 +65,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="#">
+                        <a href="{% url 'lista_tramites' %}" class="{% if '/tramites' in request.path %}selected{% endif %}">
                             <span class="icon">
                                 <!-- Trámites icon -->
                                 <svg class="icon-display" viewBox="0 0 24 24" fill="currentColor">

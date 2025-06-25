@@ -1,0 +1,53 @@
+{% extends "tramites/tramites.html" %}
+{% block title %} Lista Tramites {% endblock %}
+
+{% block tramites_content %}
+    <!-- Sección principal: Lista de Proyectos con filtro -->
+    <section>
+        <!-- Título de la sección -->
+        <h1 class="mb-4 fw-bold">Lista de Tramites</h1>
+        
+        <!-- Filtro por estado de proyecto 
+        <div class="mb-3">
+            <label for="filtroEstado" class="form-label fw-bold">Filtrar por estado:</label>
+            <select id="filtroEstado" class="form-select" style="max-width: 300px;">
+                <option value="">Todos</option>
+                <option value="Activo">Activo</option>
+                <option value="Finalizado">Finalizado</option>
+                <option value="Pendiente">Pendiente</option>
+            </select>
+        </div>-->
+        
+        <!-- Tabla de proyectos -->
+        <table class="table table-striped table-bordered align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre del Proyecto</th>
+                    <th>Cliente</th>
+                    <th>Estado</th>
+                    <th>Fecha de Inicio</th>
+                    <th>Fecha Fin</th>
+                    <th>Total</th>
+                    <th>Pagado</th>
+                    <th>Saldo pendiente</th>
+                </tr>
+            </thead>
+            <tbody id="tablaProyectos">
+                <!-- Ejemplo de fila de proyecto (puedes eliminarla cuando uses datos dinámicos) -->
+                <tr>
+                    <td>1</td>
+                    <td>Construcción Edificio Central</td>
+                    <td>Empresa XYZ</td>
+                    <td>Activo</td>
+                    <td>2024-01-15</td>
+                    <td>2024-12-20</td>
+                    <td>$500,000</td>
+                    <td>$300,000</td>
+                    <td>$200,000</td>
+                </tr>
+                <!-- Las filas reales se generan dinámicamente con JavaScript o Django -->
+            </tbody>
+        </table>
+    </section>
+{% endblock %}
