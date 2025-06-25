@@ -1,210 +1,53 @@
-<!doctype html>
-<html lang="es">
-<head>
-    <title>Gestión de Proyectos</title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous"/>
-    <link rel="stylesheet" href="style.css">
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" crossorigin="anonymous"></script>
-</head>
-<body>
-    <header>
-        <!-- Navbar aquí -->
-    </header>
-    <main>
-        <!-- Dashboard Section Mejorado -->
-        <div id="dashboard-section" class="my-4">
-                        <div class="row g-4">
-                                        <div class="col-12 col-sm-6 col-lg-3">
-                                                            <div class="card text-center shadow-sm h-100">
-                                                                                    <div class="card-body">
-                                                                                                                <div class="display-4 fw-bold text-primary">24</div>
-                                                                                                                                            <div class="card-title mb-0">Proyectos Activos</div>
-                                                                                                                                                                    </div>
-                                                                                                                                                                                        </div>
-                                                                                                                                                                                                        </div>
-                                                                                                                                                                                                                        <div class="col-12 col-sm-6 col-lg-3">
-                                                                                                                                                                                                                                            <div class="card text-center shadow-sm h-100">
-                                                                                                                                                                                                                                                                    <div class="card-body">
-                                                                                                                                                                                                                                                                                                <div class="display-4 fw-bold text-success">156</div>
-                                                                                                                                                                                                                                                                                                                            <div class="card-title mb-0">Ingresos totales</div>
-                                                                                                                                                                                                                                                                                                                                                    </div>
-                                                                                                                                                                                                                                                                                                                                                                        </div>
-                                                                                                                                                                                                                                                                                                                                                                                        </div>
-                                                                                                                                                                                                                                                                                                                                                                                                        <div class="col-12 col-sm-6 col-lg-3">
-                                                                                                                                                                                                                                                                                                                                                                                                                            <div class="card text-center shadow-sm h-100">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                    <div class="card-body">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <div class="display-4 fw-bold text-info">12</div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <div class="card-title mb-0">Total cobrado</div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <div class="col-12 col-sm-6 col-lg-3">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <div class="card text-center shadow-sm h-100">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <div class="card-body">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <div class="display-4 fw-bold text-warning">89%</div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <div class="card-title mb-0">Proyectos completados</div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </div>
-        <!-- Dashboard de KPIs y Gráficos -->
-        <section class="container">
-            <h1 class="mt-5">Dashboard de Proyectos</h1>
-            <div class="row mb-4">
-                <div class="col-md-6">
-                    <canvas id="chartEstadoProyectos"></canvas>
-                </div>
-                <div class="col-md-6">
-                    <canvas id="chartIngresosProyectos"></canvas>
-                </div>
-            </div>
-            <ul>
-                <li>Total de proyectos: <span id="kpiTotalProyectos">0</span></li>
-                <li>Ingresos totales: <span id="kpiIngresosTotales">$0</span></li>
-                <li>Proyectos activos: <span id="kpiProyectosActivos">0</span></li>
-                <li>Proyectos finalizados: <span id="kpiProyectosFinalizados">0</span></li>
-                <li>Total cobrado: <span id="kpiTotalCobrado">$0</span></li>
-            </ul>
-        </section>
+{% extends "proyectos/proyectos.html" %}
+{% block title %} Nuevo proyecto {% endblock %}
 
-        <!-- Tabla de proyectos con filtro -->
-        <section class="container">
-            <h2 class="mt-5">Lista de Proyectos</h2>
-            <div class="mb-3">
-                <label for="filtroEstado" class="form-label">Filtrar por estado:</label>
-                <select id="filtroEstado" class="form-select" style="max-width: 300px;">
-                    <option value="">Todos</option>
-                    <option value="Activo">Activo</option>
-                    <option value="Finalizado">Finalizado</option>
-                    <option value="Pendiente">Pendiente</option>
-                </select>
-            </div>
-            <table class="table table-striped table-bordered align-middle">
-                <thead class="table-dark">
-                    <tr>
-                        <th>ID</th>
-                        <th>Nombre del Proyecto</th>
-                        <th>Cliente</th>
-                        <th>Estado</th>
-                        <th>Fecha de Inicio</th>
-                        <th>Fecha Fin</th>
-                        <th>Total</th>
-                        <th>Pagado</th>
-                        <th>Saldo pendiente</th>
-                    </tr>
-                </thead>
-                <tbody id="tablaProyectos">
-                    <!-- Las filas se generan dinámicamente -->
-                </tbody>
-            </table>
-        </section>
-
-        <!-- Chart.js y scripts de dashboard y filtro -->
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-        <script>
-        // Datos de ejemplo para los proyectos
-        const proyectos = [
-            { id: 1, nombre: 'Proyecto A', cliente: 'Cliente X', estado: 'Activo', inicio: '2023-01-01', fin: '2023-12-31', total: 10000, pagado: 8500 },
-            { id: 2, nombre: 'Proyecto B', cliente: 'Cliente Y', estado: 'Finalizado', inicio: '2022-03-15', fin: '2022-11-30', total: 7000, pagado: 7000 },
-            { id: 3, nombre: 'Proyecto C', cliente: 'Cliente Z', estado: 'Pendiente', inicio: '2024-02-01', fin: '2024-12-31', total: 12000, pagado: 0 }
-        ];
-
-        // Actualiza los KPIs del dashboard
-        function actualizarKPIs() {
-            document.getElementById('kpiTotalProyectos').textContent = proyectos.length;
-            document.getElementById('kpiIngresosTotales').textContent = '$' + proyectos.reduce((acc, p) => acc + p.total, 0).toLocaleString();
-            document.getElementById('kpiProyectosActivos').textContent = proyectos.filter(p => p.estado === 'Activo').length;
-            document.getElementById('kpiProyectosFinalizados').textContent = proyectos.filter(p => p.estado === 'Finalizado').length;
-            document.getElementById('kpiTotalCobrado').textContent = '$' + proyectos.reduce((acc, p) => acc + p.pagado, 0).toLocaleString();
-        }
-
-        // Renderiza el gráfico de estados de los proyectos
-        function renderizarGraficoEstados() {
-            const ctx = document.getElementById('chartEstadoProyectos').getContext('2d');
-            const estados = ['Activo', 'Finalizado', 'Pendiente'];
-            const cantidades = estados.map(estado => proyectos.filter(p => p.estado === estado).length);
-            new Chart(ctx, {
-                type: 'pie',
-                data: {
-                    labels: estados,
-                    datasets: [{
-                        data: cantidades,
-                        backgroundColor: ['#0d6efd', '#198754', '#ffc107']
-                    }]
-                },
-                options: {
-                    plugins: {
-                        legend: { position: 'bottom' }
-                    }
-                }
-            });
-        }
-
-        // Renderiza el gráfico de ingresos por proyecto
-        function renderizarGraficoIngresos() {
-            const ctx = document.getElementById('chartIngresosProyectos').getContext('2d');
-            new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: proyectos.map(p => p.nombre),
-                    datasets: [{
-                        label: 'Ingresos ($)',
-                        data: proyectos.map(p => p.total),
-                        backgroundColor: '#0d6efd'
-                    }]
-                },
-                options: {
-                    plugins: {
-                        legend: { display: false }
-                    },
-                    scales: {
-                        y: { beginAtZero: true }
-                    }
-                }
-            });
-        }
-
-        // Renderiza la tabla de proyectos según el filtro seleccionado
-        function renderizarTablaProyectos(estadoFiltro = '') {
-            const tbody = document.getElementById('tablaProyectos');
-            tbody.innerHTML = '';
-            proyectos
-                .filter(p => !estadoFiltro || p.estado === estadoFiltro)
-                .forEach(p => {
-                    tbody.innerHTML += `
-                        <tr>
-                            <td>${p.id}</td>
-                            <td>${p.nombre}</td>
-                            <td>${p.cliente}</td>
-                            <td>${p.estado}</td>
-                            <td>${p.inicio}</td>
-                            <td>${p.fin}</td>
-                            <td>$${p.total.toLocaleString()}</td>
-                            <td>$${p.pagado.toLocaleString()}</td>
-                            <td>$${(p.total - p.pagado).toLocaleString()}</td>
-                        </tr>
-                    `;
-                });
-        }
-
-        // Evento para el filtro de estado
-        document.getElementById('filtroEstado').addEventListener('change', function() {
-            renderizarTablaProyectos(this.value);
-        });
-
-        // Inicialización al cargar la página
-        actualizarKPIs();
-        renderizarGraficoEstados();
-        renderizarGraficoIngresos();
-        renderizarTablaProyectos();
-        </script>
-    </main>
-    <footer>
-        <!-- Footer aquí -->
-    </footer>
-</body>
-</html>
+{% block proyectos_content %}
+    <!-- Sección principal: Lista de Proyectos con filtro -->
+    <section>
+        <!-- Título de la sección -->
+        <h1 class="mb-4 fw-bold">Lista de Proyectos</h1>
+        
+        <!-- Filtro por estado de proyecto -->
+        <div class="mb-3">
+            <label for="filtroEstado" class="form-label fw-bold">Filtrar por estado:</label>
+            <select id="filtroEstado" class="form-select" style="max-width: 300px;">
+                <option value="">Todos</option>
+                <option value="Activo">Activo</option>
+                <option value="Finalizado">Finalizado</option>
+                <option value="Pendiente">Pendiente</option>
+            </select>
+        </div>
+        
+        <!-- Tabla de proyectos -->
+        <table class="table table-striped table-bordered align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre del Proyecto</th>
+                    <th>Cliente</th>
+                    <th>Estado</th>
+                    <th>Fecha de Inicio</th>
+                    <th>Fecha Fin</th>
+                    <th>Total</th>
+                    <th>Pagado</th>
+                    <th>Saldo pendiente</th>
+                </tr>
+            </thead>
+            <tbody id="tablaProyectos">
+                <!-- Ejemplo de fila de proyecto (puedes eliminarla cuando uses datos dinámicos) -->
+                <tr>
+                    <td>1</td>
+                    <td>Construcción Edificio Central</td>
+                    <td>Empresa XYZ</td>
+                    <td>Activo</td>
+                    <td>2024-01-15</td>
+                    <td>2024-12-20</td>
+                    <td>$500,000</td>
+                    <td>$300,000</td>
+                    <td>$200,000</td>
+                </tr>
+                <!-- Las filas reales se generan dinámicamente con JavaScript o Django -->
+            </tbody>
+        </table>
+    </section>
+{% endblock %}

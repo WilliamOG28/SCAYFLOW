@@ -34,7 +34,7 @@
             <nav>
                 <ul>
                     <li>
-                        <a href="{% url 'base' %}">
+                        <a href="{% url 'base' %}" class="{% if request.resolver_match.url_name == 'base' %}selected{% endif %}">
                             <span class="icon">
                                 <!-- Home icon -->
                                 <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
@@ -43,7 +43,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="{% url 'proyectos' %}">
+                        <a href="{% url 'proyectos' %}" class="{% if request.path|slice:':10' == '/proyectos' %}selected{% endif %}">
                             <span class="icon">
                                 <!-- Proyectos icon -->
                                 <svg class="icon-display" viewBox="0 0 24 24" fill="currentColor">
