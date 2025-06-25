@@ -1,8 +1,7 @@
-{% extends "base.html" %}
+{% extends "proyectos/proyectos.html" %}
+{% block title %} Nuevo proyecto {% endblock %}
 
-{% block title %} Proyectos {% endblock %}
-
-{% block content %}
+{% block proyectos_content %}
        <div class="container ">
                     <h1 class="mt-5">Detalles del proyecto</h1>
                     <form>
@@ -62,7 +61,6 @@
                         </div>
                     </form>
                 </div>
-
                 <div class="container">
                     <h1 class="mt-5">Agregar trámites al proyecto</h1>
                     <form>
@@ -126,5 +124,5 @@
                         </div>
                     </div> 
                 </div>
-            </div>                   
+            </div>                  
 {% endblock %}

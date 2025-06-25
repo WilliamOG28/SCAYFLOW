@@ -7,7 +7,7 @@ urlpatterns = [
 
     #Url para proyectos
     path('proyectos', views.proyectos, name='proyectos'),
-    path('proyectos/nuevo', views.nuevo, name='nuevo_proyecto'),
-    path('proyectos/gestionar', views.gestionar, name='gestion_proyecto'),
-    path('proyectos/detalles', views.detalles, name='detalles_proyecto'),
+    path('proyectos/nuevo', views.nuevo, name='nuevo'),
+    path('proyectos/gestionar', views.gestionar, name='gestionar'),
+    path('proyectos/detalles', views.detalles, name='detalles'),
     ]

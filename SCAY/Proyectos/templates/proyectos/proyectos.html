@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %} Proyectos {% endblock %}
+
+{% block content %}
+    <div>
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <a href="{% url 'proyectos' %}"><button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">Proyectos</button></a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a href="{% url 'nuevo' %}"><button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">Lista de Proyectos</button></a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a href="{% url 'gestionar' %}"><button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact-tab-pane" type="button" role="tab" aria-controls="contact-tab-pane" aria-selected="false">Nuevo proyecto</button></a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a href="{% url 'detalles' %}"><button class="nav-link" id="disabled-tab" data-bs-toggle="tab" data-bs-target="#disabled-tab-pane" type="button" role="tab" aria-controls="disabled-tab-pane" aria-selected="false" disabled>Detalles de proyecto</button></a>
+            </li>
+        </ul>
+    </div>
+    <div>
+        {% block proyectos_content %}{% endblock %}
+    </div>             
+{% endblock %}

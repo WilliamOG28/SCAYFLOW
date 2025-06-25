@@ -6,11 +6,11 @@ def base(request):
 
 #Vistas para proyectos
 def proyectos(request):
-    return render(request,'proyectos/nuevo_proyecto.html')
+    return render(request,'proyectos/proyectos.html')
 def nuevo(request):
     return render(request,'proyectos/nuevo_proyecto.html')
 def gestionar(request):
-    return render(request,'proyectos/nuevo_proyecto.html')
+    return render(request,'proyectos/gestion_proyecto.html')
 def detalles(request):
     return render(request,'proyectos/nuevo_proyecto.html')
 # Create your views here.
