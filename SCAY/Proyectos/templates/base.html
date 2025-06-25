@@ -43,7 +43,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="{% url 'proyectos' %}" class="{% if request.path|slice:':10' == '/proyectos' %}selected{% endif %}">
+                        <a href="{% url 'proyectos' %}" class="{% if '/proyectos' in request.path %}selected{% endif %}">
                             <span class="icon">
                                 <!-- Proyectos icon -->
                                 <svg class="icon-display" viewBox="0 0 24 24" fill="currentColor">
@@ -54,7 +54,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="#">
+                        <a href="{% url 'clientes' %}" class="{% if '/clientes' in request.path %}selected{% endif %}">
                             <span class="icon">
                                 <!-- Clientes icon -->
                                 <svg class="icon-display" viewBox="0 0 24 24" fill="currentColor">

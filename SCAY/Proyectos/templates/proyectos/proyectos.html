@@ -11,12 +11,12 @@
                 </a>
             </li>
             <li class="nav-item" role="presentation">
-                <a href="{% url 'gestionar' %}" class="nav-link d-flex align-items-center gap-2 {% if tab_activa == 'gestionar' %}active{% endif %}" id="profile-tab" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="{% if tab_activa == 'gestionar' %}true{% else %}false{% endif %}">
+                <a href="{% url 'lista_proyectos' %}" class="nav-link d-flex align-items-center gap-2 {% if tab_activa == 'lista_proyectos' %}active{% endif %}" id="profile-tab" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="{% if tab_activa == 'lista_proyectos' %}true{% else %}false{% endif %}">
                     <i class="fas fa-list-alt"></i> Lista de Proyectos
                 </a>
             </li>
             <li class="nav-item" role="presentation">
-                <a href="{% url 'nuevo' %}" class="nav-link d-flex align-items-center gap-2 {% if tab_activa == 'nuevo' %}active{% endif %}" id="contact-tab" type="button" role="tab" aria-controls="contact-tab-pane" aria-selected="{% if tab_activa == 'nuevo' %}true{% else %}false{% endif %}">
+                <a href="{% url 'nuevo_proyecto' %}" class="nav-link d-flex align-items-center gap-2 {% if tab_activa == 'nuevo_proyecto' %}active{% endif %}" id="contact-tab" type="button" role="tab" aria-controls="contact-tab-pane" aria-selected="{% if tab_activa == 'nuevo_proyecto' %}true{% else %}false{% endif %}">
                     <i class="fas fa-plus-circle"></i> Nuevo Proyecto
                 </a>
             </li>
