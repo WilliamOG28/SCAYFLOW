@@ -42,8 +42,7 @@ body {
 .container {
     background-color: white;
     border-radius: 15px;
-    /* Quitar height fijo para adaptabilidad, pero si lo necesitas para debug, déjalo temporalmente */
-    /* height: 200px; */
+    height: 100%;
     margin-top: calc(var(--navbar-height) + 20px); /* Espacio debajo de la navbar */
     margin-left: calc(var(--sidebar-width) + 20px); /* Espacio a la derecha del sidebar */
     margin-right: 20px;
