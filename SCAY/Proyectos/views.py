@@ -4,6 +4,7 @@ from django.http import HttpResponse
 def base(request):
     return render(request, 'base.html')
 
+
 #Vistas para proyectos
 def proyectos(request):
     return render(request,'proyectos/proyectos.html')

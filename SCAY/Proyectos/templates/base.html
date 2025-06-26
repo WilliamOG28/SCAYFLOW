@@ -2,61 +2,72 @@
 <!doctype html>
 <html lang="en">
     <head>
-        <title>{% block title %} {% endblock %}</title>
+        <!-- Título de la página, puede ser sobrescrito por las vistas hijas -->
+        <title>{% block title %} SCAYFLOW {% endblock %}</title>
+        <!-- Hojas de estilo principales -->
         <link rel="stylesheet" href="{% static 'css/style.css' %}">
+        <!-- Bloque para agregar CSS adicional desde plantillas hijas -->
         {% block extra_css %}{% endblock %}
-        <!-- Required meta tags -->
+        <!-- Metadatos requeridos para compatibilidad y responsividad -->
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
-        <!-- Bootstrap CSS v5.2.1 -->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"crossorigin="anonymous"/>
+        <!-- Bootstrap CSS desde CDN -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"rel="stylesheet"integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"crossorigin="anonymous"/>
         <link rel="stylesheet" href="{% static 'css/index_style.css' %}">
     </head>
-
     <body>
+        <!-- Barra de navegación superior -->
         <header class="navbar" role="banner">
             <div class="navbar-left">
+                <!-- Botón para abrir/cerrar el menú lateral -->
                 <button class="menu-toggle" aria-label="Abrir menú lateral" aria-controls="sidebar" aria-expanded="false">
                     <span class="menu-bar"></span>
                     <span class="menu-bar"></span>
                     <span class="menu-bar"></span>
                 </button>
+                <!-- Logo y nombre de la aplicación -->
                 <div class="brand">
                     <img src="{% static 'img/logo.png' %}" alt="Logo" class="brand-logo" height="32"/>
                     <span class="brand-title">SCAYFLOW</span>
                 </div>
             </div>
             <div class="navbar-right">
-                <!-- Aquí puedes agregar botones de usuario, notificaciones, etc. -->
+                <!-- Espacio para botones de usuario, notificaciones, etc. -->
             </div>
         </header>
-        <aside class="sidebar collapsed" id="sidebar" role="navigation" aria-label="Menú principal">
+        <!-- Menú lateral de navegación -->
+        <section class="sidebar collapsed" id="sidebar" role="navigation" aria-label="Menú principal">
             <nav>
                 <ul>
+                    <!-- Opción Home -->
                     <li>
                         <a href="{% url 'base' %}" class="{% if request.resolver_match.url_name == 'base' %}selected{% endif %}">
                             <span class="icon">
-                                <!-- Home icon -->
-                                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+                                <!-- Icono Home -->
+                                <svg viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+                                </svg>
                             </span>
                             <span class="label">Home</span>
                         </a>
                     </li>
+                    <!-- Opción Proyectos -->
                     <li>
                         <a href="{% url 'proyectos' %}" class="{% if '/proyectos' in request.path %}selected{% endif %}">
                             <span class="icon">
-                                <!-- Proyectos icon -->
+                                <!-- Icono Proyectos -->
                                 <svg class="icon-display" viewBox="0 0 24 24" fill="currentColor">
                                     <path d="M19,3H14.82C14.4,1.84 13.3,1 12,1C10.7,1 9.6,1.84 9.18,3H5A2,2 0 0,0 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5A2,2 0 0,0 19,3M12,3A1,1 0 0,1 13,4A1,1 0 0,1 12,5A1,1 0 0,1 11,4A1,1 0 0,1 12,3M7,7H17V9H7V7M7,11H17V13H7V11M7,15H13V17H7V15Z"/>
-                                </svg>                        
+                                </svg>
                             </span>
                             <span class="label">Proyectos</span>
                         </a>
                     </li>
+                    <!-- Opción Clientes -->
                     <li>
                         <a href="{% url 'clientes' %}" class="{% if '/clientes' in request.path %}selected{% endif %}">
                             <span class="icon">
-                                <!-- Clientes icon -->
+                                <!-- Icono Clientes -->
                                 <svg class="icon-display" viewBox="0 0 24 24" fill="currentColor">
                                     <path d="M16 17V19H2V17S2 13 9 13 16 17 16 17M12.5 7.5A3.5 3.5 0 1 0 9 11A3.5 3.5 0 0 0 12.5 7.5M15.94 13A5.32 5.32 0 0 1 18 17V19H22V17S22 13.37 15.94 13M15 4A3.39 3.39 0 0 0 13.07 4.59A5 5 0 0 1 13.07 10.41A3.39 3.39 0 0 0 15 11A3.5 3.5 0 0 0 15 4Z"/>
                                 </svg>
@@ -64,21 +75,23 @@
                             <span class="label">Clientes</span>
                         </a>
                     </li>
+                    <!-- Opción Trámites -->
                     <li>
                         <a href="{% url 'lista_tramites' %}" class="{% if '/tramites' in request.path %}selected{% endif %}">
                             <span class="icon">
-                                <!-- Trámites icon -->
+                                <!-- Icono Trámites -->
                                 <svg class="icon-display" viewBox="0 0 24 24" fill="currentColor">
                                     <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
-                                </svg>                        
+                                </svg>
                             </span>
                             <span class="label">Trámites</span>
                         </a>
                     </li>
+                    <!-- Opción Pagos (aún sin funcionalidad) -->
                     <li>
                         <a href="#">
                             <span class="icon">
-                                <!-- Pagos icon -->
+                                <!-- Icono Pagos -->
                                 <svg viewBox="0 0 24 24" fill="currentColor">
                                     <path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/>
                                 </svg>
@@ -88,15 +101,83 @@
                     </li>
                 </ul>
             </nav>
-        </aside>
+        </section>
+        <!-- Contenedor principal de la página -->
         <div class="container">
-                    {% block content %}
-                    <!-- Content goes here -->
-                    {% endblock %}
+            {% block content %}
+            <!-- Contenido principal, puede ser sobrescrito por las vistas hijas -->
+            <div class="content-wrapper mt-4">
+                <!-- KPIs principales -->
+                <section class="mb-5">
+                    <div class="row g-4 justify-content-center">
+                        <!-- KPI: Proyectos Activos -->
+                        <div class="col-12 col-sm-6 col-lg-3">
+                            <div class="card border-0 shadow h-100">
+                                <div class="card-body text-center">
+                                    <div class="display-4 fw-bold text-primary" id="kpiProyectosActivos">24</div>
+                                    <div class="card-title">Proyectos Activos</div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- KPI: Ingresos Totales -->
+                        <div class="col-12 col-sm-6 col-lg-3">
+                            <div class="card border-0 shadow h-100">
+                                <div class="card-body text-center">
+                                    <div class="display-4 fw-bold text-success" id="kpiIngresosTotales">$156,000</div>
+                                    <div class="card-title">Ingresos Totales</div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- KPI: Total Cobrado -->
+                        <div class="col-12 col-sm-6 col-lg-3">
+                            <div class="card border-0 shadow h-100">
+                                <div class="card-body text-center">
+                                    <div class="display-4 fw-bold text-info" id="kpiTotalCobrado">$12,000</div>
+                                    <div class="card-title">Total Cobrado</div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- KPI: Proyectos Completados -->
+                        <div class="col-12 col-sm-6 col-lg-3">
+                            <div class="card border-0 shadow h-100">
+                                <div class="card-body text-center">
+                                    <div class="display-4 fw-bold text-warning" id="kpiProyectosCompletados">89%</div>
+                                    <div class="card-title">Proyectos Completados</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <!-- Dashboard de Gráficos -->
+                <section class="mb-5">
+                    <div class="row justify-content-center">
+                        <!-- Gráfico: Estado de Proyectos -->
+                        <div class="col-md-6 mb-4">
+                            <div class="card border-0 shadow h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title text-center">Estado de Proyectos</h5>
+                                    <canvas id="chartEstadoProyectos"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Gráfico: Ingresos por Proyecto -->
+                        <div class="col-md-6 mb-4">
+                            <div class="card border-0 shadow h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title text-center">Ingresos por Proyecto</h5>
+                                    <canvas id="chartIngresosProyectos"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            {% endblock %}
         </div>
+        <!-- Scripts JavaScript -->
         <script src="{% static 'js/sidebar.js' %}"></script>
-        <!-- Bootstrap JavaScript Libraries -->
+        <!-- Bootstrap JS y dependencias desde CDN -->
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"crossorigin="anonymous"></script>
     </body>
 </html>

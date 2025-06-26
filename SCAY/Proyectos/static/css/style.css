@@ -11,13 +11,21 @@ h1 {
     background-color: #141E61 ;
 }
 
-.row {
-    padding: 20px;
-    margin: 0 0 10px 0;
+.form-row {
+    border-radius: 20px;
+    display: flex;
+    width: 90%;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+    padding: 30px;
+    margin: 20px auto;
+    gap: 2rem;
+    flex-direction: column;
 }
+
 .form-control {
     border-radius: 8px;
     border: 1px solid #ccc;
     box-shadow: none;
     margin-bottom: 8px;
+    margin-right: 20px;
 }
