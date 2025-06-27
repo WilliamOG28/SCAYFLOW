@@ -16,28 +16,17 @@
         <link rel="stylesheet" href="{% static 'css/index_style.css' %}">
     </head>
     <body>
-        <!-- Barra de navegación superior -->
-        <header class="navbar" role="banner">
-            <div class="navbar-left">
-                <!-- Botón para abrir/cerrar el menú lateral -->
-                <button class="menu-toggle" aria-label="Abrir menú lateral" aria-controls="sidebar" aria-expanded="false">
-                    <span class="menu-bar"></span>
-                    <span class="menu-bar"></span>
-                    <span class="menu-bar"></span>
-                </button>
+    <!-- Área invisible para activar el sidebar al acercar el cursor -->
+    <div id="sidebar-hover-area"></div>
+    <!-- Menú lateral de navegación -->
+    <section class="sidebar collapsed" id="sidebar" role="navigation" aria-label="Menú principal">
+            <nav>
                 <!-- Logo y nombre de la aplicación -->
                 <div class="brand">
-                    <img src="{% static 'img/logo.png' %}" alt="Logo" class="brand-logo" height="32"/>
-                    <span class="brand-title">SCAYFLOW</span>
+                        <img src="{% static 'img/logo.png' %}" alt="Logo" class="brand-logo">
+                        <!--<img src="{% static 'img/logo-nombre.png' %}" alt="Logo" class="brand-logo-nombre">-->
+                        <img src="{% static 'img/logo-nombre.png' %}" alt="Logo" class="brand-logo-nombre">
                 </div>
-            </div>
-            <div class="navbar-right">
-                <!-- Espacio para botones de usuario, notificaciones, etc. -->
-            </div>
-        </header>
-        <!-- Menú lateral de navegación -->
-        <section class="sidebar collapsed" id="sidebar" role="navigation" aria-label="Menú principal">
-            <nav>
                 <ul>
                     <!-- Opción Home -->
                     <li>
@@ -119,6 +108,24 @@
                                 </div>
                             </div>
                         </div>
+                        <!-- KPI: Proyectos Completados -->
+                        <div class="col-12 col-sm-6 col-lg-3">
+                            <div class="card border-0 shadow h-100">
+                                <div class="card-body text-center">
+                                    <div class="display-4 fw-bold text-warning" id="kpiProyectosCompletados">15</div>
+                                    <div class="card-title">Clientes Activos</div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- KPI: Ingresos Totales -->
+                        <div class="col-12 col-sm-6 col-lg-3">
+                            <div class="card border-0 shadow h-100">
+                                <div class="card-body text-center">
+                                    <div class="display-4 fw-bold text-success" id="kpiIngresosTotales">$12,000</div>
+                                    <div class="card-title">Portafolio Total</div>
+                                </div>
+                            </div>
+                        </div>
                         <!-- KPI: Ingresos Totales -->
                         <div class="col-12 col-sm-6 col-lg-3">
                             <div class="card border-0 shadow h-100">
@@ -128,15 +135,7 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- KPI: Proyectos Completados -->
-                        <div class="col-12 col-sm-6 col-lg-3">
-                            <div class="card border-0 shadow h-100">
-                                <div class="card-body text-center">
-                                    <div class="display-4 fw-bold text-warning" id="kpiProyectosCompletados">89%</div>
-                                    <div class="card-title">Proyectos Completados</div>
-                                </div>
-                            </div>
-                        </div>
+    
                     </div>
                 </section>
                 <!-- Dashboard de Gráficos -->
@@ -146,7 +145,7 @@
                         <div class="col-md-6 mb-4">
                             <div class="card border-0 shadow h-100">
                                 <div class="card-body">
-                                    <h5 class="card-title text-center">Estado de Proyectos</h5>
+                                    <h5 class="card-title text-center">Evolución de Ingresos (Últimos 12 meses)</h5>
                                     <canvas id="chartEstadoProyectos"></canvas>
                                 </div>
                             </div>
@@ -155,18 +154,26 @@
                         <div class="col-md-6 mb-4">
                             <div class="card border-0 shadow h-100">
                                 <div class="card-body">
-                                    <h5 class="card-title text-center">Ingresos por Proyecto</h5>
+                                    <h5 class="card-title text-center">Distribución de proyectos</h5>
                                     <canvas id="chartIngresosProyectos"></canvas>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </section>
+                <section>
+                    <div class="row">
+                            <div class="card border-0 shadow h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title text-center">Alertas y Notificaciones</h5>
+                                    <canvas id="chartIngresosProyectos"></canvas>
+                                </div>
+                            </div>
+                    </div>
+                </section>
             </div>
             {% endblock %}
         </div>
-        <!-- Scripts JavaScript -->
-        <script src="{% static 'js/sidebar.js' %}"></script>
         <!-- Bootstrap JS y dependencias desde CDN -->
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"crossorigin="anonymous"></script>

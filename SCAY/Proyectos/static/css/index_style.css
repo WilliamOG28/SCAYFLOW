@@ -1,309 +1,182 @@
-/* ==========================================================================
-   VARIABLES CSS
-   ========================================================================== */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+/* =========================
+   VARIABLES
+   ========================= */
 :root {
-    --background-color: #f7f7f7;
-    --navbar-bg: #141E61;
-    --navbar-text: #EEEEEE;
-    --sidebar-bg: #0F044C;
-    --sidebar-text: #EEEEEE;
-    --sidebar-hover: #787A91;
-    --sidebar-selected: #141E61;
-    --sidebar-selected-text: #98ABEE;
-    --brand-accent: #98ABEE;
-    --border-color: #e0e0e0;
-    --shadow: 0 10px 8px rgba(20, 30, 97, 0.08);
-    --sidebar-width: 200px;
-    --sidebar-width-collapsed: 60px;
-    --sidebar-icon-size: 24px;
-    --sidebar-icon-container: 30px;
-    --navbar-height: 56px;
-    --bs-heading-color: #EEEEEE;
+  --background-color: #FAFAF9;
+  --sidebar-bg: #4F5D61;
+  --sidebar-text: #FFF;
+  --sidebar-hover: #FFF;
+  --sidebar-selected: #FFF;
+  --sidebar-selected-text: #4F5D61;
+  --sidebar-width: 200px;
+  --sidebar-width-collapsed: 60px;
+  --sidebar-icon-size: 24px;
+  --sidebar-icon-container: 30px;
+  --bs-heading-color: #EEE;
 }
 
-/* ==========================================================================
-   RESET Y BASE
-   ========================================================================== */
+/* =========================
+   RESET & BASE
+   ========================= */
 * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-family: 'Segoe UI', Arial, sans-serif;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 1rem;
 }
-
 body {
-    background: var(--background-color);
-    min-height: 100vh;
+  background: var(--background-color);
 }
 
-/* ==========================================================================
-   CONTAINER PRINCIPAL (Contenido principal de la página)
-   ========================================================================== */
+/* =========================
+   CONTAINER PRINCIPAL
+   ========================= */
 .container {
-    background-color: white;
-    border-radius: 15px;
-    height: 100%;
-    margin-top: calc(var(--navbar-height) + 20px); /* Espacio debajo de la navbar */
-    margin-left: calc(var(--sidebar-width) + 20px); /* Espacio a la derecha del sidebar */
-    margin-right: 20px;
-    margin-bottom: 20px; /* Espacio derecho */
-    transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    padding: 5px;
-    width: auto;
-    max-width: none;
+  border-radius: 15px;
+  margin-left: calc(var(--sidebar-width) + 20px);
+  margin-right: 20px;
+  margin-bottom: 20px;
+  padding: 20px;
+  transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  width: auto;
+  max-width: none;
 }
-
-/* Cuando el sidebar está colapsado */
 body:has(.sidebar.collapsed) .container,
-.sidebar.collapsed ~ .container,
-.sidebar-collapsed .container {
-    margin-left: calc(var(--sidebar-width-collapsed) + 20px);
+.sidebar-collapsed .container,
+.sidebar.collapsed ~ .container {
+  margin-left: calc(var(--sidebar-width-collapsed) + 20px);
 }
 
-/* ==========================================================================
-   NAVBAR SUPERIOR
-   ========================================================================== */
-.navbar {
-    background: var(--navbar-bg);
-    color: var(--navbar-text);
-    box-shadow: var(--shadow);
-    width: 100%;
-    height: var(--navbar-height);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0.7rem 10px;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 200;
-}
-
-.navbar-left {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-}
-
+/* =========================
+   BRAND
+   ========================= */
 .brand {
-    display: flex;
-    align-items: center;
-    gap: 0.7rem;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 7px;
 }
-
 .brand-logo {
-    height: 32px;
-    width: 32px;
-    object-fit: contain;
-    border-radius: 6px;
-    background: #fff;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.07);
+  height: 45px;
+  width: 45px;
+  object-fit: contain;
+}
+.brand-logo-nombre {
+  height: 50px;
+  width: 120px;
+  object-fit: contain;
 }
 
-.brand-title {
-    font-size: 1.4rem;
-    font-weight: 700;
-    letter-spacing: 1px;
-    color: var(--navbar-text);
-    transition: opacity 0.2s ease;
-}
-
-.menu-toggle {
-    background: none;
-    border: none;
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    cursor: pointer;
-    padding: 8px;
-    border-radius: 6px;
-    transition: background 0.2s ease;
-}
-
-.menu-toggle:focus,
-.menu-toggle:hover {
-    background: rgba(255, 255, 255, 0.08);
-}
-
-.menu-bar {
-    width: 26px;
-    height: 3px;
-    background: var(--navbar-text);
-    border-radius: 2px;
-    display: block;
-    transition: all 0.3s ease;
-}
-
-.navbar-right {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-
-/* ==========================================================================
-   SIDEBAR LATERAL
-   ========================================================================== */
+/* =========================
+   SIDEBAR
+   ========================= */
 .sidebar {
-    background: var(--sidebar-bg);
-    color: var(--sidebar-text);
-    width: var(--sidebar-width);
-    height: calc(100vh - var(--navbar-height));
-    position: fixed;
-    top: var(--navbar-height);
-    left: 0;
-    z-index: 100;
-    border-right: 1px solid var(--border-color);
-    box-shadow: 2px 0 8px rgba(20, 30, 97, 0.04);
-    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    overflow: hidden;
+  background: var(--sidebar-bg);
+  color: var(--sidebar-text);
+  width: var(--sidebar-width);
+  height: 100%;
+  position: fixed;
+  left: 0;
+  z-index: 100;
+  box-shadow: 2px 0 8px rgba(20, 30, 97, 0.04);
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
 }
-
-/* Sidebar colapsado */
 .sidebar.collapsed {
-    width: var(--sidebar-width-collapsed);
+  width: var(--sidebar-width-collapsed);
+}
+#sidebar-hover-area {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: var(--sidebar-width-collapsed);
+  height: 100vh;
+  z-index: 99;
+  background: transparent;
+}
+#sidebar-hover-area:hover ~ .sidebar,
+.sidebar:hover {
+  width: var(--sidebar-width) !important;
 }
 
-/* ==========================================================================
-   NAVEGACIÓN DEL SIDEBAR
-   ========================================================================== */
-.sidebar nav {
-    padding: 1.5rem 0;
-    height: 100%;
-}
-
+/* =========================
+   SIDEBAR NAVIGATION
+   ========================= */
 .sidebar nav ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+  list-style: none;
+  padding: 0%;
 }
-
 .sidebar nav li {
-    width: 100%;
+  width: 100%;
 }
-
 .sidebar a {
-    display: flex;
-    align-items: center;
-    padding: 0.75rem 0.9rem;
-    text-decoration: none;
-    width: 100%;
-    color: var(--sidebar-text);
-    font-weight: 500;
-    font-size: 0.9rem;
-    transition: background-color 0.2s ease, color 0.2s ease;
-    position: relative;
-    white-space: nowrap;
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 0.9rem;
+  text-decoration: none;
+  width: 100%;
+  color: var(--sidebar-text);
+  font-weight: 500;
+  font-size: 0.9rem;
+  transition: background-color 0.2s, color 0.2s;
+  position: relative;
+  white-space: nowrap;
 }
-
-.sidebar a:hover {
-    background: var(--sidebar-hover);
-    color: #fff;
-}
-
+.sidebar a:hover,
 .sidebar a.selected {
-    background: var(--sidebar-selected);
-    color: var(--sidebar-selected-text);
+  background: var(--sidebar-hover);
+  color: var(--sidebar-selected-text);
+}
+.sidebar a.selected {
+  background: var(--sidebar-selected);
 }
 
-/* ==========================================================================
-   ICONOS DEL SIDEBAR
-   ========================================================================== */
+/* =========================
+   SIDEBAR ICONS
+   ========================= */
 .sidebar .icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: var(--sidebar-icon-container);
-    height: var(--sidebar-icon-container);
-    min-width: var(--sidebar-icon-container);
-    font-size: var(--sidebar-icon-size);
-    color: inherit;
-    transition: color 0.2s ease;
-    position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--sidebar-icon-container);
+  height: var(--sidebar-icon-container);
+  min-width: var(--sidebar-icon-container);
+  font-size: var(--sidebar-icon-size);
+  color: inherit;
+  transition: color 0.2s;
+  position: relative;
 }
 
-.sidebar a.selected .icon {
-    color: var(--brand-accent);
-}
-
-/* ==========================================================================
-   ETIQUETAS DEL SIDEBAR (LABELS)
-   ========================================================================== */
+/* =========================
+   SIDEBAR LABELS
+   ========================= */
 .sidebar .label {
-    margin-left: 0.5rem;
-    transition: opacity 0.3s ease, transform 0.3s ease;
-    transform: translateX(0);
-    opacity: 1;
-    flex: 1;
+  margin-left: 0.5rem;
+  transition: opacity 0.3s, transform 0.3s;
+  transform: translateX(0);
+  opacity: 1;
+  flex: 1;
 }
-
-/* Sidebar colapsado: ocultar labels */
 .sidebar.collapsed .label {
-    opacity: 0;
-    visibility: hidden;
-    width: 0;
-    margin-left: 0;
+  opacity: 0;
+  visibility: hidden;
+  width: 0;
+  margin-left: 0;
+}
+#sidebar-hover-area:hover ~ .sidebar .label,
+.sidebar:hover .label {
+  opacity: 1 !important;
+  visibility: visible !important;
+  width: auto !important;
+  margin-left: 0.5rem !important;
 }
 
-/* Sidebar colapsado: mantener iconos alineados */
+/* Sidebar collapsed: keep icons aligned */
 .sidebar.collapsed a {
-    padding: 0.75rem 0.9rem;
-    justify-content: flex-start;
+  justify-content: flex-start;
 }
-
 .sidebar.collapsed .icon {
-    margin-left: 0;
-}
-
-/* ==========================================================================
-   RESPONSIVE (MÓVIL)
-   ========================================================================== */
-@media (max-width: 768px) {
-    /* El container ocupa casi todo el ancho, sin margen izquierdo para sidebar */
-    .container {
-        margin-left: 20px;
-        margin-right: 20px;
-        width: calc(100% - 40px);
-        max-width: none;
-    }
-    /* Cuando el sidebar está visible en móvil, el container no se mueve */
-    body:has(.sidebar.show) .container,
-    .sidebar.show ~ .container,
-    .sidebar-expanded .container {
-        margin-left: 20px;
-    }
-
-    /* Sidebar oculto por defecto en móvil */
-    .sidebar {
-        transform: translateX(-100%);
-        transition: transform 0.3s ease, width 0.3s ease;
-    }
-    /* Sidebar visible en móvil */
-    .sidebar.show {
-        transform: translateX(0);
-    }
-    /* Sidebar colapsado en móvil */
-    .sidebar.collapsed {
-        transform: translateX(-100%);
-    }
-    /* Sidebar colapsado pero visible en móvil */
-    .sidebar.collapsed.show {
-        transform: translateX(0);
-        width: var(--sidebar-width-collapsed);
-    }
-    /* Redundante pero asegura que el container no se mueva cuando sidebar está visible */
-    body:has(.sidebar.show) .container,
-    .sidebar.show ~ .container {
-        margin-left: 20px;
-    }
-}
-
-/* ==========================================================================
-   UTILIDADES PARA NAVEGADORES SIN :has()
-   ========================================================================== */
-/* Si usas JS para agregar clases al body según el estado del sidebar */
-.sidebar-expanded .container {
-    margin-left: calc(var(--sidebar-width) + 20px);
-}
-.sidebar-collapsed .container {
-    margin-left: calc(var(--sidebar-width-collapsed) + 20px);
+  margin-left: 0;
 }
