@@ -5,31 +5,29 @@
 {% endblock %}
 
 {% block clientes_content %}
-<!-- Título principal de la página -->
-<h1 class="mb-4 fw-bold">Crear Nuevo Cliente</h1>
-
 <!-- Formulario para crear un nuevo cliente -->
+<h1 class="title">Detalles del cliente</h1>
 <form>
-    <div class="form-row">
+    <div class="form-container">
 
         <!-- =========================
              Información Básica
              ========================= -->
         <section>
-            <h2 class="h5 mb-3" style="color: black;">Información básica</h2>
+            <h2 class="subtitle mb-4">Información básica</h2>
             <div class="row">
                 <!-- Columna izquierda -->
                 <div class="col-md-6">
                     <div class="mb-3">
-                        <label for="nombreCompleto" class="form-label fw-bold">Nombre completo</label>
+                        <label for="nombreCompleto" class="form-label">Nombre completo</label>
                         <input type="text" class="form-control" id="nombreCompleto" name="nombreCompleto" placeholder="Ingrese el nombre completo" required>
                     </div>
                     <div class="mb-3">
-                        <label for="tipoCliente" class="form-label fw-bold">Tipo de cliente</label>
+                        <label for="tipoCliente" class="form-label">Tipo de cliente</label>
                         <input type="text" class="form-control" id="tipoCliente" name="tipoCliente" placeholder="Ej: Persona física, Empresa" required>
                     </div>
                     <div class="mb-3">
-                        <label for="rfc" class="form-label fw-bold">RFC</label>
+                        <label for="rfc" class="form-label">RFC</label>
                         <input type="text" class="form-control" id="rfc" name="rfc" placeholder="Ingrese el RFC" required>
                     </div>
                 </div>
@@ -37,15 +35,15 @@
                 <!-- Columna derecha -->
                 <div class="col-md-6">
                     <div class="mb-3">
-                        <label for="email" class="form-label fw-bold">Email</label>
+                        <label for="email" class="form-label">Email</label>
                         <input type="email" class="form-control" id="email" name="email" placeholder="cliente@ejemplo.com" required>
                     </div>
                     <div class="mb-3">
-                        <label for="telefono" class="form-label fw-bold">Teléfono</label>
+                        <label for="telefono" class="form-label">Teléfono</label>
                         <input type="tel" class="form-control" id="telefono" name="telefono" placeholder="Ej: 555-123-4567" required>
                     </div>
                     <div class="mb-3">
-                        <label for="direccion" class="form-label fw-bold">Dirección</label>
+                        <label for="direccion" class="form-label">Dirección</label>
                         <input type="text" class="form-control" id="direccion" name="direccion" placeholder="Ingrese la dirección" required>
                     </div>
                 </div>
@@ -56,15 +54,15 @@
              Información Empresarial
              ========================= -->
         <section>
-            <h2 class="h5" style="color: black;">Información empresarial</h2>
+            <h2 class="subtitle mb-4">Información empresarial</h2>
             <div class="row">
                 <div class="col-md-6">
                     <div class="mb-3">
-                        <label for="empresa" class="form-label fw-bold">Empresa</label>
+                        <label for="empresa" class="form-label">Empresa</label>
                         <input type="text" class="form-control" id="empresa" name="empresa" placeholder="Nombre de la empresa">
                     </div>
                     <div class="mb-3">
-                        <label for="contactoEmpresa" class="form-label fw-bold">Persona de contacto</label>
+                        <label for="contactoEmpresa" class="form-label">Persona de contacto</label>
                         <input type="text" class="form-control" id="contactoEmpresa" name="contactoEmpresa" placeholder="Nombre del contacto empresarial">
                     </div>
                 </div>
@@ -75,9 +73,9 @@
              Información Adicional
              ========================= -->
         <section>
-            <h2 class="h5" style="color: black;">Información adicional</h2>
+            <h2 class="subtitle mb-4">Información adicional</h2>
             <div class="mb-3">
-                <label for="nota" class="form-label fw-bold">Nota</label>
+                <label for="nota" class="form-label">Nota</label>
                 <textarea class="form-control" id="nota" name="nota" rows="2" placeholder="Ingrese una nota adicional"></textarea>
             </div>
         </section>

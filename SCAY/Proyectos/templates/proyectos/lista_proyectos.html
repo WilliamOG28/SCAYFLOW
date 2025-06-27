@@ -2,52 +2,115 @@
 {% block title %} Lista Proyectos {% endblock %}
 
 {% block proyectos_content %}
-    <!-- Sección principal: Lista de Proyectos con filtro -->
-    <section>
-        <!-- Título de la sección -->
-        <h1 class="mb-4 fw-bold">Lista de Proyectos</h1>
-        
-        <!-- Filtro por estado de proyecto -->
-        <div class="mb-3">
-            <label for="filtroEstado" class="form-label fw-bold">Filtrar por estado:</label>
-            <select id="filtroEstado" class="form-select" style="max-width: 300px;">
+<section>
+    <!-- Filtro por estado y búsqueda -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <label for="filtroEstado" class="form-label">Filtrar por estado:</label>
+            <select id="filtroEstado" class="form-select" >
                 <option value="">Todos</option>
                 <option value="Activo">Activo</option>
                 <option value="Finalizado">Finalizado</option>
                 <option value="Pendiente">Pendiente</option>
             </select>
         </div>
-        
-        <!-- Tabla de proyectos -->
-        <table class="table table-striped table-bordered align-middle">
-            <thead class="table-dark">
-                <tr>
-                    <th>ID</th>
-                    <th>Nombre del Proyecto</th>
-                    <th>Cliente</th>
-                    <th>Estado</th>
-                    <th>Fecha de Inicio</th>
-                    <th>Fecha Fin</th>
-                    <th>Total</th>
-                    <th>Pagado</th>
-                    <th>Saldo pendiente</th>
-                </tr>
-            </thead>
-            <tbody id="tablaProyectos">
-                <!-- Ejemplo de fila de proyecto (puedes eliminarla cuando uses datos dinámicos) -->
-                <tr>
-                    <td>1</td>
-                    <td>Construcción Edificio Central</td>
-                    <td>Empresa XYZ</td>
-                    <td>Activo</td>
-                    <td>2024-01-15</td>
-                    <td>2024-12-20</td>
-                    <td>$500,000</td>
-                    <td>$300,000</td>
-                    <td>$200,000</td>
-                </tr>
-                <!-- Las filas reales se generan dinámicamente con JavaScript o Django -->
-            </tbody>
-        </table>
-    </section>
+        <div>
+            <input type="text" id="busquedaInput" class="form-control" placeholder="Buscar proyecto...">
+        </div>
+    </div>
+
+    <!-- Tabla de proyectos -->
+    <table class="table table-striped table-bordered align-middle" id="tablaProyectosTabla">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Nombre del Proyecto</th>
+                <th>Cliente</th>
+                <th>Estado</th>
+                <th>Fecha de Inicio</th>
+                <th>Fecha Fin</th>
+                <th>Total</th>
+                <th>Pagado</th>
+                <th>Saldo pendiente</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody id="tablaProyectos">
+            <!-- Ejemplos adicionales de filas -->
+            <tr>
+                <td>1</td>
+                <td>Construcción Edificio Central</td>
+                <td>Empresa XYZ</td>
+                <td>Activo</td>
+                <td>2024-01-15</td>
+                <td>2024-12-20</td>
+                <td>$500,000</td>
+                <td>$300,000</td>
+                <td>$200,000</td>
+                <td>
+                    <button class="btn btn-sm btn-primary">Editar</button>
+                    <button class="btn btn-sm btn-secondary">Detalles</button>
+                </td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Renovación Planta Industrial</td>
+                <td>Inversiones López</td>
+                <td>Finalizado</td>
+                <td>2023-05-01</td>
+                <td>2024-03-30</td>
+                <td>$1,200,000</td>
+                <td>$1,200,000</td>
+                <td>$0</td>
+                <td>
+                    <button class="btn btn-sm btn-primary">Editar</button>
+                    <button class="btn btn-sm btn-secondary">Detalles</button>
+                </td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Centro Comercial Los Pinos</td>
+                <td>Constructora El Roble</td>
+                <td>Pendiente</td>
+                <td>2025-08-01</td>
+                <td>2026-10-15</td>
+                <td>$2,300,000</td>
+                <td>$0</td>
+                <td>$2,300,000</td>
+                <td>
+                    <button class="btn btn-sm btn-primary">Editar</button>
+                    <button class="btn btn-sm btn-secondary">Detalles</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+<!-- Scripts para filtrar por estado y buscar -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const filtroEstado = document.getElementById("filtroEstado");
+        const busquedaInput = document.getElementById("busquedaInput");
+        const filas = document.querySelectorAll("#tablaProyectos tr");
+
+        function aplicarFiltros() {
+            const estadoSeleccionado = filtroEstado.value.toLowerCase();
+            const textoBusqueda = busquedaInput.value.toLowerCase();
+
+            filas.forEach(fila => {
+                const celdas = fila.getElementsByTagName("td");
+                const estado = celdas[3]?.textContent.toLowerCase();
+                const textoCompleto = fila.textContent.toLowerCase();
+
+                const coincideEstado = !estadoSeleccionado || estado === estadoSeleccionado;
+                const coincideBusqueda = textoCompleto.includes(textoBusqueda);
+
+                fila.style.display = (coincideEstado && coincideBusqueda) ? "" : "none";
+            });
+        }
+
+        filtroEstado.addEventListener("change", aplicarFiltros);
+        busquedaInput.addEventListener("input", aplicarFiltros);
+    });
+</script>
 {% endblock %}

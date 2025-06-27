@@ -7,21 +7,20 @@
 .subtitle{
     font-size: 1.25rem;
     color: #1E1E1E;
+    font-weight: bold;
 }
-.mode{
-    background-color: #E5E8E8;
-    border-radius: 60px;
-    padding: 5px;
-    border: 1px #3C3C3C solid;
-    position: fixed; 
-    top: 1rem; 
-    right: 2rem; 
-    z-index: 1050;
+body.dark-mode .subtitle{
+    color: #FFFFFF;
 }
-body.dark-mode .mode{
-    background-color: #1C1C1C;
-    border: 1px #E5E8E8 solid;
+.title{
+    font-size: 2rem;
+    color: #1E1E1E;
+    font-weight: bold;
 }
+body.dark-mode .title{
+    color: #FFFFFF;
+}
+
 .nav-menu{
     width: 90%;
     margin: auto;
@@ -94,7 +93,6 @@ body.dark-mode .nav-menu{
     width: 100%;
     max-width: 100%;
     height: 450px;
-    color: white
 }
 body.dark-mode .dashboard-card{
     background-color: #1C1C1C;
@@ -109,15 +107,14 @@ body.dark-mode .graphic-card{
 body.dark-mode .dashboard-title{
     color: #E5E8E8;
 }
-body.dark-mode .subtitle{
-    color: #FFFFFF;
-}
 
-.form-row {
+.form-container {
     border-radius: 20px;
     display: flex;
+    flex-direction: column;
     width: 90%;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+    border: 1px #E5E8E8 solid;
+    box-shadow: 0 4px 16px 0 rgba(0,0,0,0.4);
     padding: 30px;
     margin: 20px auto;
     gap: 2rem;
@@ -130,4 +127,38 @@ body.dark-mode .subtitle{
     box-shadow: none;
     margin-bottom: 8px;
     margin-right: 20px;
+    color: #3C3C3C;
+}
+.form-label{
+    color: #1C1C1C;
+    font-weight: bold;
+    font-size: 1rem;
+}
+input.form-control::placeholder {
+    color: #3C3C3C !important;
+    opacity: 1;
+}
+body.dark-mode input.form-control::placeholder{
+    color: #E5E8E8 !important;
+}
+textarea.form-control::placeholder {
+    color: #3C3C3C !important;
+    opacity: 1;
+}
+body.dark-mode textarea.form-control::placeholder{
+    color: #E5E8E8 !important;
+}
+body.dark-mode .form-container{
+    background-color: #1C1C1C;
+    border: 1px #3C3C3C solid;
+    box-shadow: 0 4px 16px 0 rgb(255, 255, 255, 0.4);
+}
+body.dark-mode .form-control{
+    color: #E5E8E8;
+    background-color: #1C1C1C;
+    border: 1px #3C3C3C solid;
+    box-shadow: 0 4px 16px 0 rgb(255, 255, 255, 0.1);
+}
+body.dark-mode .form-label{
+    color: #E5E8E8;
 }
