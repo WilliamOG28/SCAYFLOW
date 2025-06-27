@@ -27,6 +27,9 @@
   font-size: 1rem;
 }
 body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
   background: var(--background-color);
 }
 body.dark-mode {
@@ -213,12 +216,11 @@ body:has(.sidebar.collapsed) .container,
   margin-top: auto;
 }
 .footer {
-    position: relative;
     width: 100%;
-    bottom: 0;
     font-size: 1rem;
     letter-spacing: 0.03em;
     border-top: 1px solid #eaeaea;
+    margin-top: auto;
 }
 
 body.dark-mode .footer {
