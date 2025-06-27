@@ -163,18 +163,20 @@
                 <section class="mb-5">
                     <div class="row justify-content-center">
                         <!-- Gráfico: Estado de Proyectos -->
-                        <div class="col-md-6 mb-5">
+                        <div class="col-md-6">
                             <div class="graphic-card">
                                 <div class="graphic-body">
                                     <h5 class="subtitle">Evolución de Ingresos (Últimos 12 meses)</h5>
+                                    <canvas id="evolucionIngresosChart" class="graphic"></canvas>
                                 </div>
                             </div>
                         </div>
                         <!-- Gráfico: Ingresos por Proyecto -->
-                        <div class="col-md-6 mb-5">
+                        <div class="col-md-6">
                             <div class="graphic-card">
                                 <div class="graphic-body">
                                     <h5 class="subtitle">Distribución de proyectos</h5>
+                                    <canvas id="distribucionProyectosChart" class="graphic"><canvas>
                                 </div>
                             </div>
                         </div>
@@ -182,16 +184,78 @@
                 </section>
                 <section>
                     <div class="row">
-                            <div class="graphic-card">
-                                <div class="graphic-body">
-                                    <h5 class="subtitle">Alertas y Notificaciones</h5>
+                        <div class="graphic-card">
+                            <div class="graphic-body">
+                                <h5 class="subtitle">Alertas y Notificaciones</h5>
+                                <div class="alert alert-warning" role="alert">
+                                    <strong>Trámite pendiente:</strong> El trámite #1234 aún no ha sido revisado.
+                                </div>
+                                <div class="alert alert-danger" role="alert">
+                                    <strong>Pago vencido:</strong> Cliente ACME Inc. tiene pagos vencidos desde hace 7 días.
+                                </div>
+                                <div class="alert alert-info" role="alert">
+                                    Se ha actualizado el portafolio del cliente XYZ.
                                 </div>
                             </div>
+                        </div>
                     </div>
                 </section>
             </div>
             {% endblock %}
         </div>
+        <!-- script para trabajar graficos -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+            // Gráfico de línea: Evolución de Ingresos
+            const ctxIngresos = document.getElementById('evolucionIngresosChart').getContext('2d');
+            const evolucionIngresosChart = new Chart(ctxIngresos, {
+                type: 'line',
+                data: {
+                    labels: ['Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic', 'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'Ingresos ($)',
+                        data: [1200, 1500, 1800, 1600, 2000, 2400, 2200, 2500, 2300, 2700, 3000, 3200],
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        tension: 0.3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            // Gráfico de pastel: Distribución de proyectos
+            const ctxProyectos = document.getElementById('distribucionProyectosChart').getContext('2d');
+            const distribucionProyectosChart = new Chart(ctxProyectos, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Completados', 'Activos', 'Pendientes', 'Cancelados'],
+                    datasets: [{
+                        data: [15, 24, 6, 3],
+                        backgroundColor: ['#4caf50', '#2196f3', '#ffc107', '#f44336'],
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom', // Leyendas en horizontal debajo del gráfico
+                            labels: {
+                                boxWidth: 20,
+                                padding: 10
+                            }
+                        }
+                    }
+                }
+            });
+        </script>
         <footer class="footer mt-auto py-3 bg-light text-center">
             <span class="text-muted">Todos los derechos reservados © SCAY</span>
         </footer>
