@@ -16,122 +16,143 @@
         <link rel="stylesheet" href="{% static 'css/index_style.css' %}">
     </head>
     <body>
-    <!-- Área invisible para activar el sidebar al acercar el cursor -->
-    <div id="sidebar-hover-area"></div>
-    <!-- Menú lateral de navegación -->
-    <section class="sidebar collapsed" id="sidebar" role="navigation" aria-label="Menú principal">
-            <nav>
-                <!-- Logo y nombre de la aplicación -->
-                <div class="brand">
-                        <img src="{% static 'img/logo.png' %}" alt="Logo" class="brand-logo">
-                        <!--<img src="{% static 'img/logo-nombre.png' %}" alt="Logo" class="brand-logo-nombre">-->
-                        <img src="{% static 'img/logo-nombre.png' %}" alt="Logo" class="brand-logo-nombre">
-                </div>
-                <ul>
-                    <!-- Opción Home -->
-                    <li>
-                        <a href="{% url 'base' %}" class="{% if request.resolver_match.url_name == 'base' %}selected{% endif %}">
-                            <span class="icon">
-                                <!-- Icono Home -->
-                                <svg viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
-                                </svg>
-                            </span>
-                            <span class="label">Home</span>
-                        </a>
-                    </li>
-                    <!-- Opción Proyectos -->
-                    <li>
-                        <a href="{% url 'proyectos' %}" class="{% if '/proyectos' in request.path %}selected{% endif %}">
-                            <span class="icon">
-                                <!-- Icono Proyectos -->
-                                <svg class="icon-display" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M19,3H14.82C14.4,1.84 13.3,1 12,1C10.7,1 9.6,1.84 9.18,3H5A2,2 0 0,0 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5A2,2 0 0,0 19,3M12,3A1,1 0 0,1 13,4A1,1 0 0,1 12,5A1,1 0 0,1 11,4A1,1 0 0,1 12,3M7,7H17V9H7V7M7,11H17V13H7V11M7,15H13V17H7V15Z"/>
-                                </svg>
-                            </span>
-                            <span class="label">Proyectos</span>
-                        </a>
-                    </li>
-                    <!-- Opción Clientes -->
-                    <li>
-                        <a href="{% url 'clientes' %}" class="{% if '/clientes' in request.path %}selected{% endif %}">
-                            <span class="icon">
-                                <!-- Icono Clientes -->
-                                <svg class="icon-display" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M16 17V19H2V17S2 13 9 13 16 17 16 17M12.5 7.5A3.5 3.5 0 1 0 9 11A3.5 3.5 0 0 0 12.5 7.5M15.94 13A5.32 5.32 0 0 1 18 17V19H22V17S22 13.37 15.94 13M15 4A3.39 3.39 0 0 0 13.07 4.59A5 5 0 0 1 13.07 10.41A3.39 3.39 0 0 0 15 11A3.5 3.5 0 0 0 15 4Z"/>
-                                </svg>
-                            </span>
-                            <span class="label">Clientes</span>
-                        </a>
-                    </li>
-                    <!-- Opción Trámites -->
-                    <li>
-                        <a href="{% url 'lista_tramites' %}" class="{% if '/tramites' in request.path %}selected{% endif %}">
-                            <span class="icon">
-                                <!-- Icono Trámites -->
-                                <svg class="icon-display" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
-                                </svg>
-                            </span>
-                            <span class="label">Trámites</span>
-                        </a>
-                    </li>
-                    <!-- Opción Pagos (aún sin funcionalidad) -->
-                    <li>
-                        <a href="#">
-                            <span class="icon">
-                                <!-- Icono Pagos -->
-                                <svg viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/>
-                                </svg>
-                            </span>
-                            <span class="label">Pagos</span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-        </section>
+        <!-- Switch en la parte superior derecha -->
+        <div class="mode">
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="darkModeSwitch">
+                <label class="form-check-label" for="darkModeSwitch" id="darkModeLabel">🌙</label>
+            </div>
+        </div>
+        <!-- Área invisible para activar el sidebar al acercar el cursor -->
+        <div id="sidebar-hover-area">
+            <!-- Menú lateral de navegación -->
+            <section class="sidebar collapsed" id="sidebar" role="navigation" aria-label="Menú principal">
+                <nav class="sidebar-nav">
+                    <!-- Logo y nombre de la aplicación -->
+                    <div class="brand">
+                            <img src="{% static 'img/logo.png' %}" alt="Logo" class="brand-logo">
+                            <!--<img src="{% static 'img/logo-nombre.png' %}" alt="Logo" class="brand-logo-nombre">-->
+                            <img src="{% static 'img/logo-nombre.png' %}" alt="Logo" class="brand-logo-nombre">
+                    </div>
+                    <ul>
+                        <!-- Opción Home -->
+                        <li>
+                            <a href="{% url 'base' %}" class="{% if request.resolver_match.url_name == 'base' %}selected{% endif %}">
+                                <span class="icon">
+                                    <!-- Icono Home -->
+                                    <svg viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+                                    </svg>
+                                </span>
+                                <span class="label">Home</span>
+                            </a>
+                        </li>
+                        <!-- Opción Proyectos -->
+                        <li>
+                            <a href="{% url 'proyectos' %}" class="{% if '/proyectos' in request.path %}selected{% endif %}">
+                                <span class="icon">
+                                    <!-- Icono Proyectos -->
+                                    <svg class="icon-display" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M19,3H14.82C14.4,1.84 13.3,1 12,1C10.7,1 9.6,1.84 9.18,3H5A2,2 0 0,0 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5A2,2 0 0,0 19,3M12,3A1,1 0 0,1 13,4A1,1 0 0,1 12,5A1,1 0 0,1 11,4A1,1 0 0,1 12,3M7,7H17V9H7V7M7,11H17V13H7V11M7,15H13V17H7V15Z"/>
+                                    </svg>
+                                </span>
+                                <span class="label">Proyectos</span>
+                            </a>
+                        </li>
+                        <!-- Opción Clientes -->
+                        <li>
+                            <a href="{% url 'clientes' %}" class="{% if '/clientes' in request.path %}selected{% endif %}">
+                                <span class="icon">
+                                    <!-- Icono Clientes -->
+                                    <svg class="icon-display" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M16 17V19H2V17S2 13 9 13 16 17 16 17M12.5 7.5A3.5 3.5 0 1 0 9 11A3.5 3.5 0 0 0 12.5 7.5M15.94 13A5.32 5.32 0 0 1 18 17V19H22V17S22 13.37 15.94 13M15 4A3.39 3.39 0 0 0 13.07 4.59A5 5 0 0 1 13.07 10.41A3.39 3.39 0 0 0 15 11A3.5 3.5 0 0 0 15 4Z"/>
+                                    </svg>
+                                </span>
+                                <span class="label">Clientes</span>
+                            </a>
+                        </li>
+                        <!-- Opción Trámites -->
+                        <li>
+                            <a href="{% url 'lista_tramites' %}" class="{% if '/tramites' in request.path %}selected{% endif %}">
+                                <span class="icon">
+                                    <!-- Icono Trámites -->
+                                    <svg class="icon-display" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                                    </svg>
+                                </span>
+                                <span class="label">Trámites</span>
+                            </a>
+                        </li>
+                        <!-- Opción Pagos (aún sin funcionalidad) -->
+                        <li>
+                            <a href="#">
+                                <span class="icon">
+                                    <!-- Icono Pagos -->
+                                    <svg viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/>
+                                    </svg>
+                                </span>
+                                <span class="label">Pagos</span>
+                            </a>
+                        </li>
+                    </ul>
+                    <ul class="logout-list">
+                        <li>
+                            <a href="">
+                                <span class="icon">
+                                    <!-- Icono cerrar sesión -->
+                                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+                                    </svg>
+                                </span>
+                                <span class="label">Cerrar sesión</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </section>
+        </div>
         <!-- Contenedor principal de la página -->
         <div class="container">
             {% block content %}
             <!-- Contenido principal, puede ser sobrescrito por las vistas hijas -->
             <div class="content-wrapper mt-4">
-                <!-- KPIs principales -->
+                <!-- Dashboard -->
                 <section class="mb-5">
-                    <div class="row g-4 justify-content-center">
-                        <!-- KPI: Proyectos Activos -->
-                        <div class="col-12 col-sm-6 col-lg-3">
-                            <div class="card border-0 shadow h-100">
-                                <div class="card-body text-center">
-                                    <div class="display-4 fw-bold text-primary" id="kpiProyectosActivos">24</div>
-                                    <div class="card-title">Proyectos Activos</div>
+                    <div class="row">
+                        <!-- Proyectos Activos -->
+                        <div class="col-lg-3">
+                            <div class="dashboard-card">
+                                <div class="dashboard-body">
+                                    <div class="dashboard-title" id="kpiProyectosActivos">24</div>
+                                    <div class="subtitle">Proyectos Activos</div>
                                 </div>
                             </div>
                         </div>
-                        <!-- KPI: Proyectos Completados -->
-                        <div class="col-12 col-sm-6 col-lg-3">
-                            <div class="card border-0 shadow h-100">
-                                <div class="card-body text-center">
-                                    <div class="display-4 fw-bold text-warning" id="kpiProyectosCompletados">15</div>
-                                    <div class="card-title">Clientes Activos</div>
+                        <!-- Proyectos Completados -->
+                        <div class="col-lg-3">
+                            <div class="dashboard-card">
+                                <div class="dashboard-body">
+                                    <div class="dashboard-title" id="kpiProyectosCompletados">15</div>
+                                    <div class="subtitle">Clientes Activos</div>
                                 </div>
                             </div>
                         </div>
-                        <!-- KPI: Ingresos Totales -->
-                        <div class="col-12 col-sm-6 col-lg-3">
-                            <div class="card border-0 shadow h-100">
-                                <div class="card-body text-center">
-                                    <div class="display-4 fw-bold text-success" id="kpiIngresosTotales">$12,000</div>
-                                    <div class="card-title">Portafolio Total</div>
+                        <!-- Ingresos Totales -->
+                        <div class="col-lg-3">
+                            <div class="dashboard-card">
+                                <div class="dashboard-body">
+                                    <div class="dashboard-title" id="kpiIngresosTotales">$12,000</div>
+                                    <div class="subtitle">Portafolio Total</div>
                                 </div>
                             </div>
                         </div>
-                        <!-- KPI: Ingresos Totales -->
-                        <div class="col-12 col-sm-6 col-lg-3">
-                            <div class="card border-0 shadow h-100">
-                                <div class="card-body text-center">
-                                    <div class="display-4 fw-bold text-success" id="kpiIngresosTotales">12</div>
-                                    <div class="card-title">Tramites Pendientes</div>
+                        <!-- Ingresos Totales -->
+                        <div class="col-lg-3">
+                            <div class="dashboard-card">
+                                <div class="dashboard-body">
+                                    <div class="dashboard-title" style="color: #9A5A36;" id="kpiIngresosTotales">12</div>
+                                    <div class="subtitle">Tramites Pendientes</div>
                                 </div>
                             </div>
                         </div>
@@ -142,20 +163,18 @@
                 <section class="mb-5">
                     <div class="row justify-content-center">
                         <!-- Gráfico: Estado de Proyectos -->
-                        <div class="col-md-6 mb-4">
-                            <div class="card border-0 shadow h-100">
-                                <div class="card-body">
-                                    <h5 class="card-title text-center">Evolución de Ingresos (Últimos 12 meses)</h5>
-                                    <canvas id="chartEstadoProyectos"></canvas>
+                        <div class="col-md-6 mb-5">
+                            <div class="graphic-card">
+                                <div class="graphic-body">
+                                    <h5 class="subtitle">Evolución de Ingresos (Últimos 12 meses)</h5>
                                 </div>
                             </div>
                         </div>
                         <!-- Gráfico: Ingresos por Proyecto -->
-                        <div class="col-md-6 mb-4">
-                            <div class="card border-0 shadow h-100">
-                                <div class="card-body">
-                                    <h5 class="card-title text-center">Distribución de proyectos</h5>
-                                    <canvas id="chartIngresosProyectos"></canvas>
+                        <div class="col-md-6 mb-5">
+                            <div class="graphic-card">
+                                <div class="graphic-body">
+                                    <h5 class="subtitle">Distribución de proyectos</h5>
                                 </div>
                             </div>
                         </div>
@@ -163,10 +182,9 @@
                 </section>
                 <section>
                     <div class="row">
-                            <div class="card border-0 shadow h-100">
-                                <div class="card-body">
-                                    <h5 class="card-title text-center">Alertas y Notificaciones</h5>
-                                    <canvas id="chartIngresosProyectos"></canvas>
+                            <div class="graphic-card">
+                                <div class="graphic-body">
+                                    <h5 class="subtitle">Alertas y Notificaciones</h5>
                                 </div>
                             </div>
                     </div>
@@ -174,6 +192,10 @@
             </div>
             {% endblock %}
         </div>
+        <footer class="footer mt-auto py-3 bg-light text-center">
+            <span class="text-muted">Todos los derechos reservados SCAY</span>
+        </footer>
+        <script src="{% static 'js/mode_page.js' %}"></script>
         <!-- Bootstrap JS y dependencias desde CDN -->
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"crossorigin="anonymous"></script>
