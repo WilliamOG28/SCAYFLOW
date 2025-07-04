@@ -25,8 +25,11 @@ SECRET_KEY = 'django-insecure-%+fym_c1uw%^zsi78hh&e-f#wzfx*5p96joy8j5w8=0-8h5wo1
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = [
+    "scayflow-production.up.railway.app",  # tu dominio Railway
+    "localhost",                           # para correr localmente
+    "127.0.0.1",                           # para correr localmente
+]
 
 # Application definition
 
@@ -115,11 +118,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
+    os.path.join(BASE_DIR, 'Proyectos', 'static'),
 ]
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 
 # Default primary key field type
