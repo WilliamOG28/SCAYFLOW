@@ -25,8 +25,11 @@ SECRET_KEY = 'django-insecure-%+fym_c1uw%^zsi78hh&e-f#wzfx*5p96joy8j5w8=0-8h5wo1
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = [
+    "scayflow-production.up.railway.app",  # tu dominio Railway
+    "localhost",                           # para correr localmente
+    "127.0.0.1",                           # para correr localmente
+]
 
 # Application definition
 
