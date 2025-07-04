@@ -1,1 +1,2 @@
-web: python manage.py collectstatic --noinput && gunicorn SCAY.wsgi
+web: gunicorn SCAY.wsgi
+
