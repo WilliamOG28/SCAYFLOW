@@ -1,4 +1,4 @@
 Django==5.2.3
 gunicorn
-bash pip install whitenoise
+whitenoise
 
