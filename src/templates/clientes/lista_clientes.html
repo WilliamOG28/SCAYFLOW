@@ -1,0 +1,166 @@
+{% extends "clientes/clientes.html" %}
+
+{% block title %}
+    Lista Clientes
+{% endblock %}
+
+{% block clientes_content %}
+<section>
+    <table class="table table-striped table-bordered align-middle">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Email</th>
+                <th>Teléfono</th>
+                <th>Dirección</th>
+                <th>Empresa</th>
+                <th>Persona contacto</th>
+                <th>Tipo</th>
+                <th>RFC</th>
+                <th>Notas</th>
+                <th class="text-center">Acciones</th>
+            </tr>
+        </thead>
+        <tbody id="tablaClientes">
+            {% for cliente in clientes %}
+                <tr>
+                    <td>{{ cliente.cliente_id }}</td>
+                    <td>{{ cliente.nombre }}</td>
+                    <td>{{ cliente.email }}</td>
+                    <td>{{ cliente.telefono }}</td>
+                    <td>{{ cliente.direccion }}</td>
+                    <td>{{ cliente.empresa }}</td>
+                    <td>{{ cliente.persona_contacto }}</td>
+                    <td>
+                        {% if cliente.tipo == '1' %}
+                            Persona física
+                        {% elif cliente.tipo == '2' %}
+                            Persona moral
+                        {% else %}
+                            {{ cliente.tipo }}
+                        {% endif %}
+                    </td>
+                    <td>{{ cliente.rfc }}</td>
+                    <td>{{ cliente.notas }}</td>
+                    <td class="text-center">
+                        <button
+                            class="btn btn-primary btn-sm"
+                            data-bs-toggle="modal"
+                            data-bs-target="#editarClienteModal"
+                            data-id="{{ cliente.cliente_id }}"
+                            data-nombre="{{ cliente.nombre }}"
+                            data-email="{{ cliente.email }}"
+                            data-telefono="{{ cliente.telefono }}"
+                            data-direccion="{{ cliente.direccion }}"
+                            data-empresa="{{ cliente.empresa }}"
+                            data-persona_contacto="{{ cliente.persona_contacto }}"
+                            data-tipo="{{ cliente.tipo }}"
+                            data-rfc="{{ cliente.rfc }}"
+                            data-notas="{{ cliente.notas|default:'' }}"
+                        >
+                            Editar
+                        </button>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="11" class="text-center">No hay clientes registrados.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+
+<!-- Modal Editar Cliente -->
+<div class="modal fade" id="editarClienteModal" tabindex="-1" aria-labelledby="editarClienteLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-container-form">
+            <form id="formEditarCliente" method="post" action="{% url 'editar_cliente' %}">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="title" id="editarClienteLabel">Editar Cliente</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="cliente_id" id="editarClienteId">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Nombre completo</label>
+                                <input type="text" class="form-control" name="nombre" id="editarNombre" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Tipo de cliente</label>
+                                <select class="form-control" name="tipo" id="editarTipo" required>
+                                    <option value="1">Persona Física</option>
+                                    <option value="2">Persona Moral</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">RFC</label>
+                                <input type="text" class="form-control" name="rfc" id="editarRfc" maxlength="13"
+                                       pattern="[A-ZÑ&]{4}\d{6}[A-Z0-9]{3}"
+                                       title="4 letras, 6 números, 3 caracteres alfanuméricos. Ej: ABCD123456XYZ"
+                                       required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Persona de contacto</label>
+                                <input type="text" class="form-control" name="persona_contacto" id="editarPersonaContacto">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Email</label>
+                                <input type="email" class="form-control" name="email" id="editarEmail" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Teléfono</label>
+                                <input type="tel" class="form-control" name="telefono" id="editarTelefono"
+                                       maxlength="10" pattern="\d{10}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Dirección</label>
+                                <input type="text" class="form-control" name="direccion" id="editarDireccion" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Empresa</label>
+                                <input type="text" class="form-control" name="empresa" id="editarEmpresa">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Notas</label>
+                                <textarea class="form-control" name="notas" id="editarNotas" rows="2"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Script para llenar el modal -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var editarClienteModal = document.getElementById('editarClienteModal');
+    editarClienteModal.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget;
+
+        document.getElementById('editarClienteId').value = button.getAttribute('data-id');
+        document.getElementById('editarNombre').value = button.getAttribute('data-nombre');
+        document.getElementById('editarEmail').value = button.getAttribute('data-email');
+        document.getElementById('editarTelefono').value = button.getAttribute('data-telefono');
+        document.getElementById('editarDireccion').value = button.getAttribute('data-direccion');
+        document.getElementById('editarEmpresa').value = button.getAttribute('data-empresa');
+        document.getElementById('editarPersonaContacto').value = button.getAttribute('data-persona_contacto');
+        document.getElementById('editarTipo').value = button.getAttribute('data-tipo');
+        document.getElementById('editarRfc').value = button.getAttribute('data-rfc');
+        document.getElementById('editarNotas').value = button.getAttribute('data-notas') || '';
+    });
+});
+</script>
+{% endblock %}

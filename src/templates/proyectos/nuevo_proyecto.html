@@ -1,0 +1,307 @@
+{% extends "proyectos/proyectos.html" %}
+{% block title %} Nuevo Proyecto {% endblock %}
+
+{% block proyectos_content %}
+<section>
+    <h1 class="title">Detalles del proyecto</h1>
+    <form id="projectForm" method="post" autocomplete="off">
+        {% csrf_token %}
+        <div class="form-container">
+            <div class="row">
+                <div class="col-md-6">
+                    <!-- Nombre del Proyecto -->
+                    <div class="mb-3">
+                        <label for="projectName" class="form-label">Nombre del Proyecto</label>
+                        <input type="text" class="form-control" id="projectName" name="nombre" required>
+                    </div>
+                    <!-- Tipo de Proyecto -->
+                    <div class="mb-3">
+                        <label for="tipoProyecto" class="form-label">Tipo de Proyecto</label>
+                        <input type="text" class="form-control" id="tipoProyecto" name="tipo_proyecto" required>
+                    </div>
+                    <!-- Cliente -->
+                    <div class="mb-3">
+                        <label for="clientId" class="form-label">Cliente</label>
+                        <select class="form-control" id="clientId" name="cliente_id" required>
+                            <option value="">Seleccione un cliente...</option>
+                            {% for cliente in clientes %}
+                                <option value="{{ cliente.cliente_id }}">{{ cliente.nombre }} ({{ cliente.email }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <!-- Fecha de Inicio -->
+                    <div class="mb-3">
+                        <label for="startDate" class="form-label">Fecha de Inicio</label>
+                        <input type="date" class="form-control" id="startDate" name="fecha_inicio" required>
+                    </div>
+                    <!-- Fecha Fin -->
+                    <div class="mb-3">
+                        <label for="endDate" class="form-label">Fecha Fin</label>
+                        <input type="date" class="form-control" id="endDate" name="fecha_fin">
+                    </div>
+                    <!-- Sector -->
+                    <div class="mb-3">
+                        <label for="sector" class="form-label">Sector</label>
+                        <input type="text" class="form-control" id="sector" name="sector" required>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <!-- Costo base -->
+                    <div class="mb-3">
+                        <label for="baseCost" class="form-label">Costo base</label>
+                        <input type="number" step="0.01" class="form-control" id="baseCost" name="costo_base" required>
+                    </div>
+                    <!-- Tarifa (%) -->
+                    <div class="mb-3">
+                        <label for="ratePercent" class="form-label">Tarifa (%)</label>
+                        <input type="number" step="0.01" class="form-control" id="ratePercent" name="tarifa_porcentaje" required>
+                    </div>
+                    <!-- Descripción -->
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Descripción</label>
+                        <textarea class="form-control" id="description" name="descripcion" required></textarea>
+                    </div>
+                    <!-- Nota -->
+                    <div class="mb-3">
+                        <label for="note" class="form-label">Nota</label>
+                        <textarea class="form-control" id="note" name="nota"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================== -->
+        <!-- Sección para agregar trámites -->
+        <h1 class="title">Agregar trámites al proyecto</h1>
+        <div class="form-container">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label for="procedureName" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="procedureName">
+                    </div>
+                    <div class="mb-3">
+                        <label for="procedureDescription" class="form-label">Descripción</label>
+                        <input type="text" class="form-control" id="procedureDescription">
+                    </div>
+                    <div class="mb-3">
+                        <label for="procedureBaseCost" class="form-label">Costo base</label>
+                        <input type="number" step="0.01" class="form-control" id="procedureBaseCost">
+                    </div>
+                    <div class="mb-3">
+                        <label for="procedureRate" class="form-label">Tarifa (%)</label>
+                        <input type="number" step="0.01" class="form-control" id="procedureRate">
+                    </div>
+                    <div class="mb-3">
+                        <label for="procedureTotal" class="form-label">Total trámite</label>
+                        <input type="number" step="0.01" class="form-control" id="procedureTotal">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label for="procedureDuration" class="form-label">Duración estimada</label>
+                        <input type="text" class="form-control" id="procedureDuration">
+                    </div>
+                    <div class="mb-3">
+                        <label for="procedureTime" class="form-label">Tiempo de resolución</label>
+                        <input type="text" class="form-control" id="procedureTime">
+                    </div>
+                    <div class="mb-3">
+                        <label for="procedureDependencia" class="form-label">Dependencia</label>
+                        <input type="text" class="form-control" id="procedureDependencia">
+                    </div>
+                    <div class="mb-3">
+                        <label for="procedureResponsable" class="form-label">Responsable</label>
+                        <input type="text" class="form-control" id="procedureResponsable">
+                    </div>
+                    <div class="mb-3">
+                        <label for="procedureEstatus" class="form-label">Estatus</label>
+                        <input type="text" class="form-control" id="procedureEstatus">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label for="procedureDocs" class="form-label">Documentos requeridos</label>
+                        <input type="text" class="form-control" id="procedureDocs">
+                    </div>
+                    <div class="mb-3">
+                        <label for="procedureObservaciones" class="form-label">Observaciones</label>
+                        <input type="text" class="form-control" id="procedureObservaciones">
+                    </div>
+                    <div class="mb-3">
+                        <label for="procedureStartDate" class="form-label">Fecha de inicio</label>
+                        <input type="date" class="form-control" id="procedureStartDate">
+                    </div>
+                    <div class="mb-3">
+                        <label for="procedureEndDate" class="form-label">Fecha fin</label>
+                        <input type="date" class="form-control" id="procedureEndDate">
+                    </div>
+                    <div class="mb-3 d-flex justify-content-end">
+                        <button type="button" class="btn btn-primary" onclick="agregarTramite()">Agregar trámite</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabla de trámites agregados -->
+        <h1 class="title">Previsualización final del proyecto</h1>
+        <div class="form-container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="mb-3">
+                        <label class="form-label">Trámites agregados</label>
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Descripción</th>
+                                    <th>Costo base</th>
+                                    <th>Tarifa (%)</th>
+                                    <th>Total</th>
+                                    <th>Duración</th>
+                                    <th>Resolución</th>
+                                    <th>Dependencia</th>
+                                    <th>Responsable</th>
+                                    <th>Estatus</th>
+                                    <th>Documentos</th>
+                                    <th>Observaciones</th>
+                                    <th>Inicio</th>
+                                    <th>Fin</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody id="tablaTramites">
+                                <!-- JS agrega aquí -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <input type="hidden" id="tramites_json" name="tramites_json">
+
+        <div class="d-flex justify-content-end gap-2">
+            <button type="button" class="btn btn-primary" id="btnGuardar">Guardar</button>
+            <button type="reset" class="btn btn-secondary">Cancelar</button>
+        </div>
+    </form>
+</section>
+
+<!-- Modal de Confirmación -->
+<div class="modal fade" id="modalConfirmacion" tabindex="-1" aria-labelledby="modalConfirmLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalConfirmLabel">Confirmar guardado</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body" id="modalConfirmTexto">
+        ¿Estás seguro de guardar el proyecto?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary" id="btnConfirmarGuardar">Sí, guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+let tramites = [];
+
+function agregarTramite() {
+    let t = {
+        nombre: document.getElementById('procedureName').value,
+        descripcion: document.getElementById('procedureDescription').value,
+        costo_base: document.getElementById('procedureBaseCost').value,
+        tarifa_porcentaje: document.getElementById('procedureRate').value,
+        total_tramite: document.getElementById('procedureTotal').value,
+        duracion_estimada: document.getElementById('procedureDuration').value,
+        tiempo_resolucion: document.getElementById('procedureTime').value,
+        dependencia: document.getElementById('procedureDependencia').value,
+        responsable_dependencia: document.getElementById('procedureResponsable').value,
+        estatus: document.getElementById('procedureEstatus').value,
+        documentos_requeridos: document.getElementById('procedureDocs').value,
+        observaciones: document.getElementById('procedureObservaciones').value,
+        fecha_inicio: document.getElementById('procedureStartDate').value,
+        fecha_fin: document.getElementById('procedureEndDate').value
+    };
+    tramites.push(t);
+    renderTramites();
+    document.getElementById('procedureName').value = '';
+    document.getElementById('procedureDescription').value = '';
+    document.getElementById('procedureBaseCost').value = '';
+    document.getElementById('procedureRate').value = '';
+    document.getElementById('procedureTotal').value = '';
+    document.getElementById('procedureDuration').value = '';
+    document.getElementById('procedureTime').value = '';
+    document.getElementById('procedureDependencia').value = '';
+    document.getElementById('procedureResponsable').value = '';
+    document.getElementById('procedureEstatus').value = '';
+    document.getElementById('procedureDocs').value = '';
+    document.getElementById('procedureObservaciones').value = '';
+    document.getElementById('procedureStartDate').value = '';
+    document.getElementById('procedureEndDate').value = '';
+}
+
+function renderTramites() {
+    let tbody = document.getElementById('tablaTramites');
+    tbody.innerHTML = '';
+    tramites.forEach((t, idx) => {
+        tbody.innerHTML += `
+            <tr>
+                <td>${t.nombre}</td>
+                <td>${t.descripcion}</td>
+                <td>${t.costo_base}</td>
+                <td>${t.tarifa_porcentaje}</td>
+                <td>${t.total_tramite}</td>
+                <td>${t.duracion_estimada}</td>
+                <td>${t.tiempo_resolucion}</td>
+                <td>${t.dependencia}</td>
+                <td>${t.responsable_dependencia}</td>
+                <td>${t.estatus}</td>
+                <td>${t.documentos_requeridos}</td>
+                <td>${t.observaciones}</td>
+                <td>${t.fecha_inicio}</td>
+                <td>${t.fecha_fin}</td>
+                <td class="text-center">
+                    <button type="button" class="btn btn-danger btn-sm" onclick="eliminarTramite(${idx})">Eliminar</button>
+                </td>
+            </tr>
+        `;
+    });
+    document.getElementById('tramites_json').value = JSON.stringify(tramites);
+}
+
+function eliminarTramite(idx) {
+    tramites.splice(idx, 1);
+    renderTramites();
+}
+
+// Manejo del modal de confirmación al guardar
+let formPendienteSubmit = false;
+document.getElementById('btnGuardar').addEventListener('click', function(){
+    // Mensaje diferente si hay o no trámites
+    let modalTexto = tramites.length === 0
+        ? "¿Estás seguro de registrar el proyecto SIN ningún trámite?"
+        : "¿Estás seguro de guardar el proyecto?";
+    document.getElementById('modalConfirmTexto').innerText = modalTexto;
+
+    // Mostramos el modal
+    let modal = new bootstrap.Modal(document.getElementById('modalConfirmacion'));
+    modal.show();
+
+    // Guardamos una bandera para saber que está listo para submit (no submit real todavía)
+    formPendienteSubmit = true;
+});
+
+document.getElementById('btnConfirmarGuardar').addEventListener('click', function(){
+    // Preparamos los tramites JSON antes de enviar
+    document.getElementById('tramites_json').value = JSON.stringify(tramites);
+    // Ahora sí, enviamos el formulario real
+    document.getElementById('projectForm').submit();
+});
+
+</script>
+{% endblock %}

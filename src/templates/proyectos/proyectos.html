@@ -1,0 +1,97 @@
+{% extends "dashboard.html" %}
+
+{% block title %}Proyectos{% endblock %}
+
+{% block content %}
+    <div class="mt-4">
+        <ul class="nav-menu" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <a href="{% url 'proyectos' %}" class="nav-link d-flex align-items-center gap-2 {% if tab_activa == 'proyectos' %}active{% endif %}" id="home-tab" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="{% if tab_activa == 'proyectos' %}true{% else %}false{% endif %}">
+                    <i class="fas fa-briefcase"></i> Proyectos
+                </a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a href="{% url 'lista_proyectos' %}" class="nav-link d-flex align-items-center gap-2 {% if tab_activa == 'lista_proyectos' %}active{% endif %}" id="profile-tab" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="{% if tab_activa == 'lista_proyectos' %}true{% else %}false{% endif %}">
+                    <i class="fas fa-list-alt"></i> Lista de Proyectos
+                </a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a href="{% url 'nuevo_proyecto' %}" class="nav-link d-flex align-items-center gap-2 {% if tab_activa == 'nuevo_proyecto' %}active{% endif %}" id="contact-tab" type="button" role="tab" aria-controls="contact-tab-pane" aria-selected="{% if tab_activa == 'nuevo_proyecto' %}true{% else %}false{% endif %}">
+                    <i class="fas fa-plus-circle"></i> Nuevo Proyecto
+                </a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a href="{% url 'detalles' %}" class="nav-link d-flex align-items-center gap-2 disabled {% if tab_activa == 'detalles' %}active{% endif %}" id="disabled-tab" type="button" role="tab" aria-controls="disabled-tab-pane" aria-selected="{% if tab_activa == 'detalles' %}true{% else %}false{% endif %}">
+                    <i class="fas fa-info-circle"></i> Detalles de Proyecto
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="content-wrapper mt-4">
+        {% block proyectos_content %}
+            <!-- Dashboard -->
+            <section class="mb-5">
+                <div class="row g-4 justify-content-center">
+                    <!-- Proyectos Activos -->
+                    <div class="col-lg-3">
+                        <div class="dashboard-card">
+                            <div class="dashboard-body">
+                                <div class="dashboard-title" id="kpiProyectosActivos">24</div>
+                                <div class="subtitle">Proyectos Activos</div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Ingresos Totales -->
+                    <div class="col-lg-3">
+                        <div class="dashboard-card">
+                            <div class="dashboard-body">
+                                <div class="dashboard-title" id="kpiIngresosTotales">$156,000</div>
+                                <div class="subtitle">Ingresos Totales</div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Total Cobrado -->
+                    <div class="col-lg-3">
+                        <div class="dashboard-card">
+                            <div class="dashboard-body">
+                                <div class="dashboard-title" id="kpiTotalCobrado">$12,000</div>
+                                <div class="subtitle">Total Cobrado</div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Proyectos Completados -->
+                    <div class="col-lg-3">
+                        <div class="dashboard-card">
+                            <div class="dashboard-body">
+                                <div class="dashboard-title" id="kpiProyectosCompletados">89%</div>
+                                <div class="subtitle">Proyectos Completados</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- Dashboard de Gráficos -->
+            <section class="mb-5">
+                <div class="row justify-content-center">
+                    <div class="col-md-6 mb-4">
+                        <div class="graphic-card">
+                            <div class="graphic-body">
+                                <h5 class="subtitle">Estado de Proyectos</h5>
+                                <canvas id="chartEstadoProyectos"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="graphic-card">
+                            <div class="graphic-body">
+                                <h5 class="subtitle">Ingresos por Proyecto</h5>
+                                <canvas id="chartIngresosProyectos"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        {% endblock %}
+   </div>
+</div>
+{% endblock %}

@@ -1,0 +1,182 @@
+
+.content-wrapper{
+    width: 90%;
+    margin: auto;
+    padding: 10px;
+}
+.subtitle{
+    font-size: 1.25rem;
+    color: #1E1E1E;
+    font-weight: bold;
+}
+body.dark-mode .subtitle{
+    color: #FFFFFF;
+}
+.title{
+    font-size: 2rem;
+    color: #1E1E1E;
+    font-weight: bold;
+}
+body.dark-mode .title{
+    color: #FFFFFF;
+}
+
+.nav-menu{
+    width: 90%;
+    margin: auto;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 12px;
+    list-style: none;
+    padding: 10px;
+    background-color: #4F5D61;
+    color: #E5E8E8;
+    font-weight: bold;
+}
+.nav-menu li :hover{
+    color:#FFFFFF;
+}
+body.dark-mode .nav-menu{
+    background-color: #1C1C1C;
+}
+
+.dashboard-card {
+    background-color: #FFFFFF;
+    display: flex;
+    justify-content: center;    
+    align-items: center;        
+    padding: 15px;
+    height: 150px;
+    text-align: center;
+    border-radius: 10px;
+    border: 1px #E5E8E8 solid;
+    box-shadow: 0 4px 16px 0 rgba(0,0,0,0.4);
+}
+.dashboard-body {
+    display: flex;
+    flex-direction: column;     
+    align-items: center;        
+    justify-content: center;   
+    text-align: center;
+    width: 100%;                
+    height: 100%;              
+}
+.dashboard-title{
+    font-size: 3.5rem;
+    font-weight: bold;
+    color: #4F5D61;
+}
+.graphic-card {
+    background-color: #FFFFFF;
+    display: flex;
+    justify-content: center;    
+    align-items: center;        
+    padding: 15px;
+    text-align: center;
+    border-radius: 10px;
+    border: 1px #E5E8E8 solid;
+    box-shadow: 0 4px 16px 0 rgba(0,0,0,0.4);
+}
+.graphic-body {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;     
+    align-items: center;        
+    justify-content: center;   
+    text-align: center;
+    width: 100%;                
+    max-height: 450px;          
+}
+.graphic{
+    width: 100%;
+    max-width: 100%;
+    height: 450px;
+}
+body.dark-mode .dashboard-card{
+    background-color: #1C1C1C;
+    border: 1px #3C3C3C solid;
+    box-shadow: 0 4px 16px 0 rgb(255, 255, 255, 0.4);
+}
+body.dark-mode .graphic-card{
+    background-color: #1C1C1C;
+    border: 1px #3C3C3C solid;
+    box-shadow: 0 4px 16px 0 rgb(255, 255, 255, 0.4);
+}
+body.dark-mode .dashboard-title{
+    color: #E5E8E8;
+}
+
+.form-container {
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    border: 1px #E5E8E8 solid;
+    box-shadow: 0 4px 16px 0 rgba(0,0,0,0.4);
+    padding: 30px;
+    margin: 20px auto;
+    gap: 2rem;
+    flex-direction: column;
+}
+
+.form-control {
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    box-shadow: none;
+    margin-bottom: 8px;
+    margin-right: 20px;
+    color: #3C3C3C;
+}
+.form-label{
+    color: #1C1C1C;
+    font-weight: bold;
+    font-size: 1rem;
+}
+input.form-control::placeholder {
+    color: #3C3C3C !important;
+    opacity: 1;
+}
+body.dark-mode input.form-control::placeholder{
+    color: #E5E8E8 !important;
+}
+textarea.form-control::placeholder {
+    color: #3C3C3C !important;
+    opacity: 1;
+}
+body.dark-mode textarea.form-control::placeholder{
+    color: #E5E8E8 !important;
+}
+body.dark-mode .form-container{
+    background-color: #1C1C1C;
+    border: 1px #3C3C3C solid;
+    box-shadow: 0 4px 16px 0 rgb(255, 255, 255, 0.4);
+}
+body.dark-mode .form-control{
+    color: #E5E8E8;
+    background-color: #1C1C1C;
+    border: 1px #3C3C3C solid;
+    box-shadow: 0 4px 16px 0 rgb(255, 255, 255, 0.1);
+}
+body.dark-mode .form-label{
+    color: #E5E8E8;
+}
+.modal-container-form {
+    background-color: #FAFAF9;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    border: 1px #E5E8E8 solid;
+    box-shadow: 0 4px 16px 0 rgba(0,0,0,0.4);
+    padding: 30px;
+    margin: 20px auto;
+    gap: 2rem;
+    flex-direction: column;
+}
+body.dark-mode .modal-container-form{
+    background-color: #1C1C1C;
+    border: 1px #3C3C3C solid;
+    box-shadow: 0 4px 16px 0 rgb(255, 255, 255, 0.4);
+}
