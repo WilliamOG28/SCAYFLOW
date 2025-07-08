@@ -9,17 +9,14 @@
         <div class="form-container">
             <div class="row">
                 <div class="col-md-6">
-                    <!-- Nombre del Proyecto -->
                     <div class="mb-3">
                         <label for="projectName" class="form-label">Nombre del Proyecto</label>
                         <input type="text" class="form-control" id="projectName" name="nombre" required>
                     </div>
-                    <!-- Tipo de Proyecto -->
                     <div class="mb-3">
                         <label for="tipoProyecto" class="form-label">Tipo de Proyecto</label>
                         <input type="text" class="form-control" id="tipoProyecto" name="tipo_proyecto" required>
                     </div>
-                    <!-- Cliente -->
                     <div class="mb-3">
                         <label for="clientId" class="form-label">Cliente</label>
                         <select class="form-control" id="clientId" name="cliente_id" required>
@@ -29,39 +26,32 @@
                             {% endfor %}
                         </select>
                     </div>
-                    <!-- Fecha de Inicio -->
                     <div class="mb-3">
                         <label for="startDate" class="form-label">Fecha de Inicio</label>
                         <input type="date" class="form-control" id="startDate" name="fecha_inicio" required>
                     </div>
-                    <!-- Fecha Fin -->
                     <div class="mb-3">
                         <label for="endDate" class="form-label">Fecha Fin</label>
                         <input type="date" class="form-control" id="endDate" name="fecha_fin">
                     </div>
-                    <!-- Sector -->
                     <div class="mb-3">
                         <label for="sector" class="form-label">Sector</label>
                         <input type="text" class="form-control" id="sector" name="sector" required>
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <!-- Costo base -->
                     <div class="mb-3">
                         <label for="baseCost" class="form-label">Costo base</label>
                         <input type="number" step="0.01" class="form-control" id="baseCost" name="costo_base" required>
                     </div>
-                    <!-- Tarifa (%) -->
                     <div class="mb-3">
                         <label for="ratePercent" class="form-label">Tarifa (%)</label>
                         <input type="number" step="0.01" class="form-control" id="ratePercent" name="tarifa_porcentaje" required>
                     </div>
-                    <!-- Descripción -->
                     <div class="mb-3">
                         <label for="description" class="form-label">Descripción</label>
                         <textarea class="form-control" id="description" name="descripcion" required></textarea>
                     </div>
-                    <!-- Nota -->
                     <div class="mb-3">
                         <label for="note" class="form-label">Nota</label>
                         <textarea class="form-control" id="note" name="nota"></textarea>
@@ -70,8 +60,6 @@
             </div>
         </div>
 
-        <!-- ============================== -->
-        <!-- Sección para agregar trámites -->
         <h1 class="title">Agregar trámites al proyecto</h1>
         <div class="form-container">
             <div class="row">
@@ -135,41 +123,37 @@
             </div>
         </div>
 
-        <!-- Tabla de trámites agregados -->
         <h1 class="title">Previsualización final del proyecto</h1>
         <div class="form-container">
             <!-- PREVISUALIZACIÓN RESUMEN -->
             <div id="previewProyecto" class="card-preview">
-                <!-- Aquí va la previsualización generada por JS -->
+                <!-- JS inserta aquí el resumen -->
             </div>
-            <hr>
             <div class="row">
                 <div class="col-md-12">
-                    <div>
-                        <h2 class="label ">Trámites agregados</h2>
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Nombre</th>
-                                    <th>Descripción</th>
-                                    <th>Costo base</th>
-                                    <th>Tarifa (%)</th>
-                                    <th>Total</th>
-                                    <th>Duración</th>
-                                    <th>Resolución</th>
-                                    <th>Dependencia</th>
-                                    <th>Responsable</th>
-                                    <th>Documentos</th>
-                                    <th>Inicio</th>
-                                    <th>Fin</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody id="tablaTramites">
-                                <!-- JS agrega aquí -->
-                            </tbody>
-                        </table>
-                    </div>
+                    <h2 class="label">Trámites agregados</h2>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Descripción</th>
+                                <th>Costo base</th>
+                                <th>Tarifa (%)</th>
+                                <th>Total</th>
+                                <th>Duración</th>
+                                <th>Resolución</th>
+                                <th>Dependencia</th>
+                                <th>Responsable</th>
+                                <th>Documentos</th>
+                                <th>Inicio</th>
+                                <th>Fin</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablaTramites">
+                            <!-- JS agrega aquí -->
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -205,7 +189,6 @@
 <script>
 let tramites = [];
 
-// Agregar trámite
 function agregarTramite() {
     let t = {
         nombre: document.getElementById('procedureName').value,
@@ -216,7 +199,7 @@ function agregarTramite() {
         tiempo_resolucion: parseInt(document.getElementById('procedureTime').value || 0),
         dependencia: document.getElementById('procedureDependencia').value,
         responsable_dependencia: document.getElementById('procedureResponsable').value,
-        estatus: "1",  // Default 1
+        estatus: "1",
         documentos_requeridos: document.getElementById('procedureDocs').value,
         observaciones: document.getElementById('procedureObservaciones').value,
         fecha_inicio: document.getElementById('procedureStartDate').value,
@@ -244,13 +227,16 @@ function renderTramites() {
     let tbody = document.getElementById('tablaTramites');
     tbody.innerHTML = '';
     tramites.forEach((t, idx) => {
+        const base = parseFloat(t.costo_base) || 0;
+        const porcentaje = parseFloat(t.tarifa_porcentaje) || 0;
+        const monto_tarifa = base * (porcentaje / 100);
         tbody.innerHTML += `
             <tr>
                 <td>${t.nombre}</td>
                 <td>${t.descripcion}</td>
-                <td>${t.costo_base}</td>
-                <td>${t.tarifa_porcentaje}</td>
-                <td>${(parseFloat(t.costo_base || 0) + parseFloat(t.tarifa_porcentaje || 0)).toLocaleString(undefined,{minimumFractionDigits:2})}</td>
+                <td>${base.toLocaleString(undefined, {minimumFractionDigits:2})}</td>
+                <td>${porcentaje}%<br><span class="text-success">$${monto_tarifa.toLocaleString(undefined, {minimumFractionDigits:2})}</span></td>
+                <td>${(base + monto_tarifa).toLocaleString(undefined, {minimumFractionDigits:2})}</td>
                 <td>${t.duracion_estimada}</td>
                 <td>${t.tiempo_resolucion}</td>
                 <td>${t.dependencia}</td>
@@ -267,16 +253,7 @@ function renderTramites() {
     document.getElementById('tramites_json').value = JSON.stringify(tramites);
 }
 
-// Eliminar trámite
-function eliminarTramite(idx) {
-    tramites.splice(idx, 1);
-    renderTramites();
-    renderPreviewProyecto();
-}
-
-// ==== PREVISUALIZACIÓN DE PROYECTO ==== 
 function renderPreviewProyecto() {
-    // Datos generales
     const nombre = document.getElementById('projectName').value || '-';
     const tipo = document.getElementById('tipoProyecto').value || '-';
     const clienteSelect = document.getElementById('clientId');
@@ -287,32 +264,34 @@ function renderPreviewProyecto() {
     const descripcion = document.getElementById('description').value || '-';
     const notas = document.getElementById('note').value || '-';
 
-    // Costos proyecto
     const costo_base = parseFloat(document.getElementById('baseCost').value) || 0;
-    const tarifa = parseFloat(document.getElementById('ratePercent').value) || 0;
-    const tarifa_monto = costo_base * (tarifa / 100);
+    const tarifa_percent = parseFloat(document.getElementById('ratePercent').value) || 0;
+    const utilidad_proyecto = costo_base * (tarifa_percent / 100); // solo del proyecto
+
+    const tarifa_monto = utilidad_proyecto; // para claridad
     const iva_proy = (costo_base + tarifa_monto) * 0.16;
     const subtotal_proy = costo_base + tarifa_monto + iva_proy;
 
-    // Trámites
     let costo_tramites = 0, tarifas_tramites = 0, iva_tramites = 0;
     tramites.forEach(t => {
         const base = parseFloat(t.costo_base) || 0;
-        const tar = parseFloat(t.tarifa_porcentaje) || 0;
+        const porcentaje = parseFloat(t.tarifa_porcentaje) || 0;
+        const monto_tarifa = base * (porcentaje / 100);
         costo_tramites += base;
-        tarifas_tramites += tar;
-        iva_tramites += (base + tar) * 0.16;
+        tarifas_tramites += monto_tarifa;
+        iva_tramites += (base + monto_tarifa) * 0.16;
     });
     const subtotal_tramites = costo_tramites + tarifas_tramites + iva_tramites;
-
-    // Gran total
     const gran_total = subtotal_proy + subtotal_tramites;
+
+    // Utilidad total (proyecto + trámites)
+    const utilidad_total = utilidad_proyecto + tarifas_tramites;
 
     document.getElementById('previewProyecto').innerHTML = `
     <div class="row">
         <div class="col-md-3">
             <h2 class="subtitle-preview">DATOS GENERALES</h2>
-            <ul class="list-unstyled">
+            <ul class="list-unstyled mb-2">
                 <li class="label"><strong>Nombre:</strong> ${nombre}</li>
                 <li class="label"><strong>Tipo:</strong> ${tipo}</li>
                 <li class="label"><strong>Cliente:</strong> ${cliente}</li>
@@ -325,35 +304,33 @@ function renderPreviewProyecto() {
         </div>
         <div class="col-md-3">
             <h2 class="subtitle-preview">COSTOS PROYECTO</h2>
-            <ul class="list-unstyled">
+            <ul class="list-unstyled mb-2">
                 <li class="label">Costo Base: $${costo_base.toLocaleString(undefined, {minimumFractionDigits:2})}</li>
-                <li class="label">Tarifa: $${tarifa_monto.toLocaleString(undefined, {minimumFractionDigits:2})} (${tarifa}%)</li>
+                <li class="label">Tarifa: $${tarifa_monto.toLocaleString(undefined, {minimumFractionDigits:2})}</li>
                 <li class="label">IVA: $${iva_proy.toLocaleString(undefined, {minimumFractionDigits:2})}</li>
                 <li class="label"><strong>Subtotal Proyecto:</strong> $${subtotal_proy.toLocaleString(undefined, {minimumFractionDigits:2})}</li>
             </ul>
         </div>
         <div class="col-md-3">
             <h2 class="subtitle-preview">COSTOS TRÁMITES</h2>
-            <ul class="list-unstyled">
+            <ul class="list-unstyled mb-2">
                 <li class="label">Costo Base: $${costo_tramites.toLocaleString(undefined, {minimumFractionDigits:2})}</li>
-                <li class="label">Tarifas: $${tarifas_tramites.toLocaleString(undefined, {minimumFractionDigits:2})} (${tarifa}%)</li>
+                <li class="label">Tarifas: $${tarifas_tramites.toLocaleString(undefined, {minimumFractionDigits:2})}</li>
                 <li class="label">IVA: $${iva_tramites.toLocaleString(undefined, {minimumFractionDigits:2})}</li>
                 <li class="label"><strong>Subtotal Trámites:</strong> $${subtotal_tramites.toLocaleString(undefined, {minimumFractionDigits:2})}</li>
             </ul>
         </div>
         <div class="col-md-3">
             <h2 class="subtitle-preview">TOTALES FINALES</h2>
-            <ul class="list-unstyled">
-                <li class="label"><strong>Total:</strong> $${gran_total.toLocaleString(undefined, {minimumFractionDigits:2})}</li>
-                <li class="label"><strong>Total IVA:</strong> $${gran_total.toLocaleString(undefined, {minimumFractionDigits:2})}</li>
-                <li class="label"><strong>Total Utilidades:</strong> $${gran_total.toLocaleString(undefined, {minimumFractionDigits:2})}</li>
+            <ul class="list-unstyled mb-2">
+                <li class="label"><strong>Gran Total:</strong> $${gran_total.toLocaleString(undefined, {minimumFractionDigits:2})}</li>
+                <li class="label text-success"><strong>Utilidad Total:</strong> $${utilidad_total.toLocaleString(undefined, {minimumFractionDigits:2})}</li>
             </ul>
         </div>
     </div>
     `;
 }
 
-// Actualiza la previsualización en cada cambio de campos importantes
 document.querySelectorAll(
     "#projectName, #tipoProyecto, #clientId, #startDate, #endDate, #sector, #description, #note, #baseCost, #ratePercent"
 ).forEach(input => {
@@ -362,9 +339,8 @@ document.querySelectorAll(
 window.onload = function() {
     renderTramites();
     renderPreviewProyecto();
-}
+};
 
-// Modal de confirmación
 let formPendienteSubmit = false;
 document.getElementById('btnGuardar').addEventListener('click', function(){
     let modalTexto = tramites.length === 0

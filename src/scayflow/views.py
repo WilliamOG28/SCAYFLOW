@@ -59,6 +59,21 @@ def nuevo_proyecto(request):
                 fecha_inicio=t.get('fecha_inicio', None),
                 fecha_fin=fecha_fin_tramite,      # Puede ser null
             )
+        # Aquí fuerza recarga de los trámites (nuevo queryset SIEMPRE!)
+        tramites_db = Tramite.objects.filter(proyecto=proyecto)
+
+        # Ahora sí, sumar SÓLO SOBRE ESTE QUERYSET:
+        utilidad_tramites = 0
+        for tramite in tramites_db:
+            # ¡IMPORTANTE! Si por alguna razón sigue sin traerlo,
+            # fuerza el refresh desde base por cada trámite:
+            tramite.refresh_from_db()
+            utilidad_tramites += float(tramite.tarifa_monto or 0)
+
+        proyecto.refresh_from_db()  # Por si tarifa_monto de proyecto también es generated
+        utilidad_proyecto = float(proyecto.tarifa_monto or 0)
+        proyecto.utilidad_total = utilidad_proyecto + utilidad_tramites
+        proyecto.save(update_fields=['utilidad_total'])
         return redirect('lista_proyectos')
     else:
         clientes = Cliente.objects.all()

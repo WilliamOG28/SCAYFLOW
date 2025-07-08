@@ -39,6 +39,7 @@ class Proyecto(models.Model):
     fecha_inicio = models.DateField()
     fecha_fin = models.DateField()
     descripcion = models.TextField()
+    tarifa_monto = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, editable=False)
     sector = models.CharField(max_length=100)
     costo_base = models.DecimalField(max_digits=10, decimal_places=2)
     tarifa_porcentaje = models.DecimalField(max_digits=5, decimal_places=2)
@@ -53,7 +54,9 @@ class Proyecto(models.Model):
         max_digits=12, decimal_places=2, blank=True, null=True, editable=False
     )
     nota = models.TextField(blank=True, null=True)
-
+    utilidad_total = models.DecimalField(
+        max_digits=12, decimal_places=2, blank=True, null=True, editable=False
+    )
     def __str__(self):
         return self.nombre
 
@@ -65,6 +68,7 @@ class Tramite(models.Model):
     proyecto = models.ForeignKey(Proyecto, related_name='tramites', on_delete=models.CASCADE)
     nombre = models.CharField(max_length=255)
     descripcion = models.TextField()
+    tarifa_monto = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, editable=False)
     costo_base = models.DecimalField(max_digits=10, decimal_places=2)
     tarifa_porcentaje = models.DecimalField(max_digits=5, decimal_places=2)
     total_tramite = models.DecimalField(
