@@ -67,17 +67,23 @@ class Tramite(models.Model):
     descripcion = models.TextField()
     costo_base = models.DecimalField(max_digits=10, decimal_places=2)
     tarifa_porcentaje = models.DecimalField(max_digits=5, decimal_places=2)
-    total_tramite = models.DecimalField(max_digits=12, decimal_places=2)
-    duracion_estimada = models.CharField(max_length=50)
-    tiempo_resolucion = models.CharField(max_length=50)
+    total_tramite = models.DecimalField(
+        max_digits=12,
+        decimal_places=2,
+        editable=False,        # Importante
+        blank=True,
+        null=True
+    )
+    duracion_estimada = models.IntegerField()
+    tiempo_resolucion = models.IntegerField()
     dependencia = models.CharField(max_length=255)
-    responsable_dependecnia = models.CharField(max_length=255)
+    responsable_dependencia = models.CharField(max_length=255)
     estatus = models.CharField(max_length=50)
     documentos_requeridos = models.TextField()
     observaciones = models.TextField()
-    fecha_ultima_actualizacion = models.DateField()
+    fecha_ultima_actualizacion = models.DateField(null=True, blank=True)
     fecha_inicio = models.DateField()
-    fecha_fin = models.DateField()
+    fecha_fin = models.DateField(null=True, blank=True)
 
     def __str__(self):
         return self.nombre

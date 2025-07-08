@@ -25,7 +25,7 @@
                         <select class="form-control" id="clientId" name="cliente_id" required>
                             <option value="">Seleccione un cliente...</option>
                             {% for cliente in clientes %}
-                                <option value="{{ cliente.cliente_id }}">{{ cliente.nombre }} ({{ cliente.email }})</option>
+                                <option value="{{ cliente.cliente_id }}">{{ cliente.nombre }}</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -92,19 +92,15 @@
                         <label for="procedureRate" class="form-label">Tarifa (%)</label>
                         <input type="number" step="0.01" class="form-control" id="procedureRate">
                     </div>
-                    <div class="mb-3">
-                        <label for="procedureTotal" class="form-label">Total trámite</label>
-                        <input type="number" step="0.01" class="form-control" id="procedureTotal">
-                    </div>
                 </div>
                 <div class="col-md-4">
                     <div class="mb-3">
-                        <label for="procedureDuration" class="form-label">Duración estimada</label>
-                        <input type="text" class="form-control" id="procedureDuration">
+                        <label for="procedureDuration" class="form-label">Duración estimada (días)</label>
+                        <input type="number" class="form-control" id="procedureDuration">
                     </div>
                     <div class="mb-3">
-                        <label for="procedureTime" class="form-label">Tiempo de resolución</label>
-                        <input type="text" class="form-control" id="procedureTime">
+                        <label for="procedureTime" class="form-label">Tiempo de resolución (días)</label>
+                        <input type="number" class="form-control" id="procedureTime">
                     </div>
                     <div class="mb-3">
                         <label for="procedureDependencia" class="form-label">Dependencia</label>
@@ -113,10 +109,6 @@
                     <div class="mb-3">
                         <label for="procedureResponsable" class="form-label">Responsable</label>
                         <input type="text" class="form-control" id="procedureResponsable">
-                    </div>
-                    <div class="mb-3">
-                        <label for="procedureEstatus" class="form-label">Estatus</label>
-                        <input type="text" class="form-control" id="procedureEstatus">
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -146,10 +138,15 @@
         <!-- Tabla de trámites agregados -->
         <h1 class="title">Previsualización final del proyecto</h1>
         <div class="form-container">
+            <!-- PREVISUALIZACIÓN RESUMEN -->
+            <div id="previewProyecto" class="card-preview">
+                <!-- Aquí va la previsualización generada por JS -->
+            </div>
+            <hr>
             <div class="row">
                 <div class="col-md-12">
-                    <div class="mb-3">
-                        <label class="form-label">Trámites agregados</label>
+                    <div>
+                        <h2 class="label ">Trámites agregados</h2>
                         <table class="table table-striped">
                             <thead>
                                 <tr>
@@ -162,9 +159,7 @@
                                     <th>Resolución</th>
                                     <th>Dependencia</th>
                                     <th>Responsable</th>
-                                    <th>Estatus</th>
                                     <th>Documentos</th>
-                                    <th>Observaciones</th>
                                     <th>Inicio</th>
                                     <th>Fin</th>
                                     <th></th>
@@ -210,18 +205,18 @@
 <script>
 let tramites = [];
 
+// Agregar trámite
 function agregarTramite() {
     let t = {
         nombre: document.getElementById('procedureName').value,
         descripcion: document.getElementById('procedureDescription').value,
         costo_base: document.getElementById('procedureBaseCost').value,
         tarifa_porcentaje: document.getElementById('procedureRate').value,
-        total_tramite: document.getElementById('procedureTotal').value,
-        duracion_estimada: document.getElementById('procedureDuration').value,
-        tiempo_resolucion: document.getElementById('procedureTime').value,
+        duracion_estimada: parseInt(document.getElementById('procedureDuration').value || 0),
+        tiempo_resolucion: parseInt(document.getElementById('procedureTime').value || 0),
         dependencia: document.getElementById('procedureDependencia').value,
         responsable_dependencia: document.getElementById('procedureResponsable').value,
-        estatus: document.getElementById('procedureEstatus').value,
+        estatus: "1",  // Default 1
         documentos_requeridos: document.getElementById('procedureDocs').value,
         observaciones: document.getElementById('procedureObservaciones').value,
         fecha_inicio: document.getElementById('procedureStartDate').value,
@@ -229,16 +224,16 @@ function agregarTramite() {
     };
     tramites.push(t);
     renderTramites();
+    renderPreviewProyecto();
+    // Limpia campos
     document.getElementById('procedureName').value = '';
     document.getElementById('procedureDescription').value = '';
     document.getElementById('procedureBaseCost').value = '';
     document.getElementById('procedureRate').value = '';
-    document.getElementById('procedureTotal').value = '';
     document.getElementById('procedureDuration').value = '';
     document.getElementById('procedureTime').value = '';
     document.getElementById('procedureDependencia').value = '';
     document.getElementById('procedureResponsable').value = '';
-    document.getElementById('procedureEstatus').value = '';
     document.getElementById('procedureDocs').value = '';
     document.getElementById('procedureObservaciones').value = '';
     document.getElementById('procedureStartDate').value = '';
@@ -255,14 +250,12 @@ function renderTramites() {
                 <td>${t.descripcion}</td>
                 <td>${t.costo_base}</td>
                 <td>${t.tarifa_porcentaje}</td>
-                <td>${t.total_tramite}</td>
+                <td>${(parseFloat(t.costo_base || 0) + parseFloat(t.tarifa_porcentaje || 0)).toLocaleString(undefined,{minimumFractionDigits:2})}</td>
                 <td>${t.duracion_estimada}</td>
                 <td>${t.tiempo_resolucion}</td>
                 <td>${t.dependencia}</td>
                 <td>${t.responsable_dependencia}</td>
-                <td>${t.estatus}</td>
                 <td>${t.documentos_requeridos}</td>
-                <td>${t.observaciones}</td>
                 <td>${t.fecha_inicio}</td>
                 <td>${t.fecha_fin}</td>
                 <td class="text-center">
@@ -274,34 +267,119 @@ function renderTramites() {
     document.getElementById('tramites_json').value = JSON.stringify(tramites);
 }
 
+// Eliminar trámite
 function eliminarTramite(idx) {
     tramites.splice(idx, 1);
     renderTramites();
+    renderPreviewProyecto();
 }
 
-// Manejo del modal de confirmación al guardar
+// ==== PREVISUALIZACIÓN DE PROYECTO ==== 
+function renderPreviewProyecto() {
+    // Datos generales
+    const nombre = document.getElementById('projectName').value || '-';
+    const tipo = document.getElementById('tipoProyecto').value || '-';
+    const clienteSelect = document.getElementById('clientId');
+    const cliente = clienteSelect.options[clienteSelect.selectedIndex]?.text || '-';
+    const fecha_inicio = document.getElementById('startDate').value || '-';
+    const fecha_fin = document.getElementById('endDate').value || '-';
+    const sector = document.getElementById('sector').value || '-';
+    const descripcion = document.getElementById('description').value || '-';
+    const notas = document.getElementById('note').value || '-';
+
+    // Costos proyecto
+    const costo_base = parseFloat(document.getElementById('baseCost').value) || 0;
+    const tarifa = parseFloat(document.getElementById('ratePercent').value) || 0;
+    const tarifa_monto = costo_base * (tarifa / 100);
+    const iva_proy = (costo_base + tarifa_monto) * 0.16;
+    const subtotal_proy = costo_base + tarifa_monto + iva_proy;
+
+    // Trámites
+    let costo_tramites = 0, tarifas_tramites = 0, iva_tramites = 0;
+    tramites.forEach(t => {
+        const base = parseFloat(t.costo_base) || 0;
+        const tar = parseFloat(t.tarifa_porcentaje) || 0;
+        costo_tramites += base;
+        tarifas_tramites += tar;
+        iva_tramites += (base + tar) * 0.16;
+    });
+    const subtotal_tramites = costo_tramites + tarifas_tramites + iva_tramites;
+
+    // Gran total
+    const gran_total = subtotal_proy + subtotal_tramites;
+
+    document.getElementById('previewProyecto').innerHTML = `
+    <div class="row">
+        <div class="col-md-3">
+            <h2 class="subtitle-preview">DATOS GENERALES</h2>
+            <ul class="list-unstyled">
+                <li class="label"><strong>Nombre:</strong> ${nombre}</li>
+                <li class="label"><strong>Tipo:</strong> ${tipo}</li>
+                <li class="label"><strong>Cliente:</strong> ${cliente}</li>
+                <li class="label"><strong>Fecha Inicio:</strong> ${fecha_inicio}</li>
+                <li class="label"><strong>Fecha Fin:</strong> ${fecha_fin}</li>
+                <li class="label"><strong>Sector:</strong> ${sector}</li>
+                <li class="label"><strong>Descripción:</strong> ${descripcion}</li>
+                <li class="label"><strong>Notas:</strong> ${notas}</li>
+            </ul>
+        </div>
+        <div class="col-md-3">
+            <h2 class="subtitle-preview">COSTOS PROYECTO</h2>
+            <ul class="list-unstyled">
+                <li class="label">Costo Base: $${costo_base.toLocaleString(undefined, {minimumFractionDigits:2})}</li>
+                <li class="label">Tarifa: $${tarifa_monto.toLocaleString(undefined, {minimumFractionDigits:2})} (${tarifa}%)</li>
+                <li class="label">IVA: $${iva_proy.toLocaleString(undefined, {minimumFractionDigits:2})}</li>
+                <li class="label"><strong>Subtotal Proyecto:</strong> $${subtotal_proy.toLocaleString(undefined, {minimumFractionDigits:2})}</li>
+            </ul>
+        </div>
+        <div class="col-md-3">
+            <h2 class="subtitle-preview">COSTOS TRÁMITES</h2>
+            <ul class="list-unstyled">
+                <li class="label">Costo Base: $${costo_tramites.toLocaleString(undefined, {minimumFractionDigits:2})}</li>
+                <li class="label">Tarifas: $${tarifas_tramites.toLocaleString(undefined, {minimumFractionDigits:2})} (${tarifa}%)</li>
+                <li class="label">IVA: $${iva_tramites.toLocaleString(undefined, {minimumFractionDigits:2})}</li>
+                <li class="label"><strong>Subtotal Trámites:</strong> $${subtotal_tramites.toLocaleString(undefined, {minimumFractionDigits:2})}</li>
+            </ul>
+        </div>
+        <div class="col-md-3">
+            <h2 class="subtitle-preview">TOTALES FINALES</h2>
+            <ul class="list-unstyled">
+                <li class="label"><strong>Total:</strong> $${gran_total.toLocaleString(undefined, {minimumFractionDigits:2})}</li>
+                <li class="label"><strong>Total IVA:</strong> $${gran_total.toLocaleString(undefined, {minimumFractionDigits:2})}</li>
+                <li class="label"><strong>Total Utilidades:</strong> $${gran_total.toLocaleString(undefined, {minimumFractionDigits:2})}</li>
+            </ul>
+        </div>
+    </div>
+    `;
+}
+
+// Actualiza la previsualización en cada cambio de campos importantes
+document.querySelectorAll(
+    "#projectName, #tipoProyecto, #clientId, #startDate, #endDate, #sector, #description, #note, #baseCost, #ratePercent"
+).forEach(input => {
+    input.addEventListener("input", renderPreviewProyecto);
+});
+window.onload = function() {
+    renderTramites();
+    renderPreviewProyecto();
+}
+
+// Modal de confirmación
 let formPendienteSubmit = false;
 document.getElementById('btnGuardar').addEventListener('click', function(){
-    // Mensaje diferente si hay o no trámites
     let modalTexto = tramites.length === 0
         ? "¿Estás seguro de registrar el proyecto SIN ningún trámite?"
         : "¿Estás seguro de guardar el proyecto?";
     document.getElementById('modalConfirmTexto').innerText = modalTexto;
 
-    // Mostramos el modal
     let modal = new bootstrap.Modal(document.getElementById('modalConfirmacion'));
     modal.show();
 
-    // Guardamos una bandera para saber que está listo para submit (no submit real todavía)
     formPendienteSubmit = true;
 });
-
 document.getElementById('btnConfirmarGuardar').addEventListener('click', function(){
-    // Preparamos los tramites JSON antes de enviar
     document.getElementById('tramites_json').value = JSON.stringify(tramites);
-    // Ahora sí, enviamos el formulario real
     document.getElementById('projectForm').submit();
 });
-
 </script>
 {% endblock %}
