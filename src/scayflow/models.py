@@ -28,35 +28,34 @@ class Cliente(models.Model):
         return self.nombre
 
     class Meta:
-        db_table = 'clientes'  # <--- Aquí le dices a Django que use esa tabla
+        db_table = 'clientes'
 
 class Proyecto(models.Model):
     proyecto_id = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=255)
     tipo_proyecto = models.CharField(max_length=100)
-    cliente = models.ForeignKey('Cliente', on_delete=models.CASCADE)  # FK
+    cliente = models.ForeignKey('Cliente', on_delete=models.CASCADE)
     estado = models.CharField(max_length=50)
     fecha_inicio = models.DateField()
-    fecha_fin = models.DateField()
+    fecha_fin = models.DateField(null=True, blank=True)
     descripcion = models.TextField()
-    tarifa_monto = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, editable=False)
     sector = models.CharField(max_length=100)
     costo_base = models.DecimalField(max_digits=10, decimal_places=2)
     tarifa_porcentaje = models.DecimalField(max_digits=5, decimal_places=2)
-    tarifa_monto = models.DecimalField(
-        max_digits=10,
-        decimal_places=2,
-        blank=True,
-        null=True,
-        editable=False,   # <- esto es clave
-    )
-    total = models.DecimalField(
-        max_digits=12, decimal_places=2, blank=True, null=True, editable=False
-    )
+    tarifa_monto = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, editable=False)
+    iva_monto = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, editable=False)
+    total = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True, editable=False)
     nota = models.TextField(blank=True, null=True)
-    utilidad_total = models.DecimalField(
-        max_digits=12, decimal_places=2, blank=True, null=True, editable=False
-    )
+    utilidad_total = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True, editable=False)
+
+    @property
+    def total_pagado(self):
+        return sum(p.monto for p in self.pagos.all())
+
+    @property
+    def saldo_pendiente(self):
+        return (self.total or 0) - self.total_pagado
+    
     def __str__(self):
         return self.nombre
 
@@ -68,16 +67,11 @@ class Tramite(models.Model):
     proyecto = models.ForeignKey(Proyecto, related_name='tramites', on_delete=models.CASCADE)
     nombre = models.CharField(max_length=255)
     descripcion = models.TextField()
-    tarifa_monto = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, editable=False)
     costo_base = models.DecimalField(max_digits=10, decimal_places=2)
     tarifa_porcentaje = models.DecimalField(max_digits=5, decimal_places=2)
-    total_tramite = models.DecimalField(
-        max_digits=12,
-        decimal_places=2,
-        editable=False,        # Importante
-        blank=True,
-        null=True
-    )
+    tarifa_monto = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, editable=False)
+    iva_monto = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, editable=False)
+    total_tramite = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True, editable=False)
     duracion_estimada = models.IntegerField()
     tiempo_resolucion = models.IntegerField()
     dependencia = models.CharField(max_length=255)
@@ -89,8 +83,35 @@ class Tramite(models.Model):
     fecha_inicio = models.DateField()
     fecha_fin = models.DateField(null=True, blank=True)
 
+    @property
+    def total_pagado(self):
+        return sum(p.monto for p in self.pagos.all())
+
+    @property
+    def saldo_pendiente(self):
+        return (self.total_tramite or 0) - self.total_pagado
+    
     def __str__(self):
         return self.nombre
 
     class Meta:
         db_table = 'tramites'
+
+class Pago(models.Model):
+    pago_id = models.AutoField(primary_key=True)
+    proyecto = models.ForeignKey('Proyecto', on_delete=models.CASCADE, null=True, blank=True, related_name='pagos')
+    tramite = models.ForeignKey('Tramite', on_delete=models.CASCADE, null=True, blank=True, related_name='pagos')
+    monto = models.DecimalField(max_digits=12, decimal_places=2)
+    fecha = models.DateField()
+    metodo_pago = models.CharField(max_length=100)
+    comprobante = models.FileField(upload_to='comprobantes/', blank=True, null=True)
+    notas = models.TextField(blank=True, null=True)
+    def __str__(self):
+        if self.proyecto:
+            return f"Pago de ${self.monto} a Proyecto {self.proyecto.nombre}"
+        elif self.tramite:
+            return f"Pago de ${self.monto} a Trámite {self.tramite.nombre}"
+        else:
+            return f"Pago de ${self.monto}"
+    class Meta:
+        db_table = 'pagos'

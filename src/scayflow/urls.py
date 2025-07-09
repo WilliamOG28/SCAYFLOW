@@ -18,6 +18,8 @@ from django.contrib import admin
 from django.urls import path
 from django.contrib.auth import views as auth_views
 from . import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -41,4 +43,10 @@ urlpatterns = [
     #path('tramites', views.tramites, name='tramites'),
     path('tramites/nuevo', views.nuevo_tramite, name='nuevo_tramite'),
     path('tramites/lista', views.lista_tramites, name='lista_tramites'),
+
+    #Urls para pagos
+    path('pagos/pagos', views.pagos, name='pagos'),
+    path('pagos/nuevo_pago', views.nuevo_pago, name='nuevo_pago'),
 ]
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

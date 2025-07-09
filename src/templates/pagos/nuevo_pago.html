@@ -1,0 +1,112 @@
+{% extends "pagos/pagos.html" %}
+{% load humanize %}
+{% block title %} Nuevo Pago {% endblock %}
+
+{% block pagos_content %}
+<section>
+    <h1 class="title mb-4 text-center">Registrar pago</h1>
+    <!-- Selección de proyecto -->
+    <form method="get" id="proyectoForm" class="mb-4">
+        <div class="row">
+            <div class="col-12 col-md-3 mb-3">
+                <label for="proyecto_id" class="form-label">Selecciona un proyecto:</label>
+                <select name="proyecto_id" id="proyecto_id" class="form-select form-control" onchange="this.form.submit()" required>
+                    <option value="" {% if not proyecto %}selected{% endif %}>-- Elige un proyecto --</option>
+                    {% for p in proyectos %}
+                        <option value="{{ p.pk }}" {% if proyecto and p.pk == proyecto.pk %}selected{% endif %}>{{ p.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+    </form>
+
+    {% if proyecto %}
+    <div id="proyecto-info">
+        {# Aquí insertaremos el contenido AJAX #}
+        {% include "pagos/proyecto_info.html" %}
+    </div>
+    {% endif %}
+</section>
+
+<script>
+// ... tu JS igual, solo asegúrate de tenerlo una vez ...
+function mostrarTramite() {
+    var tipo = document.getElementById('pago_tipo').value;
+    document.getElementById('tramite_select').style.display = tipo === 'tramite' ? '' : 'none';
+}
+
+function validarPago() {
+    var tipo = document.getElementById('pago_tipo').value;
+    var monto = parseFloat(document.getElementById('monto').value);
+    var errorDiv = document.getElementById('error-front');
+    errorDiv.style.display = 'none';
+    var pendiente = 0;
+
+    if (tipo === "proyecto") {
+        pendiente = parseFloat("{{ proyecto.saldo_pendiente|default:'0'|floatformat:2 }}");
+    } else {
+        var tramiteSelect = document.getElementById('tramite_id');
+        var selected = tramiteSelect.options[tramiteSelect.selectedIndex];
+        pendiente = parseFloat(selected.getAttribute('data-saldo'));
+    }
+
+    if (isNaN(monto) || monto <= 0) {
+        errorDiv.innerText = "Por favor ingresa un monto válido.";
+        errorDiv.style.display = 'block';
+        return false;
+    }
+    if (monto > pendiente) {
+        errorDiv.innerText = "No puedes abonar más de lo pendiente ($" + pendiente.toFixed(2) + ").";
+        errorDiv.style.display = 'block';
+        return false;
+    }
+    return true;
+}
+
+function limpiarSeleccion() {
+    window.location = "{% url 'nuevo_pago' %}";
+}
+
+window.onload = function() {
+    if (performance.navigation.type === 1) {
+        window.location = "{% url 'nuevo_pago' %}";
+    }
+}
+
+function bindPagoFormAJAX() {
+    var pagoForm = document.getElementById('pagoForm');
+    if (pagoForm) {
+        pagoForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            var formData = new FormData(pagoForm);
+            fetch("{% url 'nuevo_pago' %}", {
+                method: "POST",
+                headers: {"X-Requested-With": "XMLHttpRequest"},
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('proyecto-info').innerHTML = data.html;
+                    document.getElementById('error-front').style.display = "none";
+                    // REASIGNA el evento después de actualizar el HTML:
+                    bindPagoFormAJAX();
+                } else if (data.error) {
+                    var errDiv = document.getElementById('error-front');
+                    errDiv.innerText = data.error;
+                    errDiv.style.display = "block";
+                }
+            })
+            .catch(err => {
+                alert("Ocurrió un error al guardar el pago.");
+            });
+        }, { once: true }); // Importante: para evitar múltiples binds, usa {once:true}
+    }
+}
+
+// Llama al iniciar
+document.addEventListener('DOMContentLoaded', function() {
+    bindPagoFormAJAX();
+});
+</script>
+{% endblock %}

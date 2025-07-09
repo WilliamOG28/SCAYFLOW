@@ -200,3 +200,153 @@ body.dark-mode .modal-container-form{
     padding: 10px;
     margin: auto;
 }
+.card-financiero {
+    background-color: #FAFAF9;
+    border-radius: 18px;
+    border: 1px #E5E8E8 solid;
+    box-shadow: 0 4px 16px 0 rgba(0,0,0,0.4);
+}
+body.dark-mode .card-financiero{
+    background-color: #1C1C1C;
+    border: 1px #3C3C3C solid;
+    box-shadow: 0 4px 16px 0 rgb(255, 255, 255, 0.4);
+}
+.bg-success-subtle { background: #e9f9f1 !important; }
+.bg-primary-subtle { background: #e7f0fa !important; }
+.bg-danger-subtle { background: #ffeaea !important; }
+
+body.dark-mode input[type="file"].form-control {
+    background: #181818 !important;
+    color: #ccc !important;
+    border: 1px solid #444 !important;
+    color-scheme: dark;
+}
+
+body.dark-mode input[type="file"].form-control::-webkit-file-upload-button {
+    background: #262626 !important;
+    color: #fff !important;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 20px;
+    font-size: 1em;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+body.dark-mode input[type="file"].form-control:hover::-webkit-file-upload-button {
+    background: #393939 !important;
+}
+
+body.dark-mode input[type="file"].form-control::file-selector-button {
+    background: #262626 !important;
+    color: #fff !important;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 20px;
+    font-size: 1em;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+body.dark-mode input[type="file"].form-control:hover::file-selector-button {
+    background: #393939 !important;
+}
+/* ====== TABLAS - CLARO ====== */
+.table-responsive {
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-principal, "Segoe UI", Arial, sans-serif);
+    text-align: center;
+    margin: auto;
+    padding: 10px 0;
+}
+.table {
+    padding: 10px;
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 95%;
+    margin: auto;
+    background: #fafbfc;
+    border-radius: 14px;
+    box-shadow: 0 4px 16px 0 rgba(100,100,100,0.08);
+    overflow: hidden;
+    transition: background 0.2s, color 0.2s;
+}
+.table th, .table td {
+    text-align: center !important;
+    padding: 12px 18px;
+    border: 1px solid #e1e4e8;
+    transition: background 0.2s, color 0.2s;
+}
+.table th {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05) !important;
+    font-weight: 700;
+    text-align: center;
+    background-color: #e9ecef;
+    color: #232323;
+    border-bottom: 2px solid #d4d6d8;
+    letter-spacing: 0.5px;
+    font-size: 1.08em;
+}
+.table-striped > tbody > tr:nth-of-type(odd) {
+    background-color: #f3f6fa !important;
+}
+.table-striped > tbody > tr:hover {
+    background: #e0e7ef !important;
+    transition: background 0.2s;
+}
+.table td {
+    font-size: 1.03em;
+}
+
+.table thead tr {
+    border-radius: 12px 12px 0 0;
+}
+
+.table tbody tr:last-child td:first-child {
+    border-radius: 0 0 0 12px;
+}
+.table tbody tr:last-child td:last-child {
+    border-radius: 0 0 12px 0;
+}
+
+/* ====== TABLAS - DARK MODE ====== */
+body.dark-mode .table {
+    background: #20222c !important;
+    color: #fff !important;
+    border-color: #282828 !important;
+    box-shadow: 0 4px 24px 0 rgba(0,0,0,0.45);
+}
+body.dark-mode .table th,
+body.dark-mode .table td {
+    background: #232323 !important;
+    color: #e4e6eb !important;
+    border: 1px solid #383838 !important;
+}
+body.dark-mode .table th {
+    background-color: #282c34 !important;
+    color: #f2f2f2 !important;
+    border-bottom: 2px solid #343942 !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.18) !important;
+}
+body.dark-mode .table-striped > tbody > tr:nth-of-type(odd) {
+    background-color: #1e2027 !important;
+}
+body.dark-mode .table-striped > tbody > tr:nth-of-type(even) {
+    background-color: #232323 !important;
+}
+body.dark-mode .table-striped > tbody > tr:hover {
+    background: #2c2f38 !important;
+    transition: background 0.2s;
+}
+body.dark-mode .table thead tr {
+    border-radius: 12px 12px 0 0;
+}
+body.dark-mode .table tbody tr:last-child td:first-child {
+    border-radius: 0 0 0 12px;
+}
+body.dark-mode .table tbody tr:last-child td:last-child {
+    border-radius: 0 0 12px 0;
+}
