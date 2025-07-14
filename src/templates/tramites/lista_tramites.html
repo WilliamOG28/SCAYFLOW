@@ -2,49 +2,77 @@
 {% block title %} Lista Tramites {% endblock %}
 
 {% block tramites_content %}
-    <!-- Sección principal: Lista de Proyectos con filtro -->
-    <section>
-        <!-- Filtro por estado de proyecto 
-        <div class="mb-3">
-            <label for="filtroEstado" class="form-label fw-bold">Filtrar por estado:</label>
-            <select id="filtroEstado" class="form-select" style="max-width: 300px;">
-                <option value="">Todos</option>
-                <option value="Activo">Activo</option>
-                <option value="Finalizado">Finalizado</option>
-                <option value="Pendiente">Pendiente</option>
-            </select>
-        </div>-->
-        
-        <!-- Tabla de proyectos -->
-        <table class="table table-striped table-bordered align-middle">
-            <thead class="table-dark">
-                <tr>
-                    <th>ID</th>
-                    <th>Nombre del Proyecto</th>
-                    <th>Cliente</th>
-                    <th>Estado</th>
-                    <th>Fecha de Inicio</th>
-                    <th>Fecha Fin</th>
-                    <th>Total</th>
-                    <th>Pagado</th>
-                    <th>Saldo pendiente</th>
-                </tr>
-            </thead>
-            <tbody id="tablaProyectos">
-                <!-- Ejemplo de fila de proyecto (puedes eliminarla cuando uses datos dinámicos) -->
-                <tr>
-                    <td>1</td>
-                    <td>Construcción Edificio Central</td>
-                    <td>Empresa XYZ</td>
-                    <td>Activo</td>
-                    <td>2024-01-15</td>
-                    <td>2024-12-20</td>
-                    <td>$500,000</td>
-                    <td>$300,000</td>
-                    <td>$200,000</td>
-                </tr>
-                <!-- Las filas reales se generan dinámicamente con JavaScript o Django -->
-            </tbody>
-        </table>
-    </section>
+<section class="container mt-4">
+    <h2 class="mb-3">Lista de Trámites</h2>
+
+    <table class="table table-striped table-bordered align-middle">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Proyecto</th>
+                <th>Nombre</th>
+                <th>Dependencia</th>
+                <th>Responsable</th>
+                <th>Inicio</th>
+                <th>Fin</th>
+                <th>Total</th>
+                <th>Pagado</th>
+                <th>Saldo</th>
+                <th>Estatus</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for tramite in tramites %}
+            <tr>
+                <td>{{ tramite.tramite_id }}</td>
+                <td>{{ tramite.proyecto }}</td>
+                <td>{{ tramite.nombre }}</td>
+                <td>{{ tramite.dependencia }}</td>
+                <td>{{ tramite.responsable_dependencia }}</td>
+                <td>{{ tramite.fecha_inicio }}</td>
+                <td>{{ tramite.fecha_fin|default:"N/A" }}</td>
+                <td>${{ tramite.total_tramite }}</td>
+                <td>${{ tramite.total_pagado }}</td>
+                <td>${{ tramite.saldo_pendiente }}</td>
+                <td>{{ tramite.estatus }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="11" class="text-center">No hay trámites disponibles.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Paginación -->
+    <nav aria-label="Paginación de trámites">
+        <ul class="pagination justify-content-center">
+            {% if tramites.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page=1">« Primero</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ tramites.previous_page_number }}">‹ Anterior</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled"><span class="page-link">« Primero</span></li>
+            <li class="page-item disabled"><span class="page-link">‹ Anterior</span></li>
+            {% endif %}
+
+            <li class="page-item active"><span class="page-link">{{ tramites.number }}</span></li>
+
+            {% if tramites.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ tramites.next_page_number }}">Siguiente ›</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ tramites.paginator.num_pages }}">Último »</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled"><span class="page-link">Siguiente ›</span></li>
+            <li class="page-item disabled"><span class="page-link">Último »</span></li>
+            {% endif %}
+        </ul>
+    </nav>
+</section>
 {% endblock %}

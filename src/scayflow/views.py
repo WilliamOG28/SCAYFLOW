@@ -9,6 +9,8 @@ from django.template.loader import render_to_string
 from .models import Cliente, Tramite, Proyecto, Pago
 import json
 from decimal import Decimal
+from django.core.paginator import Paginator
+
 @login_required
 def dashboard(request):
     return render(request, 'dashboard.html')
@@ -156,12 +158,89 @@ def editar_cliente(request):
 #Vistas para tramites
 #def tramites(request):
     #return render(request,'tramites/tramites.html')
+#def nuevo_tramite(request):
+#    return render(request,'tramites/nuevo_tramite.html')
 @login_required
 def nuevo_tramite(request):
-    return render(request,'tramites/nuevo_tramite.html')
+    proyectos = Proyecto.objects.all()
+
+    if request.method == 'POST':
+        proyecto_id = request.POST.get('proyecto')
+        proyecto = get_object_or_404(Proyecto, pk=proyecto_id)
+
+        nombre = request.POST.get('nombre')
+        descripcion = request.POST.get('descripcion')
+        costo_base = request.POST.get('costo_base')
+        tarifa_porcentaje = request.POST.get('tarifa_porcentaje')
+        duracion_estimada = request.POST.get('duracion_estimada')
+        tiempo_resolucion = request.POST.get('tiempo_resolucion')
+        dependencia = request.POST.get('dependencia')
+        responsable_dependencia = request.POST.get('responsable_dependencia')
+        estatus = request.POST.get('estatus')
+        documentos_requeridos = request.POST.get('documentos_requeridos')
+        observaciones = request.POST.get('observaciones')
+        fecha_inicio = request.POST.get('fecha_inicio')
+        fecha_fin = request.POST.get('fecha_fin') or None
+
+        # Convierte los valores numéricos y fechas con seguridad
+        try:
+            costo_base = Decimal(costo_base)
+        except:
+            costo_base = Decimal(0)
+
+        try:
+            tarifa_porcentaje = Decimal(tarifa_porcentaje)
+        except:
+            tarifa_porcentaje = Decimal(0)
+
+        try:
+            duracion_estimada = int(duracion_estimada)
+        except:
+            duracion_estimada = 0
+
+        try:
+            tiempo_resolucion = int(tiempo_resolucion)
+        except:
+            tiempo_resolucion = 0
+
+        # Calcula tarifas e IVA
+        tarifa_monto = costo_base * tarifa_porcentaje / Decimal(100)
+        iva_monto = tarifa_monto * Decimal('0.16')  # Ejemplo 16%
+        total_tramite = costo_base + tarifa_monto + iva_monto
+
+        tramite = Tramite.objects.create(
+            proyecto=proyecto,
+            nombre=nombre,
+            descripcion=descripcion,
+            costo_base=costo_base,
+            tarifa_porcentaje=tarifa_porcentaje,
+            duracion_estimada=duracion_estimada,
+            tiempo_resolucion=tiempo_resolucion,
+            dependencia=dependencia,
+            responsable_dependencia=responsable_dependencia,
+            estatus=estatus,
+            documentos_requeridos=documentos_requeridos,
+            observaciones=observaciones,
+            fecha_inicio=fecha_inicio,
+            fecha_fin=fecha_fin,
+            tarifa_monto=tarifa_monto,
+            iva_monto=iva_monto,
+            total_tramite=total_tramite,
+        )
+
+        return redirect('lista_tramites')
+
+    return render(request, 'tramites/nuevo_tramite.html', {'proyectos': proyectos})
 @login_required
 def lista_tramites(request):
-    return render(request,'tramites/lista_tramites.html')
+    tramites_list = Tramite.objects.all().order_by('-fecha_inicio')
+    paginator = Paginator(tramites_list, 10)  # 10 trámites por página
+
+    page_number = request.GET.get('page')
+    tramites = paginator.get_page(page_number)
+
+    return render(request, 'tramites/lista_tramites.html', {'tramites': tramites})
+
 
 #Vistas para pagos
 @login_required
