@@ -1,3 +1,12 @@
+# Django migrations (ignore all migrations folders)
+*/migrations/*
+
+# Except the migrations/__init__.py (required for Django to recognize the folder)
+!*/migrations/__init__.py
+
+# Ignore your app's settings.py (adjust path as needed)
+src/scayflow/settings.py
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -30,3 +39,6 @@ static_root/
 # macOS / Linux / Windows system files
 .DS_Store
 Thumbs.db
+
+#ignore gitignore, this is just for local dev
+.gitignore
