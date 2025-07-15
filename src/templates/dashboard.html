@@ -53,10 +53,15 @@
                     </a></li>
                 </ul>
                 <ul class="logout-list">
-                    <li><a href="{% url 'logout' %}">
-                        <span class="icon">🚪</span>
-                        <span class="label">Cerrar sesión</span>
-                    </a></li>
+                    <li>
+                        <form action="{% url 'logout' %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="m-0 align-baseline text-decoration-none btn-logout">
+                                <span class="icon">🚪</span>
+                                <span class="label">Salir</span>
+                            </button>
+                        </form>
+                    </li>
                 </ul>
             </nav>
         </section>

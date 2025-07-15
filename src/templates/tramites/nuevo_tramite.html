@@ -4,96 +4,92 @@
 {% block tramites_content %}
 <section>
     <!-- Sección: Agregar trámites al proyecto -->
-    <h1 class="title">Agregar trámite</h1>
+    <h2 class="text-center text-dark mb-3">Agregar trámite</h2>
 
     <form id="procedureForm" method="POST" novalidate>
         {% csrf_token %}
         <div class="form-container">
             <div class="row">
-                <div class="col-md-6">
-                    <!-- Nombre del Trámite -->
-                    <div class="mb-3">
-                        <label for="nombre" class="form-label">Nombre del Trámite</label>
-                        <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Ingrese el nombre del trámite" required>
-                    </div>
-                    <!-- Proyecto del trámite -->
-                    <div class="mb-3">
-                        <label for="proyecto" class="form-label">Proyecto</label>
-                        <select class="form-select" id="proyecto" name="proyecto" required>
-                            <option value="" selected disabled>Seleccione un proyecto</option>
-                            {% for proyecto in proyectos %}
-                                <option value="{{ proyecto.pk }}">{{ proyecto.nombre }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <!-- Estado del trámite -->
-                    <div class="mb-3">
-                        <label for="estatus" class="form-label">Estado</label>
-                        <select class="form-select" id="estatus" name="estatus" required>
-                            <option value="" selected disabled>Seleccione un estado</option>
-                            <option value="Activo">Activo</option>
-                            <option value="Inactivo">Inactivo</option>
-                            <option value="Completado">Completado</option>
-                        </select>
-                    </div>
-                    <!-- Fecha de Inicio del trámite -->
-                    <div class="mb-3">
-                        <label for="fecha_inicio" class="form-label">Fecha de Inicio</label>
-                        <input type="date" class="form-control" id="fecha_inicio" name="fecha_inicio" required>
-                    </div>
-                    <!-- Duración Estimada -->
-                    <div class="mb-3">
-                        <label for="duracion_estimada" class="form-label">Duración Estimada (días)</label>
-                        <input type="number" class="form-control" id="duracion_estimada" name="duracion_estimada" placeholder="Ingrese la duración estimada" required>
-                    </div>
+                <!-- Proyecto del trámite -->
+                <div class="mb-3 col-md-4">
+                    <label for="proyecto" class="form-label">Proyecto</label>
+                    <select class="form-select" id="proyecto" name="proyecto" required>
+                        <option value="" selected disabled>Seleccione un proyecto</option>
+                        {% for proyecto in proyectos %}
+                            <option value="{{ proyecto.pk }}">{{ proyecto.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <!-- Nombre del Trámite -->
+                <div class="mb-3 col-md-4">
+                    <label for="nombre" class="form-label">Nombre del Trámite</label>
+                    <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Ingrese el nombre del trámite" required>
+                </div>
+                <!-- Estado del trámite -->
+                <div class="mb-3 col-md-4">
+                    <label for="estatus" class="form-label">Estado</label>
+                    <select class="form-select" id="estatus" name="estatus" required>
+                        <option value="" selected disabled>Seleccione un estado</option>
+                        <option value="Activo">Activo</option>
+                        <option value="Inactivo">Inactivo</option>
+                        <option value="Completado">Completado</option>
+                    </select>
+                </div>
+                <!-- Fecha de Inicio del trámite -->
+                <div class="mb-3 col-md-4">
+                    <label for="fecha_inicio" class="form-label">Fecha de Inicio</label>
+                    <input type="date" class="form-control" id="fecha_inicio" name="fecha_inicio" required>
+                </div>
+                <!-- Duración Estimada -->
+                <div class="mb-3 col-md-4">
+                    <label for="duracion_estimada" class="form-label">Duración Estimada (días)</label>
+                    <input type="number" class="form-control" id="duracion_estimada" name="duracion_estimada" placeholder="Ingrese la duración estimada" required>
                 </div>
 
-                <div class="col-md-6">
-                    <!-- Fecha Fin del trámite -->
-                    <div class="mb-3">
-                        <label for="fecha_fin" class="form-label">Fecha Fin</label>
-                        <input type="date" class="form-control" id="fecha_fin" name="fecha_fin">
-                    </div>
-                    <!-- Costo base del trámite -->
-                    <div class="mb-3">
-                        <label for="costo_base" class="form-label">Costo base ($)</label>
-                        <input type="number" step="0.01" class="form-control" id="costo_base" name="costo_base" placeholder="Ingrese el costo base" required>
-                    </div>
-                    <!-- Tarifa (%) del trámite -->
-                    <div class="mb-3">
-                        <label for="tarifa_porcentaje" class="form-label">Tarifa (%)</label>
-                        <input type="number" step="0.01" class="form-control" id="tarifa_porcentaje" name="tarifa_porcentaje" placeholder="Ingrese la tarifa (%)" required>
-                    </div>
-                    <!-- Descripción del trámite -->
-                    <div class="mb-3">
-                        <label for="descripcion" class="form-label">Descripción</label>
-                        <textarea class="form-control" id="descripcion" name="descripcion" rows="3" placeholder="Ingrese la descripción" required></textarea>
-                    </div>
-                    <!-- Observaciones / Nota del trámite -->
-                    <div class="mb-3">
-                        <label for="observaciones" class="form-label">Observaciones</label>
-                        <textarea class="form-control" id="observaciones" name="observaciones" rows="2" placeholder="Ingrese una nota"></textarea>
-                    </div>
-                    <!-- Tiempo de resolución -->
-                    <div class="mb-3">
-                        <label for="tiempo_resolucion" class="form-label">Tiempo de resolución (días)</label>
-                        <input type="number" class="form-control" id="tiempo_resolucion" name="tiempo_resolucion" placeholder="Ingrese tiempo de resolución" required>
-                    </div>
-                    <!-- Dependencia -->
-                    <div class="mb-3">
-                        <label for="dependencia" class="form-label">Dependencia</label>
-                        <input type="text" class="form-control" id="dependencia" name="dependencia" placeholder="Ingrese dependencia" required>
-                    </div>
-                    <!-- Responsable dependencia -->
-                    <div class="mb-3">
-                        <label for="responsable_dependencia" class="form-label">Responsable Dependencia</label>
-                        <input type="text" class="form-control" id="responsable_dependencia" name="responsable_dependencia" placeholder="Ingrese responsable dependencia" required>
-                    </div>
-                    <!-- Documentos requeridos -->
-                    <div class="mb-3">
-                        <label for="documentos_requeridos" class="form-label">Documentos requeridos</label>
-                        <textarea class="form-control" id="documentos_requeridos" name="documentos_requeridos" rows="2" placeholder="Ingrese documentos requeridos" required></textarea>
-                    </div>
+                <!-- Fecha Fin del trámite -->
+                <div class="mb-3 col-md-4">
+                    <label for="fecha_fin" class="form-label">Fecha Fin</label>
+                    <input type="date" class="form-control" id="fecha_fin" name="fecha_fin">
+                </div>
+                <!-- Costo base del trámite -->
+                <div class="mb-3 col-md-4">
+                    <label for="costo_base" class="form-label">Costo base ($)</label>
+                    <input type="number" step="0.01" class="form-control" id="costo_base" name="costo_base" placeholder="Ingrese el costo base" required>
+                </div>
+                <!-- Tarifa (%) del trámite -->
+                <div class="mb-3 col-md-4">
+                    <label for="tarifa_porcentaje" class="form-label">Tarifa (%)</label>
+                    <input type="number" step="0.01" class="form-control" id="tarifa_porcentaje" name="tarifa_porcentaje" placeholder="Ingrese la tarifa (%)" required>
+                </div>
+                <!-- Descripción del trámite -->
+                <div class="mb-3 col-md-4">
+                    <label for="descripcion" class="form-label">Descripción</label>
+                    <textarea class="form-control" id="descripcion" name="descripcion" rows="2" placeholder="Ingrese la descripción" required></textarea>
+                </div>
+                <!-- Observaciones / Nota del trámite -->
+                <div class="mb-3 col-md-4">
+                    <label for="observaciones" class="form-label">Observaciones</label>
+                    <textarea class="form-control" id="observaciones" name="observaciones" rows="2" placeholder="Ingrese una nota"></textarea>
+                </div>
+                <!-- Tiempo de resolución -->
+                <div class="mb-3 col-md-4">
+                    <label for="tiempo_resolucion" class="form-label">Tiempo de resolución (días)</label>
+                    <input type="number" class="form-control" id="tiempo_resolucion" name="tiempo_resolucion" placeholder="Ingrese tiempo de resolución" required>
+                </div>
+                <!-- Dependencia -->
+                <div class="mb-3 col-md-4">
+                    <label for="dependencia" class="form-label">Dependencia</label>
+                    <input type="text" class="form-control" id="dependencia" name="dependencia" placeholder="Ingrese dependencia" required>
+                </div>
+                <!-- Responsable dependencia -->
+                <div class="mb-3 col-md-4">
+                    <label for="responsable_dependencia" class="form-label">Responsable Dependencia</label>
+                    <input type="text" class="form-control" id="responsable_dependencia" name="responsable_dependencia" placeholder="Ingrese responsable dependencia" required>
+                </div>
+                <!-- Documentos requeridos -->
+                <div class="mb-3 col-md-4">
+                    <label for="documentos_requeridos" class="form-label">Documentos requeridos</label>
+                    <textarea class="form-control" id="documentos_requeridos" name="documentos_requeridos" rows="1" placeholder="Ingrese documentos requeridos" required></textarea>
                 </div>
                 <!-- Botones para guardar o cancelar el trámite -->
                 <div class="d-flex justify-content-end gap-2">

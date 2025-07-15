@@ -1,4 +1,5 @@
 # src/scayflow/views.py
+from itertools import count
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.shortcuts import render
@@ -10,6 +11,8 @@ from .models import Cliente, Tramite, Proyecto, Pago
 import json
 from decimal import Decimal
 from django.core.paginator import Paginator
+from django.db.models import Sum, Count
+
 
 @login_required
 def dashboard(request):
@@ -155,6 +158,7 @@ def editar_cliente(request):
         messages.error(request, "Acceso no permitido.")
         return redirect('lista_clientes')
 
+##################################################################################################
 #Vistas para tramites
 #def tramites(request):
     #return render(request,'tramites/tramites.html')
@@ -233,15 +237,78 @@ def nuevo_tramite(request):
     return render(request, 'tramites/nuevo_tramite.html', {'proyectos': proyectos})
 @login_required
 def lista_tramites(request):
-    tramites_list = Tramite.objects.all().order_by('-fecha_inicio')
-    paginator = Paginator(tramites_list, 10)  # 10 trámites por página
+    clientes = Cliente.objects.all().order_by('nombre')
+    proyectos = Proyecto.objects.none()  # inicial vacío
 
+    proyecto_id = request.GET.get('proyecto')
+    cliente_id = request.GET.get('cliente')  # solo para mantener seleccionado en formulario
+
+    # Si se seleccionó un cliente, cargar sus proyectos para mostrar en select
+    if cliente_id:
+        proyectos = Proyecto.objects.filter(cliente_id=cliente_id).order_by('nombre')
+    else:
+        proyectos = Proyecto.objects.all().order_by('nombre')
+
+    # Filtrar trámites por proyecto si se seleccionó
+    if proyecto_id:
+        tramites_list = Tramite.objects.filter(proyecto_id=proyecto_id).order_by('-fecha_inicio')
+    elif cliente_id:
+        tramites_list = Tramite.objects.filter(proyecto__cliente_id=cliente_id).order_by('-fecha_inicio')
+    else:
+        tramites_list = Tramite.objects.all().order_by('-fecha_inicio')
+
+    paginator = Paginator(tramites_list, 10)
     page_number = request.GET.get('page')
     tramites = paginator.get_page(page_number)
 
-    return render(request, 'tramites/lista_tramites.html', {'tramites': tramites})
+    # KPIs
+    total_tramites = tramites_list.count()
+    activos = tramites_list.filter(estatus__iexact='Activo').count()
+    completados = tramites_list.filter(estatus__iexact='Completado').count()
+    monto_total = tramites_list.aggregate(Sum('total_tramite'))['total_tramite__sum'] or 0
+    total_pagado = sum(t.total_pagado for t in tramites_list)
+    porcentaje_completado = round((completados / total_tramites) * 100, 2) if total_tramites else 0
 
+    # estados: lista con {'estatus': 'Activo', 'cantidad': 3}, etc.
+    estados_raw = tramites_list.values('estatus').annotate(cantidad=Count('estatus'))
 
+    # Separa los datos para las gráficas
+    labels_estatus = [e['estatus'] for e in estados_raw]
+    cantidades_estatus = [e['cantidad'] for e in estados_raw]
+
+    return render(request, 'tramites/lista_tramites.html', {
+        'tramites': tramites,
+        'clientes': clientes,
+        'proyectos': proyectos,
+        'cliente_seleccionado': cliente_id,
+        'proyecto_seleccionado': proyecto_id,
+        'total_tramites': total_tramites,
+        'activos': activos,
+        'completados': completados,
+        'monto_total': monto_total,
+        'total_pagado': total_pagado,
+        'porcentaje_completado': porcentaje_completado,
+        'estados': estados_raw,
+        'labels_estatus': labels_estatus,
+        'cantidades_estatus': cantidades_estatus,
+    })
+
+    
+@login_required
+def proyectos_por_cliente(request):
+    cliente_id = request.GET.get('cliente_id')
+
+    if cliente_id:
+        proyectos_qs = Proyecto.objects.filter(cliente_id=cliente_id).order_by('nombre')
+    else:
+        proyectos_qs = Proyecto.objects.all().order_by('nombre')
+
+    proyectos = list(proyectos_qs.values('proyecto_id', 'nombre'))
+    return JsonResponse({'proyectos': proyectos})
+
+##################################################################################################
+
+##################################################################################################
 #Vistas para pagos
 @login_required
 def pagos(request):

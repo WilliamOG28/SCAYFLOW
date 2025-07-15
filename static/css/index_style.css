@@ -241,3 +241,14 @@ body.dark-mode .footer {
 body.dark-mode .footer .text-muted {
     color: #b0b0b0 !important;
 }
+
+.btn-logout {
+  width: 100%;
+  cursor: pointer;
+  display: flex;
+  justify-content: start;
+  padding:  12px 14px;
+  background-color: transparent;
+  border: none;
+}
+
