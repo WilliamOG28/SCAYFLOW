@@ -1,0 +1,107 @@
+{% extends "proyectos/proyectos.html" %}
+{% block title %} Detalles de Proyecto {% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h2>Detalles del Proyecto: {{ proyecto.nombre }}</h2>
+            <a href="{% url 'lista_proyectos' %}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Volver
+            </a>
+        </div>
+        
+        <div class="card-body">
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <h4>Información Básica</h4>
+                    <dl class="row">
+                        <dt class="col-sm-4">ID:</dt>
+                        <dd class="col-sm-8">{{ proyecto.proyecto_id }}</dd>
+                        
+                        <dt class="col-sm-4">Cliente:</dt>
+                        <dd class="col-sm-8">{{ proyecto.cliente }}</dd>
+                        
+                        <dt class="col-sm-4">Fecha Inicio:</dt>
+                        <dd class="col-sm-8">{{ proyecto.fecha_inicio }}</dd>
+                        
+                        <dt class="col-sm-4">Fecha Fin:</dt>
+                        <dd class="col-sm-8">{{ proyecto.fecha_fin|default:"N/A" }}</dd>
+                    </dl>
+                </div>
+                
+                <div class="col-md-6">
+                    <h4>Finanzas</h4>
+                    <dl class="row">
+                        <dt class="col-sm-4">Total:</dt>
+                        <dd class="col-sm-8">${{ proyecto.total|default:"N/A" }}</dd>
+                        
+                        <dt class="col-sm-4">Pagado:</dt>
+                        <dd class="col-sm-8">${{ proyecto.total_pagado }}</dd>
+                        
+                        <dt class="col-sm-4">Pendiente:</dt>
+                        <dd class="col-sm-8">${{ proyecto.saldo_pendiente }}</dd>
+                        
+                        <dt class="col-sm-4">Gasto Total:</dt>
+                        <dd class="col-sm-8">${{ proyecto.gasto_total }}</dd>
+                    </dl>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <h4>Trámites</h4>
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Descripción</th>
+                                <th>Monto</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for tram in tramites %}
+                            <tr>
+                                <td>{{ tram.fecha }}</td>
+                                <td>{{ tram.descripcion }}</td>
+                                <td>${{ tram.monto }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="3">No hay Trámites</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="col-md-6">
+                    <h4>Pagos</h4>
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Método</th>
+                                <th>Monto</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for pago in pagos %}
+                            <tr>
+                                <td>{{ pago.fecha }}</td>
+                                <td>{{ pago.metodo }}</td>
+                                <td>${{ pago.monto }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="3">No hay pagos registrados</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

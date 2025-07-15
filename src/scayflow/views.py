@@ -9,6 +9,7 @@ from django.template.loader import render_to_string
 from scayflow.models import Cliente, Tramite, Proyecto, Pago
 import json
 from decimal import Decimal
+from django.core.paginator import Paginator
 @login_required
 def dashboard(request):
     return render(request, 'dashboard.html')
@@ -66,7 +67,10 @@ def getIngresosTotales (listaProyectos):
 def getTotalCobrado (listaProyectos):
     totalCobrado = 0
     for proyecto in listaProyectos:
-        totalCobrado =+ proyecto.total_pagado
+        if proyecto.total_pagado == None:
+            pass
+        else:
+            totalCobrado =+ proyecto.total_pagado
 
 def getProyectosCompletadosPorcentaje (listaProyectos):
     proyectosActivosContador = 0
@@ -75,7 +79,7 @@ def getProyectosCompletadosPorcentaje (listaProyectos):
         if proyecto.estado == 'Activo':
             proyectosActivosContador += 1
         proyectosTotalesContador += 1
-    if proyectosTotalesContador == 0:
+    if proyectosTotalesContador == 0  or proyectosActivosContador == 0:
         return 0
     porcentaje = (proyectosActivosContador / proyectosTotalesContador)
     return round(porcentaje, 0)
@@ -158,10 +162,27 @@ def nuevo_proyecto(request):
     
 @login_required
 def lista_proyectos(request):
-    return render(request,'proyectos/lista_proyectos.html')
+    proyectos_list = Proyecto.objects.all().order_by('-fecha_inicio')
+    paginator = Paginator(proyectos_list, 10)  # 10 proyectos por página
+
+    page_number = request.GET.get('page')
+    proyectos = paginator.get_page(page_number)
+
+    return render(request, 'proyectos/lista_proyectos.html', {'proyectos': proyectos})
 @login_required
-def detalles(request):
-    return render(request,'proyectos/nuevo_proyecto.html')
+def proyecto_detalles(request, proyecto_id):
+    proyecto = get_object_or_404(Proyecto, pk=proyecto_id)
+    
+    tramites = proyecto.tramites.all()
+    pagos = proyecto.pagos.all()
+    
+    context = {
+        'proyecto': proyecto,
+        'tramites': tramites,
+        'pagos': pagos,
+    }
+    return render(request, 'proyectos/detalles.html', context)
+
 
 
 #Vistas para clientes

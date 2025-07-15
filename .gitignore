@@ -44,3 +44,4 @@ Thumbs.db
 .gitignore
 src/scayflow/migrations/0001_initial.py
 src/scayflow/migrations/__init__.py
+src/scayflow/migrations/0002_remove_proyecto_utilidad_total_tramite_es_gasto.py
