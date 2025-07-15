@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.shortcuts import redirect, get_object_or_404
 from django.http import JsonResponse
 from django.template.loader import render_to_string
-from .models import Cliente, Tramite, Proyecto, Pago
+from scayflow.models import Cliente, Tramite, Proyecto, Pago
 import json
 from decimal import Decimal
 @login_required
@@ -16,7 +16,69 @@ def dashboard(request):
 #Vistas para proyectos
 @login_required
 def proyectos(request):
-    return render(request,'proyectos/proyectos.html')
+    proyectos_all = list(Proyecto.objects.all())    
+    context = {'estadoProyectos': getEstadosProyectos(proyectos_all),
+                 'ingresosProyectos': getIngresosProyectos(proyectos_all),
+                 'evolucionDeIngresos': {},
+                 'proyectosActivos': getProyectosActivos(proyectos_all),
+                 'ingresosTotales': getIngresosTotales(proyectos_all),
+                 'proyectosTotalesPorcentaje': getProyectosCompletadosPorcentaje(proyectos_all),
+                 'totalCobrado': getTotalCobrado(proyectos_all)
+                }
+    return render(request,'proyectos/proyectos.html', context)
+
+def getEstadosProyectos (listaProyectos):    
+    proyectosActivosContador = 0
+    proyectosInactivosContador = 0
+    for proyecto in listaProyectos:
+        if proyecto.estado == 'Activo':
+            proyectosActivosContador += 1
+        if proyecto.estado == 'Inactivo':
+            proyectosInactivosContador += 1
+    data = {'proyectosActivos': proyectosActivosContador,
+                   'proyectosInactivos': proyectosInactivosContador}
+    return data
+
+def getIngresosProyectos (listaProyectos):
+    data = []
+    for proyecto in listaProyectos:
+        if proyecto.nombre != None and proyecto.total != None:
+            data.append({
+                'nombreDelProyecto': proyecto.nombre,
+                'total': proyecto.total
+            })    
+    return data
+
+def getProyectosActivos (listaProyectos):
+    proyectosActivosContador = 0
+    for proyecto in listaProyectos:
+        if proyecto.estado == 'Activo':
+            proyectosActivosContador += 1
+    return proyectosActivosContador
+
+def getIngresosTotales (listaProyectos):
+    ingresosTotales = 0
+    for proyecto in listaProyectos:
+        if proyecto.total != None:
+            ingresosTotales += proyecto.total
+    return ingresosTotales
+
+def getTotalCobrado (listaProyectos):
+    totalCobrado = 0
+    for proyecto in listaProyectos:
+        totalCobrado =+ proyecto.total_pagado
+
+def getProyectosCompletadosPorcentaje (listaProyectos):
+    proyectosActivosContador = 0
+    proyectosTotalesContador = 0
+    for proyecto in listaProyectos:
+        if proyecto.estado == 'Activo':
+            proyectosActivosContador += 1
+        proyectosTotalesContador += 1
+    if proyectosTotalesContador == 0:
+        return 0
+    porcentaje = (proyectosActivosContador / proyectosTotalesContador)
+    return round(porcentaje, 0)
 
 from decimal import Decimal
 

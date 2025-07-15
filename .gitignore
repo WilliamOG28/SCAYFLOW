@@ -42,3 +42,5 @@ Thumbs.db
 
 #ignore gitignore, this is just for local dev
 .gitignore
+src/scayflow/migrations/0001_initial.py
+src/scayflow/migrations/__init__.py
