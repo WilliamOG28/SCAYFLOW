@@ -104,16 +104,13 @@
 <!-- Script para chart Estado de Proyectos -->
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Get the context of the canvas element
         const ctx = document.getElementById('chartEstadoProyectos').getContext('2d');
         
-        // Data from Django (passed in context)
         const projectData = {
             proyectosActivos: {{ estadoProyectos.proyectosActivos }},
             proyectosInactivos: {{ estadoProyectos.proyectosInactivos }}
         };
         
-        // Create the chart
         const projectsChart = new Chart(ctx, {
             type: 'doughnut',  
             data: {
@@ -139,7 +136,7 @@
                     },
                     title: {
                         display: true,
-                        text: 'Distribución de Proyectos',
+                        text: '',
                         font: {
                             size: 16
                         }
@@ -163,7 +160,6 @@
 </script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Your project data (replace with actual Django template variable)
         const projectsData = [
             {% for proyecto in ingresosProyectos %}
             {
@@ -173,21 +169,17 @@
             {% endfor %}
         ];
 
-        // Prepare data for Chart.js
         const labels = projectsData.map(item => item.nombreDelProyecto);
         const values = projectsData.map(item => item.total);
         
-        // Generate distinct colors for each project
         const backgroundColors = [];
         const hueStep = 360 / projectsData.length;
         for (let i = 0; i < projectsData.length; i++) {
             backgroundColors.push(`hsl(${i * hueStep}, 70%, 60%)`);
         }
         
-        // Get the canvas context
         const ctx = document.getElementById('chartIngresosProyectos').getContext('2d');
         
-        // Create the chart
         new Chart(ctx, {
             type: 'doughnut',
             data: {
@@ -227,7 +219,7 @@
                     },
                     title: {
                         display: true,
-                        text: 'Project Distribution by Total',
+                        text: '',
                         font: {
                             size: 16
                         },
