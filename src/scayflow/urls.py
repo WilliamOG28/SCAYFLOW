@@ -39,10 +39,11 @@ urlpatterns = [
     path('clientes/lista', views.lista_clientes, name='lista_clientes'),
     path('clientes/editar', views.editar_cliente, name='editar_cliente'),
 
-     #Urls para tramites
+    #Urls para tramites
     #path('tramites', views.tramites, name='tramites'),
     path('tramites/nuevo', views.nuevo_tramite, name='nuevo_tramite'),
     path('tramites/lista', views.lista_tramites, name='lista_tramites'),
+    path('tramites/proyectos_por_cliente/', views.proyectos_por_cliente, name='proyectos_por_cliente'),
 
     #Urls para pagos
     path('pagos/pagos', views.pagos, name='pagos'),
