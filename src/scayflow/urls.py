@@ -32,6 +32,7 @@ urlpatterns = [
     path('proyectos/nuevo', views.nuevo_proyecto, name='nuevo_proyecto'),
     path('proyectos/lista', views.lista_proyectos, name='lista_proyectos'),
     path('proyectos/<int:proyecto_id>/', views.proyecto_detalles, name='proyecto_detalles'),
+    path('proyectos/editar/', views.editar_proyecto, name='editar_proyecto'),
 
     #Urls para clientes
     path('clientes', views.clientes, name='clientes'),

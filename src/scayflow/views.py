@@ -13,7 +13,6 @@ from decimal import Decimal
 from django.core.paginator import Paginator
 from django.db.models import Sum, Count
 
-
 @login_required
 def dashboard(request):
     return render(request, 'dashboard.html')
@@ -21,14 +20,24 @@ def dashboard(request):
 #Vistas para proyectos
 @login_required
 def proyectos(request):
-    proyectos_all = list(Proyecto.objects.all())    
+    proyectos_all = list(Proyecto.objects.all())  
+    proyectos = Proyecto.objects.all().order_by('nombre') 
+    # estados: lista con {'estatus': 'Activo', 'cantidad': 3}, etc.
+    estados_raw_proy = proyectos.values('estado').annotate(cantidad=Count('estado'))
+
+    # Separa los datos para las gráficas
+    labels_estatus = [e['estado'] for e in estados_raw_proy]
+    cantidades_estatus = [e['cantidad'] for e in estados_raw_proy]
+     
     context = {'estadoProyectos': getEstadosProyectos(proyectos_all),
                  'ingresosProyectos': getIngresosProyectos(proyectos_all),
                  'evolucionDeIngresos': {},
                  'proyectosActivos': getProyectosActivos(proyectos_all),
                  'ingresosTotales': getIngresosTotales(proyectos_all),
                  'proyectosTotalesPorcentaje': getProyectosCompletadosPorcentaje(proyectos_all),
-                 'totalCobrado': getTotalCobrado(proyectos_all)
+                 'totalCobrado': getTotalCobrado(proyectos_all),
+                 'labels_estatus' : labels_estatus,
+                 'cantidades_estatus' : cantidades_estatus
                 }
     return render(request,'proyectos/proyectos.html', context)
 
@@ -98,14 +107,14 @@ def nuevo_proyecto(request):
             nombre=request.POST.get('nombre'),
             tipo_proyecto=request.POST.get('tipo_proyecto'),
             cliente_id=request.POST.get('cliente_id'),
-            estado='1',
+            estado=request.POST.get('estado'),
             fecha_inicio=request.POST.get('fecha_inicio'),
             fecha_fin=request.POST.get('fecha_fin') or None,
             descripcion=request.POST.get('descripcion'),
             sector=request.POST.get('sector'),
             costo_base=request.POST.get('costo_base'),
             tarifa_porcentaje=request.POST.get('tarifa_porcentaje'),
-            nota=request.POST.get('nota')
+            nota=request.POST.get('nota'),
         )
 
         # Crear trámites
@@ -124,12 +133,13 @@ def nuevo_proyecto(request):
                 tiempo_resolucion=t.get('tiempo_resolucion', ''),
                 dependencia=t.get('dependencia', ''),
                 responsable_dependencia=t.get('responsable_dependencia', ''),
-                estatus=t.get('estatus', ''),
+                estatus='Activo',
                 documentos_requeridos=t.get('documentos_requeridos', ''),
                 observaciones=t.get('observaciones', ''),
                 fecha_ultima_actualizacion=None,
                 fecha_inicio=t.get('fecha_inicio', None),
                 fecha_fin=fecha_fin_tramite,
+                es_gasto=t.get('es_gasto', False),
             )
             # Actualiza los totales usando los valores ya generados por SQL
             tramite.refresh_from_db()
@@ -148,16 +158,7 @@ def nuevo_proyecto(request):
             Decimal(proyecto.iva_monto or 0)
         )
 
-        # Cálculo de utilidad_total (puede ser solo la tarifa(s) o según tu fórmula)
-        # Ejemplo: suma de tarifa_monto de proyecto y todos los trámites
-        utilidad_tramites = sum([
-            float(tramite.tarifa_monto or 0)
-            for tramite in proyecto.tramites.all()
-        ])
-        utilidad_proyecto = float(proyecto.tarifa_monto or 0)
-        proyecto.utilidad_total = utilidad_proyecto + utilidad_tramites
-
-        proyecto.save(update_fields=['total', 'utilidad_total'])
+        proyecto.save(update_fields=['total'])
 
         return redirect('lista_proyectos')
     else:
@@ -167,8 +168,8 @@ def nuevo_proyecto(request):
 @login_required
 def lista_proyectos(request):
     proyectos_list = Proyecto.objects.all().order_by('-fecha_inicio')
-    paginator = Paginator(proyectos_list, 10)  # 10 proyectos por página
 
+    paginator = Paginator(proyectos_list, 5)
     page_number = request.GET.get('page')
     proyectos = paginator.get_page(page_number)
 
@@ -186,7 +187,34 @@ def proyecto_detalles(request, proyecto_id):
         'pagos': pagos,
     }
     return render(request, 'proyectos/detalles.html', context)
+@login_required
+def editar_proyecto(request):
+    if request.method == 'POST':
+        proyecto_id = request.POST.get('proyecto_id')
+        proyecto = get_object_or_404(Proyecto, pk=proyecto_id)
 
+        # Actualizar campos
+        proyecto.nombre = request.POST.get('nombre')
+        proyecto.estado = request.POST.get('estado')
+        proyecto.tipo_proyecto = request.POST.get('tipo_proyecto')
+        #proyecto.cliente_id = request.POST.get('cliente_id')
+        proyecto.estado = request.POST.get('estado')
+        proyecto.fecha_inicio = request.POST.get('fecha_inicio')
+        proyecto.fecha_fin = request.POST.get('fecha_fin') or None
+        proyecto.descripcion = request.POST.get('descripcion')
+        proyecto.sector = request.POST.get('sector')
+        proyecto.costo_base = Decimal(request.POST.get('costo_base') or 0)
+        proyecto.tarifa_porcentaje = Decimal(request.POST.get('tarifa_porcentaje') or 0)
+        proyecto.nota = request.POST.get('nota')
+
+        # Recalcular campos derivados
+        proyecto.tarifa_monto = proyecto.costo_base * proyecto.tarifa_porcentaje / Decimal(100)
+        proyecto.iva_monto = proyecto.tarifa_monto * Decimal('0.16')
+        proyecto.total = proyecto.costo_base + proyecto.tarifa_monto + proyecto.iva_monto
+
+        proyecto.save()
+
+        return redirect('lista_proyectos')
 
 
 #Vistas para clientes
@@ -267,6 +295,7 @@ def nuevo_tramite(request):
         observaciones = request.POST.get('observaciones')
         fecha_inicio = request.POST.get('fecha_inicio')
         fecha_fin = request.POST.get('fecha_fin') or None
+        es_gasto = 'es_gasto' in request.POST
 
         # Convierte los valores numéricos y fechas con seguridad
         try:
@@ -312,6 +341,7 @@ def nuevo_tramite(request):
             tarifa_monto=tarifa_monto,
             iva_monto=iva_monto,
             total_tramite=total_tramite,
+            es_gasto=es_gasto
         )
 
         return redirect('lista_tramites')
@@ -352,7 +382,8 @@ def lista_tramites(request):
     activos = tramites_list.filter(estatus__iexact='Activo').count()
     completados = tramites_list.filter(estatus__iexact='Completado').count()
     monto_total = tramites_list.aggregate(Sum('total_tramite'))['total_tramite__sum'] or 0
-    total_pagado = sum(t.total_pagado for t in tramites_list)
+    total_pagado = sum((t.total_pagado or Decimal('0.00')) for t in tramites_list)
+
     porcentaje_completado = round((completados / total_tramites) * 100, 2) if total_tramites else 0
 
     # estados: lista con {'estatus': 'Activo', 'cantidad': 3}, etc.
@@ -408,6 +439,7 @@ def editar_tramite(request):
     tramite.dependencia = request.POST.get('dependencia')
     tramite.responsable_dependencia = request.POST.get('responsable_dependencia')
     tramite.estatus = request.POST.get('estatus')
+    tramite.es_gasto = 'es_gasto' in request.POST
 
     tramite.save()
     return redirect('lista_tramites')

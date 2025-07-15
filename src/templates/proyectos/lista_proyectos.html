@@ -2,54 +2,65 @@
 {% block title %} Lista Proyectos {% endblock %}
 
 {% block proyectos_content %}
-<section class="container mt-4">
-    <h2 class="mb-3">Lista de Proyectos</h2>
+<section class="">
+    <h2 class="mb-3 text-dark text-center">Lista de Proyectos</h2>
 
-    <table class="table table-striped table-bordered align-middle">
-        <thead class="table-dark">
-            <tr>
-                <th>ID</th>
-                <th>Cliente</th>
-                <th>Nombre</th>
-                <th>Inicio</th>
-                <th>Fin</th>
-                <th>Total</th>
-                <th>Pagado</th>
-                <th>Pendiente</th>
-                <th>Gasto Total</th>
-                <th>Estado</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for proyecto in proyectos %}
-            <tr>
-                <td>{{ proyecto.proyecto_id }}</td>
-                <td>{{ proyecto.cliente }}</td>
-                <td>{{ proyecto.nombre }}</td>
-                <td>{{ proyecto.fecha_inicio }}</td>
-                <td>{{ proyecto.fecha_fin|default:"N/A" }}</td>
-                <td>${{ proyecto.total|default:"N/A" }}</td>
-                <td>${{ proyecto.total_pagado }}</td>
-                <td>${{ proyecto.saldo_pendiente }}</td>
-                <td>${{ proyecto.gasto_total }}</td>
-                <td>{{ proyecto.estado }}</td>
-                <td>
-                    <a href="{% url 'proyecto_detalles' proyecto.proyecto_id %}" 
-                       class="btn btn-sm btn-primary">
-                        <i class="fas fa-eye"></i> Ver
-                    </a>
-                </td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="11" class="text-center">No hay proyectos disponibles.</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Cliente</th>
+                    <th>Nombre</th>
+                    <th>Inicio</th>
+                    <th>Fin</th>
+                    <th>Total</th>
+                    <th>Pagado</th>
+                    <th>Pendiente</th>
+                    <th>Gasto Total</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for proyecto in proyectos %}
+                <tr>
+                    <td>{{ proyecto.proyecto_id }}</td>
+                    <td>{{ proyecto.cliente }}</td>
+                    <td>{{ proyecto.nombre }}</td>
+                    <td>{{ proyecto.fecha_inicio }}</td>
+                    <td>{{ proyecto.fecha_fin|default:"--" }}</td>
+                    <td>${{ proyecto.total|default:"0" }}</td>
+                    <td>${{ proyecto.total_pagado }}</td>
+                    <td>${{ proyecto.saldo_pendiente }}</td>
+                    <td>${{ proyecto.gasto_total }}</td>
+                    <td>{{ proyecto.estado }}</td>
+                    <td>
+                        <a href="{% url 'proyecto_detalles' proyecto.proyecto_id %}" 
+                        class="btn btn-sm btn-primary">
+                            <i class="fas fa-eye"></i> Detalles
+                        </a>
+
+                        <button 
+                            class="btn btn-sm btn-primary" 
+                            data-bs-toggle="modal" 
+                            data-bs-target="#editarProyectoModal"
+                            onclick="llenarModalProyecto({{ proyecto.proyecto_id }}, '{{ proyecto.nombre }}', '{{ proyecto.estado }}', '{{ proyecto.tipo_proyecto }}', '{{ proyecto.cliente.cliente_id }}', '{{ proyecto.fecha_inicio }}', '{{ proyecto.fecha_fin }}', '{{ proyecto.sector }}', '{{ proyecto.costo_base }}', '{{ proyecto.tarifa_porcentaje }}', '{{ proyecto.descripcion|escapejs }}', '{{ proyecto.nota|escapejs }}')">
+                            Editar
+                        </button>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="11" class="text-center">No hay proyectos disponibles.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
     <!-- Paginación -->
-    <nav aria-label="Paginación de proyectos">
+    <nav aria-label="Paginación de proyectos" class="paginacion-tabla">
         <ul class="pagination justify-content-center">
             {% if proyectos.has_previous %}
             <li class="page-item">
@@ -79,4 +90,112 @@
         </ul>
     </nav>
 </section>
+
+<!-- Modal -->
+<div class="modal fade" id="editarProyectoModal" tabindex="-1" aria-labelledby="editarProyectoLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <form method="POST" action="{% url 'editar_proyecto' %}">
+        {% csrf_token %}
+        <input type="hidden" name="proyecto_id" id="editProyectoId">
+        <div class="modal-header">
+          <h5 class="modal-title text-dark" id="editarProyectoLabel">Editar Proyecto</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <div class="modal-body">
+          <!-- Inserta aquí tu HTML original del formulario -->
+          <div class="row">
+            <div class="mb-3 col-md-4">
+              <label for="projectName" class="form-label text-dark">Nombre del Proyecto</label>
+              <input type="text" class="form-control" id="projectName" name="nombre" required>
+            </div>
+            <div class="mb-3 col-md-4">
+              <label for="estado" class="form-label">Estado</label>
+              <select class="form-select" id="estado" name="estado" required>
+                <option value="" disabled>Seleccione</option>
+                <option value="Activo">Activo</option>
+                <option value="Inactivo">Inactivo</option>
+              </select>
+            </div>
+            <div class="mb-3 col-md-4">
+              <label for="tipoProyecto" class="form-label">Tipo de Proyecto</label>
+              <input type="text" class="form-control" id="tipoProyecto" name="tipo_proyecto" required>
+            </div>
+            <!--
+            <div class="mb-3 col-md-4">
+              <label for="clientId" class="form-label">Cliente</label>
+              <select class="form-control" id="clientId" name="cliente_id" required>
+                <option value="">Seleccione un cliente...</option>
+                {% for cliente in clientes %}
+                  <option value="{{ cliente.cliente_id }}">{{ cliente.nombre }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            -->
+            <div class="mb-3 col-md-4">
+              <label for="startDate" class="form-label">Fecha de Inicio</label>
+              <input type="date" class="form-control" id="startDate" name="fecha_inicio" required>
+            </div>
+            <div class="mb-3 col-md-4">
+              <label for="endDate" class="form-label">Fecha Fin</label>
+              <input type="date" class="form-control" id="endDate" name="fecha_fin">
+            </div>
+            <div class="mb-3 col-md-4">
+              <label for="sector" class="form-label">Sector</label>
+              <input type="text" class="form-control" id="sector" name="sector" required>
+            </div>
+            <div class="mb-3 col-md-4">
+              <label for="baseCost" class="form-label">Costo base</label>
+              <input type="number" step="0.01" class="form-control" id="baseCost" name="costo_base" required>
+            </div>
+            <div class="mb-3 col-md-4">
+              <label for="ratePercent" class="form-label">Tarifa (%)</label>
+              <input type="number" step="0.01" class="form-control" id="ratePercent" name="tarifa_porcentaje" required>
+            </div>
+            <div class="mb-3 col-md-4">
+              <label for="description" class="form-label">Descripción</label>
+              <textarea class="form-control" id="description" name="descripcion" required></textarea>
+            </div>
+            <div class="mb-3 col-md-4">
+              <label for="note" class="form-label">Nota</label>
+              <textarea class="form-control" id="note" name="nota"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success">Guardar cambios</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+    function convertirFecha(fechaTexto) {
+        const date = new Date(fechaTexto);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // meses empiezan en 0
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+
+  function llenarModalProyecto(id, nombre, estado, tipo, cliente_id, fecha_inicio, fecha_fin, sector, costo, tarifa, descripcion, nota) {
+    document.getElementById('editProyectoId').value = id;
+    document.getElementById('projectName').value = nombre;
+    document.getElementById('estado').value = estado;
+    document.getElementById('tipoProyecto').value = tipo;
+    //document.getElementById('clientId').value = cliente_id;
+    document.getElementById('startDate').value = convertirFecha(fecha_inicio);
+    document.getElementById('endDate').value = convertirFecha(fecha_fin);
+    document.getElementById('sector').value = sector;
+    document.getElementById('baseCost').value = costo;
+    document.getElementById('ratePercent').value = tarifa;
+    document.getElementById('description').value = descripcion;
+    document.getElementById('note').value = nota;
+  }
+</script>
+
 {% endblock %}

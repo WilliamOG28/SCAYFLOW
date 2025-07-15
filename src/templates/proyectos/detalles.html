@@ -1,20 +1,22 @@
 {% extends "proyectos/proyectos.html" %}
 {% block title %} Detalles de Proyecto {% endblock %}
 
-{% block content %}
-<div class="container mt-4">
-    <div class="card">
+{% block proyectos_content %}
+<div class="">
+    <div class="card shadow p-3 mb-5 bg-body rounded">
         <div class="card-header">
-            <h2>Detalles del Proyecto: {{ proyecto.nombre }}</h2>
-            <a href="{% url 'lista_proyectos' %}" class="btn btn-secondary">
+            <h2 class="mb-3 text-dark text-start">📘 Detalles del Proyecto: {{ proyecto.nombre }}</h2>
+            <!--
+                        <a href="{% url 'lista_proyectos' %}" class="btn btn-secondary">
                 <i class="fas fa-arrow-left"></i> Volver
             </a>
+            -->
         </div>
         
         <div class="card-body">
             <div class="row mb-4">
                 <div class="col-md-6">
-                    <h4>Información Básica</h4>
+                    <h4 class="text-dark">Información Básica</h4>
                     <dl class="row">
                         <dt class="col-sm-4">ID:</dt>
                         <dd class="col-sm-8">{{ proyecto.proyecto_id }}</dd>
@@ -31,10 +33,10 @@
                 </div>
                 
                 <div class="col-md-6">
-                    <h4>Finanzas</h4>
+                    <h4 class="text-dark">Finanzas</h4>
                     <dl class="row">
                         <dt class="col-sm-4">Total:</dt>
-                        <dd class="col-sm-8">${{ proyecto.total|default:"N/A" }}</dd>
+                        <dd class="col-sm-8">${{ proyecto.total|default:"0" }}</dd>
                         
                         <dt class="col-sm-4">Pagado:</dt>
                         <dd class="col-sm-8">${{ proyecto.total_pagado }}</dd>
@@ -50,7 +52,7 @@
             
             <div class="row">
                 <div class="col-md-6">
-                    <h4>Trámites</h4>
+                    <h4 class="text-dark">Trámites</h4>
                     <table class="table table-sm">
                         <thead>
                             <tr>
@@ -62,9 +64,9 @@
                         <tbody>
                             {% for tram in tramites %}
                             <tr>
-                                <td>{{ tram.fecha }}</td>
-                                <td>{{ tram.descripcion }}</td>
-                                <td>${{ tram.monto }}</td>
+                                <td>{{ tram.fecha | default:'--'}}</td>
+                                <td>{{ tram.descripcion | default:'--'}}</td>
+                                <td>${{ tram.monto | default:'--'}}</td>
                             </tr>
                             {% empty %}
                             <tr>
@@ -76,7 +78,7 @@
                 </div>
                 
                 <div class="col-md-6">
-                    <h4>Pagos</h4>
+                    <h4 class="text-dark">Pagos</h4>
                     <table class="table table-sm">
                         <thead>
                             <tr>
@@ -88,9 +90,9 @@
                         <tbody>
                             {% for pago in pagos %}
                             <tr>
-                                <td>{{ pago.fecha }}</td>
-                                <td>{{ pago.metodo }}</td>
-                                <td>${{ pago.monto }}</td>
+                                <td class="text-dark">{{ pago.fecha | default:'--' }}</td>
+                                <td>{{ pago.metodo | default:'--' }}</td>
+                                <td>${{ pago.monto | default:'--' }}</td>
                             </tr>
                             {% empty %}
                             <tr>

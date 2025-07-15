@@ -1,3 +1,4 @@
+from decimal import Decimal
 from django.db import models
 from django.core.validators import RegexValidator
 
@@ -95,7 +96,7 @@ class Tramite(models.Model):
 
     @property
     def total_pagado(self):
-        return sum(p.monto for p in self.pagos.all())
+        return sum(p.monto or Decimal('0.00') for p in self.pagos.all())
 
     @property
     def saldo_pendiente(self):
@@ -111,7 +112,7 @@ class Pago(models.Model):
     pago_id = models.AutoField(primary_key=True)
     proyecto = models.ForeignKey('Proyecto', on_delete=models.CASCADE, null=True, blank=True, related_name='pagos')
     tramite = models.ForeignKey('Tramite', on_delete=models.CASCADE, null=True, blank=True, related_name='pagos')
-    monto = models.DecimalField(max_digits=12, decimal_places=2)
+    monto = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     fecha = models.DateField()
     metodo_pago = models.CharField(max_length=100)
     comprobante = models.FileField(upload_to='comprobantes/', blank=True, null=True)

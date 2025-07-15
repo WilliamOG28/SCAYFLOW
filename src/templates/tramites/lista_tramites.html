@@ -60,6 +60,7 @@
                     <th>Total</th>
                     <th>Pagado</th>
                     <th>Saldo</th>
+                    <th>Es gasto</th>
                     <th>Estatus</th>
                     <th>Acciones</th>
                 </tr>
@@ -77,6 +78,13 @@
                     <td>${{ tramite.total_tramite }}</td>
                     <td>${{ tramite.total_pagado }}</td>
                     <td>${{ tramite.saldo_pendiente }}</td>
+                    <td>
+                        {% if tramite.es_gasto %}
+                            <span class="text-danger">❌ Gasto</span>
+                        {% else %}
+                            <span class="text-success">✅ Utilidad</span>
+                        {% endif %}
+                    </td>
                     <td>
                         {% if tramite.estatus == "Activo" %}
                             <span class="badge bg-primary">{{ tramite.estatus }}</span>
@@ -101,6 +109,7 @@
                             data-dependencia="{{ tramite.dependencia }}"
                             data-responsable="{{ tramite.responsable_dependencia }}"
                             data-estatus="{{ tramite.estatus }}"
+                            data-es-gasto="{{ tramite.es_gasto }}"
                         >
                             Editar
                         </button>
@@ -149,9 +158,11 @@
         </ul>
     </nav>
 
+    <hr class="mt-5">
+
     <!-- Dashboard -->
     <!-- Dashboard KPIs -->
-    <section class="mb-5 mt-4">
+    <section class="my-5">
         <div class="row g-4 justify-content-center">
             <!-- Trámites Totales -->
             <div class="col-lg-3">
@@ -266,6 +277,15 @@
               <option value="Completado">Completado</option>
             </select>
           </div>
+            <div class="mb-3 col-md-4">
+                <label class="form-label">Gasto</label>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="True" id="es_gasto" name="es_gasto">
+                    <label class="form-check-label" for="es_gasto">
+                        ¿Es gasto?
+                    </label>
+                </div>
+            </div>
         </div>
         <div class="modal-footer">
           <button type="submit" class="btn btn-success">Guardar cambios</button>
@@ -311,11 +331,13 @@
       document.getElementById('editDependencia').value = btn.dataset.dependencia;
       document.getElementById('editResponsable').value = btn.dataset.responsable;
       document.getElementById('editEstatus').value = btn.dataset.estatus;
+    // Checkbox es_gasto
+      const esGastoCheckbox = document.getElementById('es_gasto');
+        const esGastoValue = btn.dataset.esGasto?.toLowerCase() || 'false'; // por seguridad
+        esGastoCheckbox.checked = (esGastoValue === 'true');
     });
   });
 </script>
-
-
 
 <script>
     document.getElementById('cliente').addEventListener('change', function () {
@@ -373,6 +395,7 @@
         }
     });
 </script>
+
 <script>
   const modalEliminar = document.getElementById('modalEliminar');
   modalEliminar.addEventListener('show.bs.modal', function (event) {
@@ -382,6 +405,5 @@
     input.value = tramiteId;
   });
 </script>
-
 
 {% endblock %}

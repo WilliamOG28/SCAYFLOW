@@ -49,7 +49,7 @@
                     <div class="col-lg-3">
                         <div class="dashboard-card">
                             <div class="dashboard-body">
-                                <div class="dashboard-title" id="kpiTotalCobrado">${{ totalCobrado }}</div>
+                                <div class="dashboard-title" id="kpiTotalCobrado">${{ totalCobrado|default:"0" }}</div>
                                 <div class="subtitle">Total Cobrado</div>
                             </div>
                         </div>
@@ -114,9 +114,9 @@
         const projectsChart = new Chart(ctx, {
             type: 'doughnut',  
             data: {
-                labels: ['Proyectos Activos', 'Proyectos Inactivos'],
+                labels: {{ labels_estatus|safe }},
                 datasets: [{
-                    data: [projectData.proyectosActivos, projectData.proyectosInactivos],
+                    data: {{ cantidades_estatus|safe }},
                     backgroundColor: [
                         'rgba(54, 162, 235, 0.7)',
                         'rgba(255, 99, 132, 0.7)'   
