@@ -6,7 +6,7 @@
     <h2 class="mb-3 text-dark text-center">Lista de Trámites</h2>
     <form method="get" class="mb-3">
         <div class="row">
-            <div class="col-md-5">
+            <div class="col-md-4">
                 <label for="cliente" class="mt-2">Filtrar por Cliente:</label>
                 <select name="cliente" id="cliente" class="form-select">
                     <option value="">-- Todos los clientes --</option>
@@ -17,7 +17,7 @@
                     {% endfor %}
                 </select>
             </div>
-            <div class="col-md-5">
+            <div class="col-md-4">
                 <label for="proyecto" class="mt-2">Filtrar por Proyecto:</label>
                 <select name="proyecto" id="proyectoSelect" class="form-select">
                     <option value="">-- Todos los proyectos --</option>
@@ -29,54 +29,97 @@
                 </select>
             </div>
 
+            <div class="col-md-2">
+                <label for="estatus" class="mt-2">Filtrar por Estatus:</label>
+                <select name="estatus" id="estatus" class="form-select">
+                    <option value="">-- Todos --</option>
+                    <option value="Activo" {% if estatus_seleccionado == 'Activo' %}selected{% endif %}>Activo</option>
+                    <option value="Inactivo" {% if estatus_seleccionado == 'Inactivo' %}selected{% endif %}>Inactivo</option>
+                    <option value="Completado" {% if estatus_seleccionado == 'Completado' %}selected{% endif %}>Completado</option>
+                </select>
+            </div>
+
+
             <div class="col-md-2 d-flex justify-content-center align-items-end">
-                <button type="submit" class="btn btn-primary w-100">Filtrar</button>
+                <button type="submit" class="btn btn-primary w-100 btn-filtrar-tramites">Filtrar</button>
             </div>
         </div>
 
     </form>
-
-    <table class="table table-striped table-bordered align-middle">
-        <thead class="table-dark">
-            <tr>
-                <th>ID</th>
-                <th>Proyecto</th>
-                <th>Nombre</th>
-                <th>Dependencia</th>
-                <th>Responsable</th>
-                <th>Inicio</th>
-                <th>Fin</th>
-                <th>Total</th>
-                <th>Pagado</th>
-                <th>Saldo</th>
-                <th>Estatus</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for tramite in tramites %}
-            <tr>
-                <td>{{ tramite.tramite_id }}</td>
-                <td>{{ tramite.proyecto }}</td>
-                <td>{{ tramite.nombre }}</td>
-                <td>{{ tramite.dependencia }}</td>
-                <td>{{ tramite.responsable_dependencia }}</td>
-                <td>{{ tramite.fecha_inicio }}</td>
-                <td>{{ tramite.fecha_fin|default:"N/A" }}</td>
-                <td>${{ tramite.total_tramite }}</td>
-                <td>${{ tramite.total_pagado }}</td>
-                <td>${{ tramite.saldo_pendiente }}</td>
-                <td>{{ tramite.estatus }}</td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="11" class="text-center">No hay trámites disponibles.</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Proyecto</th>
+                    <th>Nombre</th>
+                    <th>Dependencia</th>
+                    <th>Responsable</th>
+                    <th>Inicio</th>
+                    <th>Fin</th>
+                    <th>Total</th>
+                    <th>Pagado</th>
+                    <th>Saldo</th>
+                    <th>Estatus</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for tramite in tramites %}
+                <tr>
+                    <td>{{ tramite.tramite_id }}</td>
+                    <td>{{ tramite.proyecto }}</td>
+                    <td>{{ tramite.nombre }}</td>
+                    <td>{{ tramite.dependencia }}</td>
+                    <td>{{ tramite.responsable_dependencia }}</td>
+                    <td>{{ tramite.fecha_inicio }}</td>
+                    <td>{{ tramite.fecha_fin|default:"N/A" }}</td>
+                    <td>${{ tramite.total_tramite }}</td>
+                    <td>${{ tramite.total_pagado }}</td>
+                    <td>${{ tramite.saldo_pendiente }}</td>
+                    <td>
+                        {% if tramite.estatus == "Activo" %}
+                            <span class="badge bg-primary">{{ tramite.estatus }}</span>
+                        {% elif tramite.estatus == "Inactivo" %}
+                            <span class="badge bg-warning">{{ tramite.estatus }}</span>
+                        {% elif tramite.estatus == "Completado" %}
+                            <span class="badge bg-success">{{ tramite.estatus }}</span>
+                        {% else %}
+                            <span class="badge bg-warning text-dark">{{ tramite.estatus }}</span>
+                        {% endif %}
+                    </td>
+                    <td class="d-flex justify-content-center align-items-center gap-1" height="100">
+                        <button 
+                            class="btn btn-sm btn-primary editar-btn"
+                            data-bs-toggle="modal"
+                            data-bs-target="#modalEditarTramite"
+                            data-id="{{ tramite.tramite_id }}"
+                            data-nombre="{{ tramite.nombre }}"
+                            data-descripcion="{{ tramite.descripcion }}"
+                            data-costo-base="{{ tramite.costo_base }}"
+                            data-tarifa-porcentaje="{{ tramite.tarifa_porcentaje }}"
+                            data-dependencia="{{ tramite.dependencia }}"
+                            data-responsable="{{ tramite.responsable_dependencia }}"
+                            data-estatus="{{ tramite.estatus }}"
+                        >
+                            Editar
+                        </button>
+                        <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#modalEliminar" data-tramite-id="{{ tramite.tramite_id }}">
+                            🗑️
+                        </button>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="11" class="text-center">No hay trámites disponibles.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
     <!-- Paginación -->
-    <nav aria-label="Paginación de trámites">
+    <nav aria-label="Paginación de trámites" class="paginacion-tabla">
         <ul class="pagination justify-content-center">
             {% if tramites.has_previous %}
             <li class="page-item">
@@ -128,6 +171,15 @@
                     </div>
                 </div>
             </div>
+            <!-- Trámites Activos -->
+            <div class="col-lg-3">
+                <div class="dashboard-card text-dark">
+                    <div class="dashboard-body text-center">
+                        <div class="dashboard-title display-5">{{ completados }}</div>
+                        <div class="subtitle">Trámites Completados</div>
+                    </div>
+                </div>
+            </div>
             <!-- Monto Total -->
             <div class="col-lg-3">
                 <div class="dashboard-card text-dark">
@@ -169,6 +221,101 @@
     </section>
 
 </section>
+
+<!-- Modal de Edición -->
+<div class="modal fade" id="modalEditarTramite" tabindex="-1" aria-labelledby="modalEditarTramiteLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <form method="post" action="{% url 'editar_tramite' %}">
+      {% csrf_token %}
+      <input type="hidden" name="tramite_id" id="editTramiteId">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title text-dark" id="modalEditarTramiteLabel">Editar Trámite</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body row g-3">
+          <div class="col-md-6">
+            <label for="editNombre" class="form-label">Nombre</label>
+            <input type="text" class="form-control" name="nombre" id="editNombre" required>
+          </div>
+          <div class="col-md-6">
+            <label for="editDescripcion" class="form-label">Descripción</label>
+            <input type="text" class="form-control" name="descripcion" id="editDescripcion">
+          </div>
+          <div class="col-md-6">
+            <label for="editCostoBase" class="form-label">Costo Base</label>
+            <input type="number" class="form-control" name="costo_base" id="editCostoBase" step="0.01">
+          </div>
+          <div class="col-md-6">
+            <label for="editTarifaPorcentaje" class="form-label">Tarifa %</label>
+            <input type="number" class="form-control" name="tarifa_porcentaje" id="editTarifaPorcentaje" step="0.01">
+          </div>
+          <div class="col-md-6">
+            <label for="editDependencia" class="form-label">Dependencia</label>
+            <input type="text" class="form-control" name="dependencia" id="editDependencia">
+          </div>
+          <div class="col-md-6">
+            <label for="editResponsable" class="form-label">Responsable</label>
+            <input type="text" class="form-control" name="responsable_dependencia" id="editResponsable">
+          </div>
+          <div class="col-md-6">
+            <label for="editEstatus" class="form-label">Estatus</label>
+            <select name="estatus" id="editEstatus" class="form-select">
+              <option value="Activo">Activo</option>
+              <option value="Inactivo">Inactivo</option>
+              <option value="Completado">Completado</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success">Guardar cambios</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Modal de Confirmación de Eliminación -->
+<div class="modal fade" id="modalEliminar" tabindex="-1" aria-labelledby="modalEliminarLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <form method="post" action="{% url 'eliminar_tramite' %}">
+        {% csrf_token %}
+        <input type="hidden" name="tramite_id" id="inputTramiteIdEliminar">
+        <div class="modal-content">
+          <div class="modal-header bg-danger text-white">
+            <h5 class="modal-title" id="modalEliminarLabel">Confirmar eliminación</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+          </div>
+          <div class="modal-body">
+            ¿Estás seguro de que deseas eliminar este trámite? Esta acción no se puede deshacer.
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-danger">Eliminar</button>
+          </div>
+        </div>
+    </form>
+  </div>
+</div>
+
+
+<script>
+  document.querySelectorAll('.editar-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.getElementById('editTramiteId').value = btn.dataset.id;
+      document.getElementById('editNombre').value = btn.dataset.nombre;
+      document.getElementById('editDescripcion').value = btn.dataset.descripcion;
+      document.getElementById('editCostoBase').value = btn.dataset.costoBase;
+      document.getElementById('editTarifaPorcentaje').value = btn.dataset.tarifaPorcentaje;
+      document.getElementById('editDependencia').value = btn.dataset.dependencia;
+      document.getElementById('editResponsable').value = btn.dataset.responsable;
+      document.getElementById('editEstatus').value = btn.dataset.estatus;
+    });
+  });
+</script>
+
+
 
 <script>
     document.getElementById('cliente').addEventListener('change', function () {
@@ -226,4 +373,15 @@
         }
     });
 </script>
+<script>
+  const modalEliminar = document.getElementById('modalEliminar');
+  modalEliminar.addEventListener('show.bs.modal', function (event) {
+    const button = event.relatedTarget;
+    const tramiteId = button.getAttribute('data-tramite-id');
+    const input = document.getElementById('inputTramiteIdEliminar');
+    input.value = tramiteId;
+  });
+</script>
+
+
 {% endblock %}

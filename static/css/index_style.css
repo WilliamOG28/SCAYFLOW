@@ -252,3 +252,26 @@ body.dark-mode .footer .text-muted {
   border: none;
 }
 
+.editar-btn {
+}
+
+.btn-filtrar-tramites {
+  background-color: #4F5D61 !important;
+  color: #fff !important;
+  border: none;
+}
+
+.paginacion-tabla {
+
+}
+
+.paginacion-tabla ul li .page-link {
+  color: #4F5D61 !important;
+}
+
+.paginacion-tabla .page-item.active span{
+  background-color: #4F5D61 !important;
+  color: #fff !important;
+  border: none;
+  height: 100% !important;
+}

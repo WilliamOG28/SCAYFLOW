@@ -241,7 +241,8 @@ def lista_tramites(request):
     proyectos = Proyecto.objects.none()  # inicial vacío
 
     proyecto_id = request.GET.get('proyecto')
-    cliente_id = request.GET.get('cliente')  # solo para mantener seleccionado en formulario
+    cliente_id = request.GET.get('cliente') 
+    estatus = request.GET.get('estatus')
 
     # Si se seleccionó un cliente, cargar sus proyectos para mostrar en select
     if cliente_id:
@@ -256,8 +257,11 @@ def lista_tramites(request):
         tramites_list = Tramite.objects.filter(proyecto__cliente_id=cliente_id).order_by('-fecha_inicio')
     else:
         tramites_list = Tramite.objects.all().order_by('-fecha_inicio')
+        
+    if estatus:
+        tramites_list = tramites_list.filter(estatus__iexact=estatus)
 
-    paginator = Paginator(tramites_list, 10)
+    paginator = Paginator(tramites_list, 5)
     page_number = request.GET.get('page')
     tramites = paginator.get_page(page_number)
 
@@ -291,6 +295,7 @@ def lista_tramites(request):
         'estados': estados_raw,
         'labels_estatus': labels_estatus,
         'cantidades_estatus': cantidades_estatus,
+        'estatus_seleccionado': estatus,
     })
 
     
@@ -305,6 +310,32 @@ def proyectos_por_cliente(request):
 
     proyectos = list(proyectos_qs.values('proyecto_id', 'nombre'))
     return JsonResponse({'proyectos': proyectos})
+
+@login_required
+def editar_tramite(request):
+    tramite_id = request.POST.get('tramite_id')
+    tramite = get_object_or_404(Tramite, pk=tramite_id)
+
+    tramite.nombre = request.POST.get('nombre')
+    tramite.descripcion = request.POST.get('descripcion')
+    tramite.costo_base = Decimal(request.POST.get('costo_base') or 0)
+    tramite.tarifa_porcentaje = Decimal(request.POST.get('tarifa_porcentaje') or 0)
+    tramite.tarifa_monto = tramite.costo_base * tramite.tarifa_porcentaje / Decimal(100)
+    tramite.iva_monto = tramite.tarifa_monto * Decimal('0.16')
+    tramite.total_tramite = tramite.costo_base + tramite.tarifa_monto + tramite.iva_monto
+    tramite.dependencia = request.POST.get('dependencia')
+    tramite.responsable_dependencia = request.POST.get('responsable_dependencia')
+    tramite.estatus = request.POST.get('estatus')
+
+    tramite.save()
+    return redirect('lista_tramites')
+
+@login_required
+def eliminar_tramite(request):
+    tramite_id = request.POST.get('tramite_id')
+    tramite = get_object_or_404(Tramite, pk=tramite_id)
+    tramite.delete()
+    return redirect('lista_tramites')
 
 ##################################################################################################
 

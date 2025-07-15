@@ -44,6 +44,8 @@ urlpatterns = [
     path('tramites/nuevo', views.nuevo_tramite, name='nuevo_tramite'),
     path('tramites/lista', views.lista_tramites, name='lista_tramites'),
     path('tramites/proyectos_por_cliente/', views.proyectos_por_cliente, name='proyectos_por_cliente'),
+    path('tramites/editar/', views.editar_tramite, name='editar_tramite'),
+    path('tramites/eliminar/', views.eliminar_tramite, name='eliminar_tramite'),
 
     #Urls para pagos
     path('pagos/pagos', views.pagos, name='pagos'),
