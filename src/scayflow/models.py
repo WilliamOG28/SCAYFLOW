@@ -46,8 +46,6 @@ class Proyecto(models.Model):
     iva_monto = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, editable=False)
     total = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True, editable=False)
     nota = models.TextField(blank=True, null=True)
-    utilidad_total = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True, editable=False)
-
     @property
     def total_pagado(self):
         return sum(p.monto for p in self.pagos.all())
@@ -55,6 +53,17 @@ class Proyecto(models.Model):
     @property
     def saldo_pendiente(self):
         return (self.total or 0) - self.total_pagado
+
+    @property
+    def gasto_total(self):
+        return sum(
+            t.total_tramite for t in self.tramites.all() 
+            if t.es_gasto
+        )
+
+    @property
+    def utilidad_total(self):
+        return self.total - self.gasto_total
     
     def __str__(self):
         return self.nombre
@@ -82,6 +91,7 @@ class Tramite(models.Model):
     fecha_ultima_actualizacion = models.DateField(null=True, blank=True)
     fecha_inicio = models.DateField()
     fecha_fin = models.DateField(null=True, blank=True)
+    es_gasto = models.BooleanField(null=False, blank=False)    
 
     @property
     def total_pagado(self):

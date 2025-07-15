@@ -31,7 +31,7 @@
                     <div class="col-lg-3">
                         <div class="dashboard-card">
                             <div class="dashboard-body">
-                                <div class="dashboard-title" id="kpiProyectosActivos">24</div>
+                                <div class="dashboard-title" id="kpiProyectosActivos">{{ proyectosActivos }}</div>
                                 <div class="subtitle">Proyectos Activos</div>
                             </div>
                         </div>
@@ -40,25 +40,25 @@
                     <div class="col-lg-3">
                         <div class="dashboard-card">
                             <div class="dashboard-body">
-                                <div class="dashboard-title" id="kpiIngresosTotales">$156,000</div>
+                                <div class="dashboard-title" id="kpiIngresosTotales">${{ ingresosTotales }}</div>
                                 <div class="subtitle">Ingresos Totales</div>
                             </div>
                         </div>
                     </div>
-                    <!-- Total Cobrado -->
+                    <!-- Total Cobrado -->                    
                     <div class="col-lg-3">
                         <div class="dashboard-card">
                             <div class="dashboard-body">
-                                <div class="dashboard-title" id="kpiTotalCobrado">$12,000</div>
+                                <div class="dashboard-title" id="kpiTotalCobrado">${{ totalCobrado }}</div>
                                 <div class="subtitle">Total Cobrado</div>
                             </div>
                         </div>
-                    </div>
+                    </div>                    
                     <!-- Proyectos Completados -->
                     <div class="col-lg-3">
                         <div class="dashboard-card">
                             <div class="dashboard-body">
-                                <div class="dashboard-title" id="kpiProyectosCompletados">89%</div>
+                                <div class="dashboard-title" id="kpiProyectosCompletados">{{ proyectosTotalesPorcentaje }}%</div>
                                 <div class="subtitle">Proyectos Completados</div>
                             </div>
                         </div>
@@ -84,9 +84,159 @@
                             </div>
                         </div>
                     </div>
+                    <!--
+                    <div class="col-md-6 mb-4">
+                        <div class="graphic-card">
+                            <div class="graphic-body">
+                                <h5 class="subtitle">Evolución de Ingresos Últimos 12 Meses</h5>
+                                <canvas id="chartEvolucionDeIngresos"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    -->
                 </div>
             </section>
         {% endblock %}
    </div>
 </div>
+<!--Agregamos CharJS desde CDNJS-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.min.js" integrity="sha512-L0Shl7nXXzIlBSUUPpxrokqq4ojqgZFQczTYlGjzONGTDAcLremjwaWv5A+EDLnxhQzY5xUZPWLOLqYRkY0Cbw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<!-- Script para chart Estado de Proyectos -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const ctx = document.getElementById('chartEstadoProyectos').getContext('2d');
+        
+        const projectData = {
+            proyectosActivos: {{ estadoProyectos.proyectosActivos }},
+            proyectosInactivos: {{ estadoProyectos.proyectosInactivos }}
+        };
+        
+        const projectsChart = new Chart(ctx, {
+            type: 'doughnut',  
+            data: {
+                labels: ['Proyectos Activos', 'Proyectos Inactivos'],
+                datasets: [{
+                    data: [projectData.proyectosActivos, projectData.proyectosInactivos],
+                    backgroundColor: [
+                        'rgba(54, 162, 235, 0.7)',
+                        'rgba(255, 99, 132, 0.7)'   
+                    ],
+                    borderColor: [
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 99, 132, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: '',
+                        font: {
+                            size: 16
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const label = context.label || '';
+                                const value = context.raw || 0;
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percentage = Math.round((value / total) * 100);
+                                return `${label}: ${value} (${percentage}%)`;
+                            }
+                        }
+                    }
+                },
+                cutout: '70%'
+            }
+        });
+    });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const projectsData = [
+            {% for proyecto in ingresosProyectos %}
+            {
+                nombreDelProyecto: "{{ proyecto.nombreDelProyecto|escapejs }}",
+                total: {{ proyecto.total }}
+            }{% if not forloop.last %},{% endif %}
+            {% endfor %}
+        ];
+
+        const labels = projectsData.map(item => item.nombreDelProyecto);
+        const values = projectsData.map(item => item.total);
+        
+        const backgroundColors = [];
+        const hueStep = 360 / projectsData.length;
+        for (let i = 0; i < projectsData.length; i++) {
+            backgroundColors.push(`hsl(${i * hueStep}, 70%, 60%)`);
+        }
+        
+        const ctx = document.getElementById('chartIngresosProyectos').getContext('2d');
+        
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: values,
+                    backgroundColor: backgroundColors,
+                    borderColor: '#fff',
+                    borderWidth: 2,
+                    hoverOffset: 10
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: {
+                            boxWidth: 12,
+                            padding: 20,
+                            font: {
+                                size: 12
+                            }
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const label = context.label || '';
+                                const value = context.raw || 0;
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percentage = Math.round((value / total) * 100);
+                                return `${label}: ${value} (${percentage}%)`;
+                            }
+                        }
+                    },
+                    title: {
+                        display: true,
+                        text: '',
+                        font: {
+                            size: 16
+                        },
+                        padding: {
+                            top: 10,
+                            bottom: 20
+                        }
+                    }
+                },
+                cutout: '65%',
+                animation: {
+                    animateScale: true,
+                    animateRotate: true
+                }
+            }
+        });
+    });
+</script>
+
 {% endblock %}

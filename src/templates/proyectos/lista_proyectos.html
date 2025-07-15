@@ -2,115 +2,81 @@
 {% block title %} Lista Proyectos {% endblock %}
 
 {% block proyectos_content %}
-<section>
-    <!-- Filtro por estado y búsqueda -->
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <div>
-            <label for="filtroEstado" class="form-label">Filtrar por estado:</label>
-            <select id="filtroEstado" class="form-select" >
-                <option value="">Todos</option>
-                <option value="Activo">Activo</option>
-                <option value="Finalizado">Finalizado</option>
-                <option value="Pendiente">Pendiente</option>
-            </select>
-        </div>
-        <div>
-            <input type="text" id="busquedaInput" class="form-control" placeholder="Buscar proyecto...">
-        </div>
-    </div>
+<section class="container mt-4">
+    <h2 class="mb-3">Lista de Proyectos</h2>
 
-    <!-- Tabla de proyectos -->
-    <table class="table table-striped table-bordered align-middle" id="tablaProyectosTabla">
+    <table class="table table-striped table-bordered align-middle">
         <thead class="table-dark">
             <tr>
                 <th>ID</th>
-                <th>Nombre del Proyecto</th>
                 <th>Cliente</th>
-                <th>Estado</th>
-                <th>Fecha de Inicio</th>
-                <th>Fecha Fin</th>
+                <th>Nombre</th>
+                <th>Inicio</th>
+                <th>Fin</th>
                 <th>Total</th>
                 <th>Pagado</th>
-                <th>Saldo pendiente</th>
-                <th>Acciones</th>
+                <th>Pendiente</th>
+                <th>Gasto Total</th>
+                <th>Estado</th>
             </tr>
         </thead>
-        <tbody id="tablaProyectos">
-            <!-- Ejemplos adicionales de filas -->
+        <tbody>
+            {% for proyecto in proyectos %}
             <tr>
-                <td>1</td>
-                <td>Construcción Edificio Central</td>
-                <td>Empresa XYZ</td>
-                <td>Activo</td>
-                <td>2024-01-15</td>
-                <td>2024-12-20</td>
-                <td>$500,000</td>
-                <td>$300,000</td>
-                <td>$200,000</td>
+                <td>{{ proyecto.proyecto_id }}</td>
+                <td>{{ proyecto.cliente }}</td>
+                <td>{{ proyecto.nombre }}</td>
+                <td>{{ proyecto.fecha_inicio }}</td>
+                <td>{{ proyecto.fecha_fin|default:"N/A" }}</td>
+                <td>${{ proyecto.total|default:"N/A" }}</td>
+                <td>${{ proyecto.total_pagado }}</td>
+                <td>${{ proyecto.saldo_pendiente }}</td>
+                <td>${{ proyecto.gasto_total }}</td>
+                <td>{{ proyecto.estado }}</td>
                 <td>
-                    <button class="btn btn-sm btn-primary">Editar</button>
-                    <button class="btn btn-sm btn-secondary">Detalles</button>
+                    <a href="{% url 'proyecto_detalles' proyecto.proyecto_id %}" 
+                       class="btn btn-sm btn-primary">
+                        <i class="fas fa-eye"></i> Ver
+                    </a>
                 </td>
             </tr>
+            {% empty %}
             <tr>
-                <td>2</td>
-                <td>Renovación Planta Industrial</td>
-                <td>Inversiones López</td>
-                <td>Finalizado</td>
-                <td>2023-05-01</td>
-                <td>2024-03-30</td>
-                <td>$1,200,000</td>
-                <td>$1,200,000</td>
-                <td>$0</td>
-                <td>
-                    <button class="btn btn-sm btn-primary">Editar</button>
-                    <button class="btn btn-sm btn-secondary">Detalles</button>
-                </td>
+                <td colspan="11" class="text-center">No hay proyectos disponibles.</td>
             </tr>
-            <tr>
-                <td>3</td>
-                <td>Centro Comercial Los Pinos</td>
-                <td>Constructora El Roble</td>
-                <td>Pendiente</td>
-                <td>2025-08-01</td>
-                <td>2026-10-15</td>
-                <td>$2,300,000</td>
-                <td>$0</td>
-                <td>$2,300,000</td>
-                <td>
-                    <button class="btn btn-sm btn-primary">Editar</button>
-                    <button class="btn btn-sm btn-secondary">Detalles</button>
-                </td>
-            </tr>
+            {% endfor %}
         </tbody>
     </table>
+
+    <!-- Paginación -->
+    <nav aria-label="Paginación de proyectos">
+        <ul class="pagination justify-content-center">
+            {% if proyectos.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page=1">« Primero</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ proyectos.previous_page_number }}">‹ Anterior</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled"><span class="page-link">« Primero</span></li>
+            <li class="page-item disabled"><span class="page-link">‹ Anterior</span></li>
+            {% endif %}
+
+            <li class="page-item active"><span class="page-link">{{ proyectos.number }}</span></li>
+
+            {% if proyectos.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ proyectos.next_page_number }}">Siguiente ›</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ proyectos.paginator.num_pages }}">Último »</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled"><span class="page-link">Siguiente ›</span></li>
+            <li class="page-item disabled"><span class="page-link">Último »</span></li>
+            {% endif %}
+        </ul>
+    </nav>
 </section>
-
-<!-- Scripts para filtrar por estado y buscar -->
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const filtroEstado = document.getElementById("filtroEstado");
-        const busquedaInput = document.getElementById("busquedaInput");
-        const filas = document.querySelectorAll("#tablaProyectos tr");
-
-        function aplicarFiltros() {
-            const estadoSeleccionado = filtroEstado.value.toLowerCase();
-            const textoBusqueda = busquedaInput.value.toLowerCase();
-
-            filas.forEach(fila => {
-                const celdas = fila.getElementsByTagName("td");
-                const estado = celdas[3]?.textContent.toLowerCase();
-                const textoCompleto = fila.textContent.toLowerCase();
-
-                const coincideEstado = !estadoSeleccionado || estado === estadoSeleccionado;
-                const coincideBusqueda = textoCompleto.includes(textoBusqueda);
-
-                fila.style.display = (coincideEstado && coincideBusqueda) ? "" : "none";
-            });
-        }
-
-        filtroEstado.addEventListener("change", aplicarFiltros);
-        busquedaInput.addEventListener("input", aplicarFiltros);
-    });
-</script>
 {% endblock %}
