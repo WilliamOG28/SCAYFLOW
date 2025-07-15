@@ -160,6 +160,7 @@
                                     <th>Documentos</th>
                                     <th>Inicio</th>
                                     <th>Fin</th>
+                                    <th>Es gasto</th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -217,7 +218,8 @@ function agregarTramite() {
         documentos_requeridos: document.getElementById('procedureDocs').value,
         observaciones: document.getElementById('procedureObservaciones').value,
         fecha_inicio: document.getElementById('procedureStartDate').value,
-        fecha_fin: document.getElementById('procedureEndDate').value
+        fecha_fin: document.getElementById('procedureEndDate').value,
+        es_gasto: document.getElementById('es_gasto').value
     };
     tramites.push(t);
     renderTramites();
@@ -235,6 +237,7 @@ function agregarTramite() {
     document.getElementById('procedureObservaciones').value = '';
     document.getElementById('procedureStartDate').value = '';
     document.getElementById('procedureEndDate').value = '';
+    document.getElementById('es_gasto').value = false;
 }
 
 function renderTramites() {
@@ -258,6 +261,7 @@ function renderTramites() {
                 <td>${t.documentos_requeridos}</td>
                 <td>${t.fecha_inicio}</td>
                 <td>${t.fecha_fin}</td>
+                <td>${t.es_gasto}</td>
                 <td class="text-center">
                     <button type="button" class="btn btn-danger btn-sm" onclick="eliminarTramite(${idx})">Eliminar</button>
                 </td>

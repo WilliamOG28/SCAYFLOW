@@ -59,8 +59,8 @@ class Proyecto(models.Model):
     def gasto_total(self):
         return sum(
             t.total_tramite for t in self.tramites.all() 
-            if t.es_gasto
-        )
+            if t.es_gasto and t.total_tramite is not None
+        ) or 0
 
     @property
     def utilidad_total(self):

@@ -9,7 +9,7 @@ from django.http import JsonResponse
 from django.template.loader import render_to_string
 from scayflow.models import Cliente, Tramite, Proyecto, Pago
 import json
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation
 from django.core.paginator import Paginator
 from django.db.models import Sum, Count
 
@@ -99,68 +99,84 @@ def getProyectosCompletadosPorcentaje (listaProyectos):
 
 from decimal import Decimal
 
+def safe_decimal(value, default=Decimal('0.00')):
+    if value is None or value == '':
+        return default
+    try:
+        return Decimal(str(value))
+    except (InvalidOperation, TypeError):
+        return default
+    
 @login_required
 def nuevo_proyecto(request):
     if request.method == 'POST':
-        # Crear proyecto
-        proyecto = Proyecto.objects.create(
-            nombre=request.POST.get('nombre'),
-            tipo_proyecto=request.POST.get('tipo_proyecto'),
-            cliente_id=request.POST.get('cliente_id'),
-            estado=request.POST.get('estado'),
-            fecha_inicio=request.POST.get('fecha_inicio'),
-            fecha_fin=request.POST.get('fecha_fin') or None,
-            descripcion=request.POST.get('descripcion'),
-            sector=request.POST.get('sector'),
-            costo_base=request.POST.get('costo_base'),
-            tarifa_porcentaje=request.POST.get('tarifa_porcentaje'),
-            nota=request.POST.get('nota'),
-        )
-
-        # Crear trámites
-        tramites = json.loads(request.POST.get('tramites_json', '[]'))
-        for t in tramites:
-            fecha_fin_tramite = t.get('fecha_fin', None)
-            if not fecha_fin_tramite:
-                fecha_fin_tramite = None
-            tramite = Tramite.objects.create(
-                proyecto=proyecto,
-                nombre=t['nombre'],
-                descripcion=t['descripcion'],
-                costo_base=t['costo_base'],
-                tarifa_porcentaje=t['tarifa_porcentaje'],
-                duracion_estimada=t['duracion_estimada'],
-                tiempo_resolucion=t.get('tiempo_resolucion', ''),
-                dependencia=t.get('dependencia', ''),
-                responsable_dependencia=t.get('responsable_dependencia', ''),
-                estatus='Activo',
-                documentos_requeridos=t.get('documentos_requeridos', ''),
-                observaciones=t.get('observaciones', ''),
-                fecha_ultima_actualizacion=None,
-                fecha_inicio=t.get('fecha_inicio', None),
-                fecha_fin=fecha_fin_tramite,
-                es_gasto=t.get('es_gasto', False),
+        try:
+            # Create project with safe decimal conversion
+            proyecto = Proyecto.objects.create(
+                nombre=request.POST.get('nombre'),
+                tipo_proyecto=request.POST.get('tipo_proyecto'),
+                cliente_id=request.POST.get('cliente_id'),
+                estado=request.POST.get('estado'),
+                fecha_inicio=request.POST.get('fecha_inicio'),
+                fecha_fin=request.POST.get('fecha_fin') or None,
+                descripcion=request.POST.get('descripcion'),
+                sector=request.POST.get('sector'),
+                costo_base=safe_decimal(request.POST.get('costo_base')),
+                tarifa_porcentaje=request.POST.get('tarifa_porcentaje'),
+                nota=request.POST.get('nota'),
             )
-            # Actualiza los totales usando los valores ya generados por SQL
-            tramite.refresh_from_db()
-            tramite.total_tramite = (
-                Decimal(tramite.costo_base or 0) +
-                Decimal(tramite.tarifa_monto or 0) +
-                Decimal(tramite.iva_monto or 0)
+
+            # Create procedures
+            tramites = json.loads(request.POST.get('tramites_json', '[]'))
+            for t in tramites:
+                costo_base = safe_decimal(t.get('costo_base'))
+                tarifa_porcentaje = safe_decimal(t.get('tarifa_porcentaje'))
+                
+                # Cálculos
+                tarifa_monto = costo_base * (tarifa_porcentaje / Decimal('100'))
+                subtotal = costo_base + tarifa_monto
+                iva_monto = subtotal * Decimal('0.16')
+                total_tramite = subtotal + iva_monto
+                
+                Tramite.objects.create(
+                    proyecto=proyecto,
+                    nombre=t.get('nombre', ''),
+                    descripcion=t.get('descripcion', ''),
+                    costo_base=safe_decimal(t.get('costo_base')),
+                    tarifa_porcentaje=safe_decimal(t.get('tarifa_porcentaje')),
+                    duracion_estimada=t.get('duracion_estimada', 0),
+                    tiempo_resolucion=t.get('tiempo_resolucion', ''),
+                    dependencia=t.get('dependencia', ''),
+                    responsable_dependencia=t.get('responsable_dependencia', ''),
+                    estatus='Activo',
+                    documentos_requeridos=t.get('documentos_requeridos', ''),
+                    observaciones=t.get('observaciones', ''),
+                    fecha_ultima_actualizacion=None,
+                    fecha_inicio=t.get('fecha_inicio', None),
+                    fecha_fin=t.get('fecha_fin', None),
+                    es_gasto=t.get('es_gasto', False),
+                    tarifa_monto=tarifa_monto,
+                    iva_monto=iva_monto,
+                    total_tramite=total_tramite,
+                )
+
+            # Calculate totals without refresh_from_db if it's causing issues
+            proyecto.total = (
+                (proyecto.costo_base or Decimal('0')) + 
+                (proyecto.tarifa_monto or Decimal('0')) + 
+                (proyecto.iva_monto or Decimal('0'))
             )
-            tramite.save(update_fields=['total_tramite'])
+            proyecto.save(update_fields=['total'])
 
-        # Actualiza los totales y utilidad en el proyecto
-        proyecto.refresh_from_db()
-        proyecto.total = (
-            Decimal(proyecto.costo_base or 0) +
-            Decimal(proyecto.tarifa_monto or 0) +
-            Decimal(proyecto.iva_monto or 0)
-        )
-
-        proyecto.save(update_fields=['total'])
-
-        return redirect('lista_proyectos')
+            return redirect('lista_proyectos')
+            
+        except Exception as e:
+            # Log the error and return a user-friendly message
+            print(f"Error creating project: {str(e)}")
+            messages.error(request, "Error creating project. Please check your input values.")
+            clientes = Cliente.objects.all()
+            return render(request, 'proyectos/nuevo_proyecto.html', {'clientes': clientes})
+            
     else:
         clientes = Cliente.objects.all()
         return render(request, 'proyectos/nuevo_proyecto.html', {'clientes': clientes})
@@ -193,30 +209,42 @@ def editar_proyecto(request):
         proyecto_id = request.POST.get('proyecto_id')
         proyecto = get_object_or_404(Proyecto, pk=proyecto_id)
 
-        # Actualizar campos
-        proyecto.nombre = request.POST.get('nombre')
-        proyecto.estado = request.POST.get('estado')
-        proyecto.tipo_proyecto = request.POST.get('tipo_proyecto')
-        #proyecto.cliente_id = request.POST.get('cliente_id')
-        proyecto.estado = request.POST.get('estado')
-        proyecto.fecha_inicio = request.POST.get('fecha_inicio')
-        proyecto.fecha_fin = request.POST.get('fecha_fin') or None
-        proyecto.descripcion = request.POST.get('descripcion')
-        proyecto.sector = request.POST.get('sector')
-        proyecto.costo_base = Decimal(request.POST.get('costo_base') or 0)
-        proyecto.tarifa_porcentaje = Decimal(request.POST.get('tarifa_porcentaje') or 0)
-        proyecto.nota = request.POST.get('nota')
+        try:
+            # Helper function for safe decimal conversion
+            def get_decimal(value, default='0.00'):
+                try:
+                    return Decimal(str(value)) if value else Decimal(default)
+                except (InvalidOperation, TypeError):
+                    return Decimal(default)
 
-        # Recalcular campos derivados
-        proyecto.tarifa_monto = proyecto.costo_base * proyecto.tarifa_porcentaje / Decimal(100)
-        proyecto.iva_monto = proyecto.tarifa_monto * Decimal('0.16')
-        proyecto.total = proyecto.costo_base + proyecto.tarifa_monto + proyecto.iva_monto
+            # Update fields with proper decimal handling
+            proyecto.nombre = request.POST.get('nombre')
+            proyecto.estado = request.POST.get('estado')
+            proyecto.tipo_proyecto = request.POST.get('tipo_proyecto')
+            proyecto.fecha_inicio = request.POST.get('fecha_inicio')
+            proyecto.fecha_fin = request.POST.get('fecha_fin') or None
+            proyecto.descripcion = request.POST.get('descripcion')
+            proyecto.sector = request.POST.get('sector')
+            proyecto.nota = request.POST.get('nota')
+            
+            # Decimal fields with proper handling
+            proyecto.costo_base = get_decimal(request.POST.get('costo_base'))
+            proyecto.tarifa_porcentaje = get_decimal(request.POST.get('tarifa_porcentaje'))
 
-        proyecto.save()
+            # Recalculate derived fields
+            proyecto.tarifa_monto = (proyecto.costo_base * proyecto.tarifa_porcentaje) / Decimal(100)
+            proyecto.iva_monto = (proyecto.costo_base + proyecto.tarifa_monto) * Decimal('0.16')
+            proyecto.total = proyecto.costo_base + proyecto.tarifa_monto + proyecto.iva_monto
 
-        return redirect('lista_proyectos')
+            proyecto.save()
+            return redirect('lista_proyectos')
 
-
+        except Exception as e:
+            # Handle any errors gracefully
+            print(f"Error updating project: {str(e)}")
+            # You might want to add a message to the user here
+            return redirect('editar_proyecto', proyecto_id=proyecto_id)
+        
 #Vistas para clientes
 @login_required
 def clientes(request):
