@@ -275,3 +275,12 @@ body.dark-mode .footer .text-muted {
   border: none;
   height: 100% !important;
 }
+
+#calendar {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+#calendar a, #calendar h2 {
+  color: #000 !important;
+}

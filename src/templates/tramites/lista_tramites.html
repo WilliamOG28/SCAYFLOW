@@ -2,6 +2,13 @@
 {% block title %} Lista Tramites {% endblock %}
 
 {% block tramites_content %}
+
+<!-- FullCalendar CSS -->
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css" rel="stylesheet">
+<!-- FullCalendar JS -->
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.18/index.global.min.js'></script>
+
+
 <section class="">
     <h2 class="mb-3 text-dark text-center">Lista de Trámites</h2>
     <form method="get" class="mb-3">
@@ -231,6 +238,11 @@
         </div>
     </section>
 
+    <section class="my-5">
+        <h5 class="text-center mb-4 text-dark">📅 Calendario de Trámites (Fecha de Fin)</h5>
+        <div id="calendar" class="border p-3 bg-white shadow-sm rounded"></div>
+    </section>
+
 </section>
 
 <!-- Modal de Edición -->
@@ -404,6 +416,38 @@
     const input = document.getElementById('inputTramiteIdEliminar');
     input.value = tramiteId;
   });
+</script>
+
+
+<script>
+//CALENDARIO
+document.addEventListener('DOMContentLoaded', function () {
+    const calendarEl = document.getElementById('calendar');
+
+    const calendar = new FullCalendar.Calendar(calendarEl, {
+        locale: 'es',
+        initialView: 'dayGridMonth',
+        height: 'auto',
+        headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,listMonth'
+        },
+        buttonText: {
+            today: 'Hoy',
+            month: 'Mes',
+            week: 'Semana',
+            day: 'Día',
+            list: 'Lista'
+        },
+        events: {{ eventos_json|safe }},
+        eventClick: function(info) {
+            alert("Trámite: " + info.event.title + "\nFecha fin: " + info.event.startStr);
+        }
+    });
+
+    calendar.render();
+});
 </script>
 
 {% endblock %}

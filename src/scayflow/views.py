@@ -12,10 +12,53 @@ import json
 from decimal import Decimal, InvalidOperation
 from django.core.paginator import Paginator
 from django.db.models import Sum, Count
+from django.utils.dateformat import format as date_format
 
 @login_required
 def dashboard(request):
-    return render(request, 'dashboard.html')
+    # Lista de los proyectos más recientes (limitado a 5 por ejemplo)
+    proyectos = Proyecto.objects.all().order_by('-fecha_inicio')
+    total_proyectos = Proyecto.objects.all().order_by('-fecha_inicio').count()
+
+    # Conteos de trámites
+    total_tramites = Tramite.objects.count()
+    completados = Tramite.objects.filter(estatus__iexact='Completado').count()
+    pendientes = Tramite.objects.exclude(estatus__iexact='Completado').count()
+    
+    activos = Tramite.objects.filter(estatus__iexact='Activo').count()
+    tramites_activos = Tramite.objects.exclude(estatus__iexact='Activo').count()
+
+    # Conteo agrupado por estado para gráfica
+    estados = Tramite.objects.values('estatus').annotate(total=Count('estatus'))
+
+    # Preparo listas para la gráfica (labels y datos)
+    labels = [e['estatus'] for e in estados]
+    cantidades = [e['total'] for e in estados]
+    
+    tramites_list = Tramite.objects.all().order_by('-fecha_inicio')
+    
+    eventos_calendario = []
+    for tramite in tramites_list:
+        if tramite.fecha_fin:
+            eventos_calendario.append({
+                "title": f"{tramite.nombre} ({tramite.proyecto})",
+                "start": date_format(tramite.fecha_fin, 'Y-m-d'),
+                "allDay": True,
+            })
+
+    return render(request, 'dashboard.html', {
+        'proyectos': proyectos,
+        'total_tramites': total_tramites,
+        'completados': completados,
+        'pendientes': pendientes,
+        'activos' : activos,
+        'estados': estados,
+        'labels': labels,
+        'cantidades': cantidades,
+        'total_proyectos' : total_proyectos,
+        'eventos_json': json.dumps(eventos_calendario),
+        'ingresosTotales': getIngresosTotales(proyectos),
+    })
 
 #Vistas para proyectos
 @login_required
@@ -420,6 +463,15 @@ def lista_tramites(request):
     # Separa los datos para las gráficas
     labels_estatus = [e['estatus'] for e in estados_raw]
     cantidades_estatus = [e['cantidad'] for e in estados_raw]
+    
+    eventos_calendario = []
+    for tramite in tramites_list:
+        if tramite.fecha_fin:
+            eventos_calendario.append({
+                "title": f"{tramite.nombre} ({tramite.proyecto})",
+                "start": date_format(tramite.fecha_fin, 'Y-m-d'),
+                "allDay": True,
+            })
 
     return render(request, 'tramites/lista_tramites.html', {
         'tramites': tramites,
@@ -437,6 +489,7 @@ def lista_tramites(request):
         'labels_estatus': labels_estatus,
         'cantidades_estatus': cantidades_estatus,
         'estatus_seleccionado': estatus,
+        'eventos_json': json.dumps(eventos_calendario),
     })
 
     
