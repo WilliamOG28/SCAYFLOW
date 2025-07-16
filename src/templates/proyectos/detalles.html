@@ -1,0 +1,109 @@
+{% extends "proyectos/proyectos.html" %}
+{% block title %} Detalles de Proyecto {% endblock %}
+
+{% block proyectos_content %}
+<div class="">
+    <div class="card shadow p-3 mb-5 bg-body rounded">
+        <div class="card-header">
+            <h2 class="mb-3 text-dark text-start">📘 Detalles del Proyecto: {{ proyecto.nombre }}</h2>
+            <!--
+                        <a href="{% url 'lista_proyectos' %}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Volver
+            </a>
+            -->
+        </div>
+        
+        <div class="card-body">
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <h4 class="text-dark">Información Básica</h4>
+                    <dl class="row">
+                        <dt class="col-sm-4">ID:</dt>
+                        <dd class="col-sm-8">{{ proyecto.proyecto_id }}</dd>
+                        
+                        <dt class="col-sm-4">Cliente:</dt>
+                        <dd class="col-sm-8">{{ proyecto.cliente }}</dd>
+                        
+                        <dt class="col-sm-4">Fecha Inicio:</dt>
+                        <dd class="col-sm-8">{{ proyecto.fecha_inicio }}</dd>
+                        
+                        <dt class="col-sm-4">Fecha Fin:</dt>
+                        <dd class="col-sm-8">{{ proyecto.fecha_fin|default:"N/A" }}</dd>
+                    </dl>
+                </div>
+                
+                <div class="col-md-6">
+                    <h4 class="text-dark">Finanzas</h4>
+                    <dl class="row">
+                        <dt class="col-sm-4">Total:</dt>
+                        <dd class="col-sm-8">${{ proyecto.total|default:"0" }}</dd>
+                        
+                        <dt class="col-sm-4">Pagado:</dt>
+                        <dd class="col-sm-8">${{ proyecto.total_pagado }}</dd>
+                        
+                        <dt class="col-sm-4">Pendiente:</dt>
+                        <dd class="col-sm-8">${{ proyecto.saldo_pendiente }}</dd>
+                        
+                        <dt class="col-sm-4">Gasto Total:</dt>
+                        <dd class="col-sm-8">${{ proyecto.gasto_total }}</dd>
+                    </dl>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <h4 class="text-dark">Trámites</h4>
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Descripción</th>
+                                <th>Monto</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for tram in tramites %}
+                            <tr>
+                                <td>{{ tram.fecha | default:'--'}}</td>
+                                <td>{{ tram.descripcion | default:'--'}}</td>
+                                <td>${{ tram.monto | default:'--'}}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="3">No hay Trámites</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="col-md-6">
+                    <h4 class="text-dark">Pagos</h4>
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Método</th>
+                                <th>Monto</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for pago in pagos %}
+                            <tr>
+                                <td class="text-dark">{{ pago.fecha | default:'--' }}</td>
+                                <td>{{ pago.metodo | default:'--' }}</td>
+                                <td>${{ pago.monto | default:'--' }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="3">No hay pagos registrados</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -2,49 +2,452 @@
 {% block title %} Lista Tramites {% endblock %}
 
 {% block tramites_content %}
-    <!-- Sección principal: Lista de Proyectos con filtro -->
-    <section>
-        <!-- Filtro por estado de proyecto 
-        <div class="mb-3">
-            <label for="filtroEstado" class="form-label fw-bold">Filtrar por estado:</label>
-            <select id="filtroEstado" class="form-select" style="max-width: 300px;">
-                <option value="">Todos</option>
-                <option value="Activo">Activo</option>
-                <option value="Finalizado">Finalizado</option>
-                <option value="Pendiente">Pendiente</option>
-            </select>
-        </div>-->
-        
-        <!-- Tabla de proyectos -->
+
+<!-- FullCalendar CSS -->
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css" rel="stylesheet">
+<!-- FullCalendar JS -->
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.18/index.global.min.js'></script>
+
+
+<section class="">
+    <h2 class="mb-3 text-dark text-center">Lista de Trámites</h2>
+    <form method="get" class="mb-3">
+        <div class="row">
+            <div class="col-md-4">
+                <label for="cliente" class="mt-2">Filtrar por Cliente:</label>
+                <select name="cliente" id="cliente" class="form-select">
+                    <option value="">-- Todos los clientes --</option>
+                    {% for cliente in clientes %}
+                        <option value="{{ cliente.cliente_id }}" {% if cliente_seleccionado == cliente.cliente_id|stringformat:"s" %}selected{% endif %}>
+                            {{ cliente.nombre }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label for="proyecto" class="mt-2">Filtrar por Proyecto:</label>
+                <select name="proyecto" id="proyectoSelect" class="form-select">
+                    <option value="">-- Todos los proyectos --</option>
+                    {% for proyecto in proyectos %}
+                        <option value="{{ proyecto.proyecto_id }}" {% if proyecto_seleccionado == proyecto.proyecto_id|stringformat:"s" %}selected{% endif %}>
+                            {{ proyecto.nombre }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col-md-2">
+                <label for="estatus" class="mt-2">Filtrar por Estatus:</label>
+                <select name="estatus" id="estatus" class="form-select">
+                    <option value="">-- Todos --</option>
+                    <option value="Activo" {% if estatus_seleccionado == 'Activo' %}selected{% endif %}>Activo</option>
+                    <option value="Inactivo" {% if estatus_seleccionado == 'Inactivo' %}selected{% endif %}>Inactivo</option>
+                    <option value="Completado" {% if estatus_seleccionado == 'Completado' %}selected{% endif %}>Completado</option>
+                </select>
+            </div>
+
+
+            <div class="col-md-2 d-flex justify-content-center align-items-end">
+                <button type="submit" class="btn btn-primary w-100 btn-filtrar-tramites">Filtrar</button>
+            </div>
+        </div>
+
+    </form>
+    <div class="table-responsive">
         <table class="table table-striped table-bordered align-middle">
             <thead class="table-dark">
                 <tr>
                     <th>ID</th>
-                    <th>Nombre del Proyecto</th>
-                    <th>Cliente</th>
-                    <th>Estado</th>
-                    <th>Fecha de Inicio</th>
-                    <th>Fecha Fin</th>
+                    <th>Proyecto</th>
+                    <th>Nombre</th>
+                    <th>Dependencia</th>
+                    <th>Responsable</th>
+                    <th>Inicio</th>
+                    <th>Fin</th>
                     <th>Total</th>
                     <th>Pagado</th>
-                    <th>Saldo pendiente</th>
+                    <th>Saldo</th>
+                    <th>Es gasto</th>
+                    <th>Estatus</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
-            <tbody id="tablaProyectos">
-                <!-- Ejemplo de fila de proyecto (puedes eliminarla cuando uses datos dinámicos) -->
+            <tbody>
+                {% for tramite in tramites %}
                 <tr>
-                    <td>1</td>
-                    <td>Construcción Edificio Central</td>
-                    <td>Empresa XYZ</td>
-                    <td>Activo</td>
-                    <td>2024-01-15</td>
-                    <td>2024-12-20</td>
-                    <td>$500,000</td>
-                    <td>$300,000</td>
-                    <td>$200,000</td>
+                    <td>{{ tramite.tramite_id }}</td>
+                    <td>{{ tramite.proyecto }}</td>
+                    <td>{{ tramite.nombre }}</td>
+                    <td>{{ tramite.dependencia }}</td>
+                    <td>{{ tramite.responsable_dependencia }}</td>
+                    <td>{{ tramite.fecha_inicio }}</td>
+                    <td>{{ tramite.fecha_fin|default:"N/A" }}</td>
+                    <td>${{ tramite.total_tramite }}</td>
+                    <td>${{ tramite.total_pagado }}</td>
+                    <td>${{ tramite.saldo_pendiente }}</td>
+                    <td>
+                        {% if tramite.es_gasto %}
+                            <span class="text-danger">❌ Gasto</span>
+                        {% else %}
+                            <span class="text-success">✅ Utilidad</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if tramite.estatus == "Activo" %}
+                            <span class="badge bg-primary">{{ tramite.estatus }}</span>
+                        {% elif tramite.estatus == "Inactivo" %}
+                            <span class="badge bg-warning">{{ tramite.estatus }}</span>
+                        {% elif tramite.estatus == "Completado" %}
+                            <span class="badge bg-success">{{ tramite.estatus }}</span>
+                        {% else %}
+                            <span class="badge bg-warning text-dark">{{ tramite.estatus }}</span>
+                        {% endif %}
+                    </td>
+                    <td class="d-flex justify-content-center align-items-center gap-1" height="100">
+                        <button 
+                            class="btn btn-sm btn-primary editar-btn"
+                            data-bs-toggle="modal"
+                            data-bs-target="#modalEditarTramite"
+                            data-id="{{ tramite.tramite_id }}"
+                            data-nombre="{{ tramite.nombre }}"
+                            data-descripcion="{{ tramite.descripcion }}"
+                            data-costo-base="{{ tramite.costo_base }}"
+                            data-tarifa-porcentaje="{{ tramite.tarifa_porcentaje }}"
+                            data-dependencia="{{ tramite.dependencia }}"
+                            data-responsable="{{ tramite.responsable_dependencia }}"
+                            data-estatus="{{ tramite.estatus }}"
+                            data-es-gasto="{{ tramite.es_gasto }}"
+                        >
+                            Editar
+                        </button>
+                        <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#modalEliminar" data-tramite-id="{{ tramite.tramite_id }}">
+                            🗑️
+                        </button>
+                    </td>
                 </tr>
-                <!-- Las filas reales se generan dinámicamente con JavaScript o Django -->
+                {% empty %}
+                <tr>
+                    <td colspan="11" class="text-center">No hay trámites disponibles.</td>
+                </tr>
+                {% endfor %}
             </tbody>
         </table>
+    </div>
+
+    <!-- Paginación -->
+    <nav aria-label="Paginación de trámites" class="paginacion-tabla">
+        <ul class="pagination justify-content-center">
+            {% if tramites.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page=1{% if proyecto_seleccionado %}&proyecto={{ proyecto_seleccionado }}{% endif %}">« Primero</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ tramites.previous_page_number }}{% if proyecto_seleccionado %}&proyecto={{ proyecto_seleccionado }}{% endif %}">‹ Anterior</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled"><span class="page-link">« Primero</span></li>
+            <li class="page-item disabled"><span class="page-link">‹ Anterior</span></li>
+            {% endif %}
+
+            <li class="page-item active"><span class="page-link">{{ tramites.number }}</span></li>
+
+            {% if tramites.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ tramites.next_page_number }}{% if proyecto_seleccionado %}&proyecto={{ proyecto_seleccionado }}{% endif %}">Siguiente ›</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ tramites.paginator.num_pages }}{% if proyecto_seleccionado %}&proyecto={{ proyecto_seleccionado }}{% endif %}">Último »</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled"><span class="page-link">Siguiente ›</span></li>
+            <li class="page-item disabled"><span class="page-link">Último »</span></li>
+            {% endif %}
+        </ul>
+    </nav>
+
+    <hr class="mt-5">
+
+    <!-- Dashboard -->
+    <!-- Dashboard KPIs -->
+    <section class="my-5">
+        <div class="row g-4 justify-content-center">
+            <!-- Trámites Totales -->
+            <div class="col-lg-3">
+                <div class="dashboard-card text-dark">
+                    <div class="dashboard-body text-center">
+                        <div class="dashboard-title display-5">{{ total_tramites }}</div>
+                        <div class="subtitle">Total Trámites</div>
+                    </div>
+                </div>
+            </div>
+            <!-- Trámites Activos -->
+            <div class="col-lg-3">
+                <div class="dashboard-card text-dark">
+                    <div class="dashboard-body text-center">
+                        <div class="dashboard-title display-5">{{ activos }}</div>
+                        <div class="subtitle">Trámites Activos</div>
+                    </div>
+                </div>
+            </div>
+            <!-- Trámites Activos -->
+            <div class="col-lg-3">
+                <div class="dashboard-card text-dark">
+                    <div class="dashboard-body text-center">
+                        <div class="dashboard-title display-5">{{ completados }}</div>
+                        <div class="subtitle">Trámites Completados</div>
+                    </div>
+                </div>
+            </div>
+            <!-- Monto Total -->
+            <div class="col-lg-3">
+                <div class="dashboard-card text-dark">
+                    <div class="dashboard-body text-center">
+                        <div class="dashboard-title display-5">${{ monto_total|floatformat:2 }}</div>
+                        <div class="subtitle">Monto Total</div>
+                    </div>
+                </div>
+            </div>
+            <!-- Total Pagado -->
+            <div class="col-lg-3">
+                <div class="dashboard-card text-dark">
+                    <div class="dashboard-body text-center">
+                        <div class="dashboard-title display-5">${{ total_pagado|floatformat:2 }}</div>
+                        <div class="subtitle">Total Pagado</div>
+                    </div>
+                </div>
+            </div>
+            <!-- % Completado -->
+            <div class="col-lg-3">
+                <div class="dashboard-card text-dark">
+                    <div class="dashboard-body text-center">
+                        <div class="dashboard-title display-5">{{ porcentaje_completado }}%</div>
+                        <div class="subtitle">Trámites Completados</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="graphic-card text-dark">
+                    <div class="graphic-body">
+                        <h5 class="subtitle">Estatus de trámites</h5>
+                        <canvas id="chartEstadoTramites"></canvas>
+                    </div>
+                </div>
+            </div>
+
+        </div>
     </section>
+
+    <section class="my-5">
+        <h5 class="text-center mb-4 text-dark">📅 Calendario de Trámites (Fecha de Fin)</h5>
+        <div id="calendar" class="border p-3 bg-white shadow-sm rounded"></div>
+    </section>
+
+</section>
+
+<!-- Modal de Edición -->
+<div class="modal fade" id="modalEditarTramite" tabindex="-1" aria-labelledby="modalEditarTramiteLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <form method="post" action="{% url 'editar_tramite' %}">
+      {% csrf_token %}
+      <input type="hidden" name="tramite_id" id="editTramiteId">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title text-dark" id="modalEditarTramiteLabel">Editar Trámite</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body row g-3">
+          <div class="col-md-6">
+            <label for="editNombre" class="form-label">Nombre</label>
+            <input type="text" class="form-control" name="nombre" id="editNombre" required>
+          </div>
+          <div class="col-md-6">
+            <label for="editDescripcion" class="form-label">Descripción</label>
+            <input type="text" class="form-control" name="descripcion" id="editDescripcion">
+          </div>
+          <div class="col-md-6">
+            <label for="editCostoBase" class="form-label">Costo Base</label>
+            <input type="number" class="form-control" name="costo_base" id="editCostoBase" step="0.01">
+          </div>
+          <div class="col-md-6">
+            <label for="editTarifaPorcentaje" class="form-label">Tarifa %</label>
+            <input type="number" class="form-control" name="tarifa_porcentaje" id="editTarifaPorcentaje" step="0.01">
+          </div>
+          <div class="col-md-6">
+            <label for="editDependencia" class="form-label">Dependencia</label>
+            <input type="text" class="form-control" name="dependencia" id="editDependencia">
+          </div>
+          <div class="col-md-6">
+            <label for="editResponsable" class="form-label">Responsable</label>
+            <input type="text" class="form-control" name="responsable_dependencia" id="editResponsable">
+          </div>
+          <div class="col-md-6">
+            <label for="editEstatus" class="form-label">Estatus</label>
+            <select name="estatus" id="editEstatus" class="form-select">
+              <option value="Activo">Activo</option>
+              <option value="Inactivo">Inactivo</option>
+              <option value="Completado">Completado</option>
+            </select>
+          </div>
+            <div class="mb-3 col-md-4">
+                <label class="form-label">Gasto</label>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="True" id="es_gasto" name="es_gasto">
+                    <label class="form-check-label" for="es_gasto">
+                        ¿Es gasto?
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success">Guardar cambios</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Modal de Confirmación de Eliminación -->
+<div class="modal fade" id="modalEliminar" tabindex="-1" aria-labelledby="modalEliminarLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <form method="post" action="{% url 'eliminar_tramite' %}">
+        {% csrf_token %}
+        <input type="hidden" name="tramite_id" id="inputTramiteIdEliminar">
+        <div class="modal-content">
+          <div class="modal-header bg-danger text-white">
+            <h5 class="modal-title" id="modalEliminarLabel">Confirmar eliminación</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+          </div>
+          <div class="modal-body">
+            ¿Estás seguro de que deseas eliminar este trámite? Esta acción no se puede deshacer.
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-danger">Eliminar</button>
+          </div>
+        </div>
+    </form>
+  </div>
+</div>
+
+
+<script>
+  document.querySelectorAll('.editar-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.getElementById('editTramiteId').value = btn.dataset.id;
+      document.getElementById('editNombre').value = btn.dataset.nombre;
+      document.getElementById('editDescripcion').value = btn.dataset.descripcion;
+      document.getElementById('editCostoBase').value = btn.dataset.costoBase;
+      document.getElementById('editTarifaPorcentaje').value = btn.dataset.tarifaPorcentaje;
+      document.getElementById('editDependencia').value = btn.dataset.dependencia;
+      document.getElementById('editResponsable').value = btn.dataset.responsable;
+      document.getElementById('editEstatus').value = btn.dataset.estatus;
+    // Checkbox es_gasto
+      const esGastoCheckbox = document.getElementById('es_gasto');
+        const esGastoValue = btn.dataset.esGasto?.toLowerCase() || 'false'; // por seguridad
+        esGastoCheckbox.checked = (esGastoValue === 'true');
+    });
+  });
+</script>
+
+<script>
+    document.getElementById('cliente').addEventListener('change', function () {
+        const clienteId = this.value;
+        const proyectoSelect = document.getElementById('proyectoSelect');
+
+        proyectoSelect.innerHTML = '<option value="">Cargando proyectos...</option>';
+
+        let url = '/tramites/proyectos_por_cliente/';
+        if (clienteId) {
+            url += `?cliente_id=${clienteId}`;
+        }
+
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                proyectoSelect.innerHTML = '<option value="">-- Selecciona un proyecto --</option>';
+                data.proyectos.forEach(proyecto => {
+                    const option = document.createElement('option');
+                    option.value = proyecto.proyecto_id;
+                    option.textContent = proyecto.nombre;
+                    proyectoSelect.appendChild(option);
+                });
+            })
+            .catch(() => {
+                proyectoSelect.innerHTML = '<option value="">Error cargando proyectos</option>';
+            });
+    });
+    
+
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx = document.getElementById('chartEstadoTramites');
+    const chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: {{ labels_estatus|safe }},
+            datasets: [{
+                label: 'Cantidad',
+                data: {{ cantidades_estatus|safe }},
+                backgroundColor: ['#0d6efd', '#198754', '#ffc107', '#dc3545'],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: { precision: 0 }
+                }
+            }
+        }
+    });
+</script>
+
+<script>
+  const modalEliminar = document.getElementById('modalEliminar');
+  modalEliminar.addEventListener('show.bs.modal', function (event) {
+    const button = event.relatedTarget;
+    const tramiteId = button.getAttribute('data-tramite-id');
+    const input = document.getElementById('inputTramiteIdEliminar');
+    input.value = tramiteId;
+  });
+</script>
+
+
+<script>
+//CALENDARIO
+document.addEventListener('DOMContentLoaded', function () {
+    const calendarEl = document.getElementById('calendar');
+
+    const calendar = new FullCalendar.Calendar(calendarEl, {
+        locale: 'es',
+        initialView: 'dayGridMonth',
+        height: 'auto',
+        headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,listMonth'
+        },
+        buttonText: {
+            today: 'Hoy',
+            month: 'Mes',
+            week: 'Semana',
+            day: 'Día',
+            list: 'Lista'
+        },
+        events: {{ eventos_json|safe }},
+        eventClick: function(info) {
+            alert("Trámite: " + info.event.title + "\nFecha fin: " + info.event.startStr);
+        }
+    });
+
+    calendar.render();
+});
+</script>
+
 {% endblock %}

@@ -3,118 +3,130 @@
 
 {% block proyectos_content %}
 <section>
-    <h1 class="title">Detalles del proyecto</h1>
+    <h2 class="text-center text-dark mb-3">Detalles del proyecto</h2>
     <form id="projectForm" method="post" autocomplete="off">
         {% csrf_token %}
         <div class="form-container">
             <div class="row">
-                <div class="col-md-6">
-                    <div class="mb-3">
-                        <label for="projectName" class="form-label">Nombre del Proyecto</label>
-                        <input type="text" class="form-control" id="projectName" name="nombre" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="tipoProyecto" class="form-label">Tipo de Proyecto</label>
-                        <input type="text" class="form-control" id="tipoProyecto" name="tipo_proyecto" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="clientId" class="form-label">Cliente</label>
-                        <select class="form-control" id="clientId" name="cliente_id" required>
-                            <option value="">Seleccione un cliente...</option>
-                            {% for cliente in clientes %}
-                                <option value="{{ cliente.cliente_id }}">{{ cliente.nombre }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="startDate" class="form-label">Fecha de Inicio</label>
-                        <input type="date" class="form-control" id="startDate" name="fecha_inicio" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="endDate" class="form-label">Fecha Fin</label>
-                        <input type="date" class="form-control" id="endDate" name="fecha_fin">
-                    </div>
-                    <div class="mb-3">
-                        <label for="sector" class="form-label">Sector</label>
-                        <input type="text" class="form-control" id="sector" name="sector" required>
-                    </div>
+                <div class="mb-3 col-md-4">
+                    <label for="projectName" class="form-label">Nombre del Proyecto</label>
+                    <input type="text" class="form-control" id="projectName" name="nombre" required>
                 </div>
-                <div class="col-md-6">
-                    <div class="mb-3">
-                        <label for="baseCost" class="form-label">Costo base</label>
-                        <input type="number" step="0.01" class="form-control" id="baseCost" name="costo_base" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="ratePercent" class="form-label">Tarifa (%)</label>
-                        <input type="number" step="0.01" class="form-control" id="ratePercent" name="tarifa_porcentaje" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="description" class="form-label">Descripción</label>
-                        <textarea class="form-control" id="description" name="descripcion" required></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label for="note" class="form-label">Nota</label>
-                        <textarea class="form-control" id="note" name="nota"></textarea>
-                    </div>
+                    <!-- Estado del trámite -->
+                <div class="mb-3 col-md-4">
+                    <label for="estatus" class="form-label">Estado</label>
+                    <select class="form-select" id="estado" name="estado" required>
+                        <option value="" selected disabled>Seleccione</option>
+                        <option value="Activo">Activo</option>
+                        <option value="Inactivo">Inactivo</option>
+                    </select>
+                </div>
+                <div class="mb-3 col-md-4">
+                    <label for="tipoProyecto" class="form-label">Tipo de Proyecto</label>
+                    <input type="text" class="form-control" id="tipoProyecto" name="tipo_proyecto" required>
+                </div>
+                <div class="mb-3 col-md-4">
+                    <label for="clientId" class="form-label">Cliente</label>
+                    <select class="form-control" id="clientId" name="cliente_id" required>
+                        <option value="">Seleccione un cliente...</option>
+                        {% for cliente in clientes %}
+                            <option value="{{ cliente.cliente_id }}">{{ cliente.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mb-3 col-md-4">
+                    <label for="startDate" class="form-label">Fecha de Inicio</label>
+                    <input type="date" class="form-control" id="startDate" name="fecha_inicio" required>
+                </div>
+                <div class="mb-3 col-md-4">
+                    <label for="endDate" class="form-label">Fecha Fin</label>
+                    <input type="date" class="form-control" id="endDate" name="fecha_fin">
+                </div>
+                <div class="mb-3 col-md-4">
+                    <label for="sector" class="form-label">Sector</label>
+                    <input type="text" class="form-control" id="sector" name="sector" required>
+                </div>
+                <div class="mb-3 col-md-4">
+                    <label for="baseCost" class="form-label">Costo base</label>
+                    <input type="number" step="0.01" class="form-control" id="baseCost" name="costo_base" required>
+                </div>
+                <div class="mb-3 col-md-4">
+                    <label for="ratePercent" class="form-label">Tarifa (%)</label>
+                    <input type="number" step="0.01" class="form-control" id="ratePercent" name="tarifa_porcentaje" required>
+                </div>
+                <div class="mb-3 col-md-4">
+                    <label for="description" class="form-label">Descripción</label>
+                    <textarea class="form-control" id="description" name="descripcion" required></textarea>
+                </div>
+                <div class="mb-3 col-md-4">
+                    <label for="note" class="form-label">Nota</label>
+                    <textarea class="form-control" id="note" name="nota"></textarea>
                 </div>
             </div>
         </div>
 
-        <h1 class="title">Agregar trámites al proyecto</h1>
+        <h2 class="text-center text-dark mb-3">Agregar trámites al proyecto</h2>
         <div class="form-container">
             <div class="row">
-                <div class="col-md-4">
-                    <div class="mb-3">
-                        <label for="procedureName" class="form-label">Nombre</label>
-                        <input type="text" class="form-control" id="procedureName">
-                    </div>
-                    <div class="mb-3">
-                        <label for="procedureDescription" class="form-label">Descripción</label>
-                        <input type="text" class="form-control" id="procedureDescription">
-                    </div>
-                    <div class="mb-3">
-                        <label for="procedureBaseCost" class="form-label">Costo base</label>
-                        <input type="number" step="0.01" class="form-control" id="procedureBaseCost">
-                    </div>
-                    <div class="mb-3">
-                        <label for="procedureRate" class="form-label">Tarifa (%)</label>
-                        <input type="number" step="0.01" class="form-control" id="procedureRate">
-                    </div>
+                <div class="mb-3 col-md-4">
+                    <label for="procedureName" class="form-label">Nombre</label>
+                    <input type="text" class="form-control" id="procedureName">
                 </div>
-                <div class="col-md-4">
-                    <div class="mb-3">
-                        <label for="procedureDuration" class="form-label">Duración estimada (días)</label>
-                        <input type="number" class="form-control" id="procedureDuration">
-                    </div>
-                    <div class="mb-3">
-                        <label for="procedureTime" class="form-label">Tiempo de resolución (días)</label>
-                        <input type="number" class="form-control" id="procedureTime">
-                    </div>
-                    <div class="mb-3">
-                        <label for="procedureDependencia" class="form-label">Dependencia</label>
-                        <input type="text" class="form-control" id="procedureDependencia">
-                    </div>
-                    <div class="mb-3">
-                        <label for="procedureResponsable" class="form-label">Responsable</label>
-                        <input type="text" class="form-control" id="procedureResponsable">
-                    </div>
+                <div class="mb-3 col-md-4">
+                    <label for="procedureDescription" class="form-label">Descripción</label>
+                    <input type="text" class="form-control" id="procedureDescription">
                 </div>
-                <div class="col-md-4">
-                    <div class="mb-3">
-                        <label for="procedureDocs" class="form-label">Documentos requeridos</label>
-                        <input type="text" class="form-control" id="procedureDocs">
-                    </div>
-                    <div class="mb-3">
-                        <label for="procedureObservaciones" class="form-label">Observaciones</label>
-                        <input type="text" class="form-control" id="procedureObservaciones">
-                    </div>
-                    <div class="mb-3">
-                        <label for="procedureStartDate" class="form-label">Fecha de inicio</label>
-                        <input type="date" class="form-control" id="procedureStartDate">
-                    </div>
-                    <div class="mb-3">
-                        <label for="procedureEndDate" class="form-label">Fecha fin</label>
-                        <input type="date" class="form-control" id="procedureEndDate">
+                <div class="mb-3 col-md-4">
+                    <label for="procedureBaseCost" class="form-label">Costo base</label>
+                    <input type="number" step="0.01" class="form-control" id="procedureBaseCost">
+                </div>
+                <div class="mb-3 col-md-4">
+                    <label for="procedureRate" class="form-label">Tarifa (%)</label>
+                    <input type="number" step="0.01" class="form-control" id="procedureRate">
+                </div>
+
+                <div class="mb-3 col-md-4">
+                    <label for="procedureDuration" class="form-label">Duración estimada (días)</label>
+                    <input type="number" class="form-control" id="procedureDuration">
+                </div>
+                <div class="mb-3 col-md-4">
+                    <label for="procedureTime" class="form-label">Tiempo de resolución (días)</label>
+                    <input type="number" class="form-control" id="procedureTime">
+                </div>
+                <div class="mb-3 col-md-4">
+                    <label for="procedureDependencia" class="form-label">Dependencia</label>
+                    <input type="text" class="form-control" id="procedureDependencia">
+                </div>
+                <div class="mb-3 col-md-4">
+                    <label for="procedureResponsable" class="form-label">Responsable</label>
+                    <input type="text" class="form-control" id="procedureResponsable">
+                </div>
+                <div class="mb-3 col-md-4">
+                    <label for="procedureDocs" class="form-label">Documentos requeridos</label>
+                    <input type="text" class="form-control" id="procedureDocs">
+                </div>
+                <div class="mb-3 col-md-4">
+                    <label for="procedureObservaciones" class="form-label">Observaciones</label>
+                    <input type="text" class="form-control" id="procedureObservaciones">
+                </div>
+                <div class="mb-3 col-md-4">
+                    <label for="procedureStartDate" class="form-label">Fecha de inicio</label>
+                    <input type="date" class="form-control" id="procedureStartDate">
+                </div>
+                <div class="mb-3 col-md-4">
+                    <label for="procedureEndDate" class="form-label">Fecha fin</label>
+                    <input type="date" class="form-control" id="procedureEndDate">
+                </div>
+
+                <div class="col-md-12">
+                    <div class="mb-3 col-md-4">
+                        <label for="estatus" class="form-label">Gasto</label>
+                            <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="True" id="es_gasto">
+                            <label class="form-check-label" for="flexCheckDefault">
+                                Es gasto?
+                            </label>
+                        </div>
                     </div>
                     <div class="mb-3 d-flex justify-content-end">
                         <button type="button" class="btn btn-primary" onclick="agregarTramite()">Agregar trámite</button>
@@ -123,7 +135,7 @@
             </div>
         </div>
 
-        <h1 class="title">Previsualización final del proyecto</h1>
+        <h2 class="text-center text-dark mb-3">Previsualización final del proyecto</h2>
         <div class="form-container">
             <!-- PREVISUALIZACIÓN RESUMEN -->
             <div id="previewProyecto" class="card-preview">
@@ -132,28 +144,31 @@
             <div class="row">
                 <div class="col-md-12">
                     <h2 class="label">Trámites agregados</h2>
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Nombre</th>
-                                <th>Descripción</th>
-                                <th>Costo base</th>
-                                <th>Tarifa (%)</th>
-                                <th>Total</th>
-                                <th>Duración</th>
-                                <th>Resolución</th>
-                                <th>Dependencia</th>
-                                <th>Responsable</th>
-                                <th>Documentos</th>
-                                <th>Inicio</th>
-                                <th>Fin</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody id="tablaTramites">
-                            <!-- JS agrega aquí -->
-                        </tbody>
-                    </table>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Descripción</th>
+                                    <th>Costo base</th>
+                                    <th>Tarifa (%)</th>
+                                    <th>Total</th>
+                                    <th>Duración</th>
+                                    <th>Resolución</th>
+                                    <th>Dependencia</th>
+                                    <th>Responsable</th>
+                                    <th>Documentos</th>
+                                    <th>Inicio</th>
+                                    <th>Fin</th>
+                                    <th>Es gasto</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody id="tablaTramites">
+                                <!-- JS agrega aquí -->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -199,11 +214,12 @@ function agregarTramite() {
         tiempo_resolucion: parseInt(document.getElementById('procedureTime').value || 0),
         dependencia: document.getElementById('procedureDependencia').value,
         responsable_dependencia: document.getElementById('procedureResponsable').value,
-        estatus: "1",
+        estatus: "Activo",
         documentos_requeridos: document.getElementById('procedureDocs').value,
         observaciones: document.getElementById('procedureObservaciones').value,
         fecha_inicio: document.getElementById('procedureStartDate').value,
-        fecha_fin: document.getElementById('procedureEndDate').value
+        fecha_fin: document.getElementById('procedureEndDate').value,
+        es_gasto: document.getElementById('es_gasto').value
     };
     tramites.push(t);
     renderTramites();
@@ -221,6 +237,7 @@ function agregarTramite() {
     document.getElementById('procedureObservaciones').value = '';
     document.getElementById('procedureStartDate').value = '';
     document.getElementById('procedureEndDate').value = '';
+    document.getElementById('es_gasto').value = false;
 }
 
 function renderTramites() {
@@ -244,6 +261,7 @@ function renderTramites() {
                 <td>${t.documentos_requeridos}</td>
                 <td>${t.fecha_inicio}</td>
                 <td>${t.fecha_fin}</td>
+                <td>${t.es_gasto}</td>
                 <td class="text-center">
                     <button type="button" class="btn btn-danger btn-sm" onclick="eliminarTramite(${idx})">Eliminar</button>
                 </td>

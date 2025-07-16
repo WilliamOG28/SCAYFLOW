@@ -241,3 +241,46 @@ body.dark-mode .footer {
 body.dark-mode .footer .text-muted {
     color: #b0b0b0 !important;
 }
+
+.btn-logout {
+  width: 100%;
+  cursor: pointer;
+  display: flex;
+  justify-content: start;
+  padding:  12px 14px;
+  background-color: transparent;
+  border: none;
+}
+
+.editar-btn {
+}
+
+.btn-filtrar-tramites {
+  background-color: #4F5D61 !important;
+  color: #fff !important;
+  border: none;
+}
+
+.paginacion-tabla {
+
+}
+
+.paginacion-tabla ul li .page-link {
+  color: #4F5D61 !important;
+}
+
+.paginacion-tabla .page-item.active span{
+  background-color: #4F5D61 !important;
+  color: #fff !important;
+  border: none;
+  height: 100% !important;
+}
+
+#calendar {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+#calendar a, #calendar h2 {
+  color: #000 !important;
+}

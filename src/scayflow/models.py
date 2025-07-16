@@ -1,3 +1,4 @@
+from decimal import Decimal
 from django.db import models
 from django.core.validators import RegexValidator
 
@@ -46,8 +47,6 @@ class Proyecto(models.Model):
     iva_monto = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, editable=False)
     total = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True, editable=False)
     nota = models.TextField(blank=True, null=True)
-    utilidad_total = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True, editable=False)
-
     @property
     def total_pagado(self):
         return sum(p.monto for p in self.pagos.all())
@@ -55,6 +54,17 @@ class Proyecto(models.Model):
     @property
     def saldo_pendiente(self):
         return (self.total or 0) - self.total_pagado
+
+    @property
+    def gasto_total(self):
+        return sum(
+            t.total_tramite for t in self.tramites.all() 
+            if t.es_gasto and t.total_tramite is not None
+        ) or 0
+
+    @property
+    def utilidad_total(self):
+        return self.total - self.gasto_total
     
     def __str__(self):
         return self.nombre
@@ -80,12 +90,13 @@ class Tramite(models.Model):
     documentos_requeridos = models.TextField()
     observaciones = models.TextField()
     fecha_ultima_actualizacion = models.DateField(null=True, blank=True)
-    fecha_inicio = models.DateField()
+    fecha_inicio = models.DateField(null=True, blank=True)
     fecha_fin = models.DateField(null=True, blank=True)
+    es_gasto = models.BooleanField(null=False, blank=False)    
 
     @property
     def total_pagado(self):
-        return sum(p.monto for p in self.pagos.all())
+        return sum(p.monto or Decimal('0.00') for p in self.pagos.all())
 
     @property
     def saldo_pendiente(self):
@@ -101,7 +112,7 @@ class Pago(models.Model):
     pago_id = models.AutoField(primary_key=True)
     proyecto = models.ForeignKey('Proyecto', on_delete=models.CASCADE, null=True, blank=True, related_name='pagos')
     tramite = models.ForeignKey('Tramite', on_delete=models.CASCADE, null=True, blank=True, related_name='pagos')
-    monto = models.DecimalField(max_digits=12, decimal_places=2)
+    monto = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     fecha = models.DateField()
     metodo_pago = models.CharField(max_length=100)
     comprobante = models.FileField(upload_to='comprobantes/', blank=True, null=True)
