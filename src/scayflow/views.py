@@ -13,6 +13,7 @@ from decimal import Decimal, InvalidOperation
 from django.core.paginator import Paginator
 from django.db.models import Sum, Count
 from django.utils.dateformat import format as date_format
+from django.db.models import Q
 
 @login_required
 def dashboard(request):
@@ -310,8 +311,23 @@ def nuevo_cliente(request):
     return render(request, 'clientes/nuevo_cliente.html')
 @login_required
 def lista_clientes(request):
-    clientes = Cliente.objects.all()
-    return render(request, 'clientes/lista_clientes.html', {'clientes': clientes})
+    buscar = request.GET.get('buscar-cliente')
+
+    if buscar:
+        clientes_list = Cliente.objects.filter(
+            Q(nombre__icontains=buscar)
+        ).order_by('nombre')
+    else:
+        clientes_list = Cliente.objects.all().order_by('nombre')
+
+    paginator = Paginator(clientes_list, 5)
+    page_number = request.GET.get('page')
+    clientes = paginator.get_page(page_number)
+
+    return render(request, 'clientes/lista_clientes.html', {
+        'clientes': clientes,
+        'buscar': buscar,  # Para mantener el valor en el input
+    })
 @login_required
 def editar_cliente(request):
     if request.method == 'POST':
