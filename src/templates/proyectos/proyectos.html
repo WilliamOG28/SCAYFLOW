@@ -114,9 +114,9 @@
         const projectsChart = new Chart(ctx, {
             type: 'doughnut',  
             data: {
-                labels: {{ labels_estatus|safe }},
+                labels: ['Proyectos Activos', 'Proyectos Inactivos'],
                 datasets: [{
-                    data: {{ cantidades_estatus|safe }},
+                    data: [projectData.proyectosActivos, projectData.proyectosInactivos],
                     backgroundColor: [
                         'rgba(54, 162, 235, 0.7)',
                         'rgba(255, 99, 132, 0.7)'   

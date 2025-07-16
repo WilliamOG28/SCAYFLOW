@@ -90,7 +90,7 @@ class Tramite(models.Model):
     documentos_requeridos = models.TextField()
     observaciones = models.TextField()
     fecha_ultima_actualizacion = models.DateField(null=True, blank=True)
-    fecha_inicio = models.DateField()
+    fecha_inicio = models.DateField(null=True, blank=True)
     fecha_fin = models.DateField(null=True, blank=True)
     es_gasto = models.BooleanField(null=False, blank=False)    
 
