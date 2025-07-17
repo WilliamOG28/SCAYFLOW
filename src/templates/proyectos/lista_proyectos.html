@@ -30,15 +30,15 @@
                     <td>{{ proyecto.nombre }}</td>
                     <td>{{ proyecto.fecha_inicio }}</td>
                     <td>{{ proyecto.fecha_fin|default:"--" }}</td>
-                    <td>${{ proyecto.total|default:"0" }}</td>
-                    <td>${{ proyecto.total_pagado }}</td>
-                    <td>${{ proyecto.saldo_pendiente }}</td>
-                    <td>${{ proyecto.gasto_total }}</td>
+                    <td class="monetario">${{ proyecto.total|default:"0" }}</td>
+                    <td class="monetario">${{ proyecto.total_pagado }}</td>
+                    <td class="monetario">${{ proyecto.saldo_pendiente }}</td>
+                    <td class="monetario">${{ proyecto.gasto_total }}</td>
                     <td>{{ proyecto.estado }}</td>
-                    <td>
+                    <td class="d-flex justify-content-center align-items-center gap-1" height="100">
                         <a href="{% url 'proyecto_detalles' proyecto.proyecto_id %}" 
-                        class="btn btn-sm btn-primary">
-                            <i class="fas fa-eye"></i> Detalles
+                        class="btn btn-sm btn-secondary">
+                            Detalles
                         </a>
 
                         <button 
@@ -47,6 +47,9 @@
                             data-bs-target="#editarProyectoModal"
                             onclick="llenarModalProyecto({{ proyecto.proyecto_id }}, '{{ proyecto.nombre }}', '{{ proyecto.estado }}', '{{ proyecto.tipo_proyecto }}', '{{ proyecto.cliente.cliente_id }}', '{{ proyecto.fecha_inicio }}', '{{ proyecto.fecha_fin }}', '{{ proyecto.sector }}', '{{ proyecto.costo_base }}', '{{ proyecto.tarifa_porcentaje }}', '{{ proyecto.descripcion|escapejs }}', '{{ proyecto.nota|escapejs }}')">
                             Editar
+                        </button>
+                        <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#modalEliminar" data-proyecto-id="{{ proyecto.proyecto_id }}">
+                            🗑️
                         </button>
                     </td>
                 </tr>
@@ -173,6 +176,29 @@
   </div>
 </div>
 
+<!-- Modal de Confirmación de Eliminación -->
+<div class="modal fade" id="modalEliminar" tabindex="-1" aria-labelledby="modalEliminarLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <form method="post" action="{% url 'eliminar_proyecto' %}">
+        {% csrf_token %}
+        <input type="hidden" name="proyecto_id" id="inputProyectoIdEliminar">
+        <div class="modal-content">
+          <div class="modal-header bg-danger text-white">
+            <h5 class="modal-title" id="modalEliminarLabel">Confirmar eliminación</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+          </div>
+          <div class="modal-body">
+            ¿Estás seguro de que deseas eliminar este proyecto? Esta acción no se puede deshacer.
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-danger">Eliminar</button>
+          </div>
+        </div>
+    </form>
+  </div>
+</div>
+
 <script>
     function convertirFecha(fechaTexto) {
         const date = new Date(fechaTexto);
@@ -196,6 +222,40 @@
     document.getElementById('description').value = descripcion;
     document.getElementById('note').value = nota;
   }
+
+  //FORMATO MONEDA
+  function formatearCeldasMonetarias(clase) {
+        const elementos = document.querySelectorAll(`.${clase}`);
+        elementos.forEach(el => {
+            const rawText = el.textContent.trim().replace(/[^\d.-]/g, '');
+            const valor = parseFloat(rawText);
+
+            if (!isNaN(valor)) {
+                const valorFormateado = valor.toLocaleString("es-MX", {
+                    style: "currency",
+                    currency: "MXN",
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                });
+                el.textContent = valorFormateado;
+            }
+        });
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        formatearCeldasMonetarias('monetario');
+    });
+</script>
+
+<script>
+  //MODAL ELIMNAR PROYECTO
+  const modalEliminar = document.getElementById('modalEliminar');
+  modalEliminar.addEventListener('show.bs.modal', function (event) {
+    const button = event.relatedTarget;
+    const tramiteId = button.getAttribute('data-proyecto-id');
+    const input = document.getElementById('inputProyectoIdEliminar');
+    input.value = tramiteId;
+  });
 </script>
 
 {% endblock %}

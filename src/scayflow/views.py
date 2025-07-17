@@ -288,6 +288,13 @@ def editar_proyecto(request):
             print(f"Error updating project: {str(e)}")
             # You might want to add a message to the user here
             return redirect('editar_proyecto', proyecto_id=proyecto_id)
+
+@login_required
+def eliminar_proyecto(request):
+    proyecto_id = request.POST.get('proyecto_id')
+    proyecto = get_object_or_404(Proyecto, pk=proyecto_id)
+    proyecto.delete()
+    return redirect('lista_proyectos')
         
 #Vistas para clientes
 @login_required

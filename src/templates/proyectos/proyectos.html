@@ -36,24 +36,6 @@
                             </div>
                         </div>
                     </div>
-                    <!-- Ingresos Totales -->
-                    <div class="col-lg-3">
-                        <div class="dashboard-card">
-                            <div class="dashboard-body">
-                                <div class="dashboard-title" id="kpiIngresosTotales">${{ ingresosTotales }}</div>
-                                <div class="subtitle">Ingresos Totales</div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Total Cobrado -->                    
-                    <div class="col-lg-3">
-                        <div class="dashboard-card">
-                            <div class="dashboard-body">
-                                <div class="dashboard-title" id="kpiTotalCobrado">${{ totalCobrado|default:"0" }}</div>
-                                <div class="subtitle">Total Cobrado</div>
-                            </div>
-                        </div>
-                    </div>                    
                     <!-- Proyectos Completados -->
                     <div class="col-lg-3">
                         <div class="dashboard-card">
@@ -63,12 +45,32 @@
                             </div>
                         </div>
                     </div>
+                    <!-- Total Cobrado -->                    
+                    <div class="col-lg-6">
+                        <div class="dashboard-card">
+                            <div class="dashboard-body">
+                                <div class="dashboard-title" id="kpiTotalCobrado">${{ totalCobrado|default:"0" }}</div>
+                                <div class="subtitle">Total Cobrado</div>
+                            </div>
+                        </div>
+                    </div>                    
                 </div>
             </section>
             <!-- Dashboard de Gráficos -->
             <section class="mb-5">
                 <div class="row justify-content-center">
                     <div class="col-md-6 mb-4">
+                        <div class="row mb-5">
+                            <!-- Ingresos Totales -->
+                            <div class="col-lg-12">
+                                <div class="dashboard-card">
+                                    <div class="dashboard-body">
+                                        <div class="dashboard-title display-6" id="kpiIngresosTotales">{{ ingresosTotales }}</div>
+                                        <div class="subtitle">Ingresos Totales</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="graphic-card">
                             <div class="graphic-body">
                                 <h5 class="subtitle">Estado de Proyectos</h5>
@@ -79,7 +81,7 @@
                     <div class="col-md-6 mb-4">
                         <div class="graphic-card">
                             <div class="graphic-body">
-                                <h5 class="subtitle">Ingresos por Proyecto</h5>
+                                <h5 class="subtitle display-6">Ingresos por Proyecto</h5>
                                 <canvas id="chartIngresosProyectos"></canvas>
                             </div>
                         </div>
@@ -236,6 +238,34 @@
                 }
             }
         });
+    });
+</script>
+
+//FORMATO MONEDA
+<script>
+    function formatearKPI(idElemento) {
+        const el = document.getElementById(idElemento);
+
+        if (!el) return; // si no existe, no hace nada
+
+        const rawText = el.textContent.trim().replace(/[^\d.-]/g, '');
+        const valor = parseFloat(rawText);
+
+        if (!isNaN(valor)) {
+            const valorFormateado = valor.toLocaleString("es-MX", {
+                style: "currency",
+                currency: "MXN",
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+            });
+
+            el.textContent = valorFormateado;
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        formatearKPI("kpiIngresosTotales");
+        formatearKPI("kpiTotalCobrado");
     });
 </script>
 

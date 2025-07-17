@@ -4,8 +4,9 @@
     margin: auto;
     padding: 10px;
 }
+
 .subtitle{
-    font-size: 1.25rem;
+    font-size: 1.15rem;
     color: #1E1E1E;
     font-weight: bold;
 }
@@ -21,7 +22,7 @@ body.dark-mode .subtitle-preview{
     color: #FFFFFF;
 }
 .title{
-    font-size: 2rem;
+    font-size: 1.5rem;
     color: #1E1E1E;
     font-weight: bold;
 }
@@ -72,7 +73,7 @@ body.dark-mode .nav-menu{
     height: 100%;              
 }
 .dashboard-title{
-    font-size: 3.5rem;
+    font-size: 3rem;
     font-weight: bold;
     color: #4F5D61;
 }

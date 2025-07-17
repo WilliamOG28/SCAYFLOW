@@ -82,9 +82,9 @@
                     <td>{{ tramite.responsable_dependencia }}</td>
                     <td>{{ tramite.fecha_inicio }}</td>
                     <td>{{ tramite.fecha_fin|default:"N/A" }}</td>
-                    <td>${{ tramite.total_tramite }}</td>
-                    <td>${{ tramite.total_pagado }}</td>
-                    <td>${{ tramite.saldo_pendiente }}</td>
+                    <td class="monetario">${{ tramite.total_tramite }}</td>
+                    <td class="monetario">${{ tramite.total_pagado }}</td>
+                    <td class="monetario">${{ tramite.saldo_pendiente }}</td>
                     <td>
                         {% if tramite.es_gasto %}
                             <span class="text-danger">❌ Gasto</span>
@@ -198,24 +198,6 @@
                     </div>
                 </div>
             </div>
-            <!-- Monto Total -->
-            <div class="col-lg-3">
-                <div class="dashboard-card text-dark">
-                    <div class="dashboard-body text-center">
-                        <div class="dashboard-title display-5">${{ monto_total|floatformat:2 }}</div>
-                        <div class="subtitle">Monto Total</div>
-                    </div>
-                </div>
-            </div>
-            <!-- Total Pagado -->
-            <div class="col-lg-3">
-                <div class="dashboard-card text-dark">
-                    <div class="dashboard-body text-center">
-                        <div class="dashboard-title display-5">${{ total_pagado|floatformat:2 }}</div>
-                        <div class="subtitle">Total Pagado</div>
-                    </div>
-                </div>
-            </div>
             <!-- % Completado -->
             <div class="col-lg-3">
                 <div class="dashboard-card text-dark">
@@ -225,9 +207,28 @@
                     </div>
                 </div>
             </div>
-
+            <!-- Monto Total -->
+            <div class="col-md-6">
+                <div class="col-lg-12 mb-4">
+                    <div class="dashboard-card text-dark">
+                        <div class="dashboard-body text-center">
+                            <div class="dashboard-title display-6 monetario">{{ monto_total|floatformat:2 }}</div>
+                            <div class="subtitle">Monto Total</div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Total Pagado -->
+                <div class="col-lg-12">
+                    <div class="dashboard-card text-dark">
+                        <div class="dashboard-body text-center">
+                            <div class="dashboard-title display-6 monetario">${{ total_pagado|floatformat:2 }}</div>
+                            <div class="subtitle">Total Pagado</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="col-lg-6">
-                <div class="graphic-card text-dark">
+                <div class="graphic-card text-dark h-100">
                     <div class="graphic-body">
                         <h5 class="subtitle">Estatus de trámites</h5>
                         <canvas id="chartEstadoTramites"></canvas>
@@ -448,6 +449,29 @@ document.addEventListener('DOMContentLoaded', function () {
 
     calendar.render();
 });
+
+//FORMATO MONEDA
+  function formatearCeldasMonetarias(clase) {
+        const elementos = document.querySelectorAll(`.${clase}`);
+        elementos.forEach(el => {
+            const rawText = el.textContent.trim().replace(/[^\d.-]/g, '');
+            const valor = parseFloat(rawText);
+
+            if (!isNaN(valor)) {
+                const valorFormateado = valor.toLocaleString("es-MX", {
+                    style: "currency",
+                    currency: "MXN",
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                });
+                el.textContent = valorFormateado;
+            }
+        });
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        formatearCeldasMonetarias('monetario');
+    });
 </script>
 
 {% endblock %}
