@@ -416,7 +416,7 @@ def nuevo_tramite(request):
 
         # Calcula tarifas e IVA
         tarifa_monto = costo_base * tarifa_porcentaje / Decimal(100)
-        iva_monto = tarifa_monto * Decimal('0.16')  # Ejemplo 16%
+        iva_monto = (costo_base + tarifa_monto) * Decimal('0.16')
         total_tramite = costo_base + tarifa_monto + iva_monto
 
         tramite = Tramite.objects.create(
@@ -540,7 +540,7 @@ def editar_tramite(request):
     tramite.costo_base = Decimal(request.POST.get('costo_base') or 0)
     tramite.tarifa_porcentaje = Decimal(request.POST.get('tarifa_porcentaje') or 0)
     tramite.tarifa_monto = tramite.costo_base * tramite.tarifa_porcentaje / Decimal(100)
-    tramite.iva_monto = tramite.tarifa_monto * Decimal('0.16')
+    tramite.iva_monto = (tramite.costo_base + tramite.tarifa_monto) * Decimal('0.16')
     tramite.total_tramite = tramite.costo_base + tramite.tarifa_monto + tramite.iva_monto
     tramite.dependencia = request.POST.get('dependencia')
     tramite.responsable_dependencia = request.POST.get('responsable_dependencia')
