@@ -348,7 +348,9 @@ def editar_cliente(request):
         cliente.empresa = request.POST.get('empresa', cliente.empresa)
         cliente.tipo = request.POST.get('tipo', cliente.tipo)
         cliente.rfc = request.POST.get('rfc', cliente.rfc)
-        # Si tienes más campos, agrégalos aquí
+        cliente.persona_contacto = request.POST.get('persona_contacto', cliente.persona_contacto)
+        cliente.direccion = request.POST.get('direccion', cliente.direccion)
+        cliente.notas = request.POST.get('notas', cliente.notas)
 
         try:
             cliente.save()
