@@ -73,7 +73,7 @@
     </div>
 
     <!-- Área del contenido dinámico -->
-    <div class="container">
+    <div class="container px-5 contenedor-main">
         {% block content %}
         <!-- Contenido por defecto que puedes sobrescribir -->
         {% endblock %}
@@ -100,37 +100,42 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-3">
-                        <div class="card shadow-sm text-center h-100 dashboard-card">
+
+                    <div class="col-md-6">
+                        <div class="card shadow-sm text-center h-100 dashboard-card" style="overflow: hidden; white-space: nowrap;">
                             <div class="card-body">
-                                <h5 class="card-title subtitle">Tramites Completados</h5>
-                                <p class="display-8 m-0 dashboard-title">{{ completados }}</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="card shadow-sm text-center h-100 dashboard-card">
-                            <div class="card-body">
-                                <h5 class="card-title subtitle">Ingresos totales</h5>
-                                <p class="display-8 m-0 dashboard-title">$ {{ ingresosTotales }}</p>
+                                <h5 class="card-title subtitle mb-4">Ingresos totales</h5>
+                                <p id="ingresosTotales" class="display-6 m-0 dashboard-title" style="word-wrap: break-word;">{{ ingresosTotales }}</p>
                             </div>
                         </div>
                     </div>
                     <!-- Gráfica -->
-                    <div class="card shadow-sm col-md-4 dashboard-card">
-                        <div class="card-header fw-bold dashboard-title" style="font-size: 26px !important;">
-                            Estado de los Trámites
+                    <div class="col-md-6 grafica-dashboard">
+                        <div class="col-md-12 mb-4">
+                            <div class="card shadow-sm text-center h-100 dashboard-card">
+                                <div class="card-body">
+                                    <h5 class="card-title subtitle">Tramites Completados</h5>
+                                    <p class="display-8 m-0 dashboard-title">{{ completados }}</p>
+                                </div>
+                            </div>
                         </div>
-                        <div class="card-body d-flex align-items-center">
-                            <canvas id="graficaTramites"></canvas>
-                        </div>
+                        <div class="card shadow-sm dashboard-card grafica-dashboard">
+                            <div class="card-header fw-bold dashboard-title" style="font-size: 26px !important;">
+                                Estado de los Trámites
+                            </div>
+                            <div class="card-body d-flex align-items-center">
+                                <canvas id="graficaTramites"></canvas>
+                            </div>
+                        </div>  
                     </div>
-                    <div class="card shadow-sm col-md-8 dashboard-card">
-                        <div class="card-header fw-bold dashboard-title" style="font-size: 26px !important;">
-                            Calendario de trámites (Fecha finalización)
-                        </div>
-                        <div class="card-body">
-                            <div id="calendar" class="border p-3 bg-white shadow-sm rounded"></div>
+                    <div class="col-md-6">
+                        <div class="card shadow-sm dashboard-card">
+                            <div class="card-header fw-bold dashboard-title" style="font-size: 26px !important;">
+                                Calendario de trámites (Fecha finalización)
+                            </div>
+                            <div class="card-body">
+                                <div id="calendar" class="border p-3 bg-white shadow-sm rounded"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -190,6 +195,27 @@
                 calendar.render();
             });
             </script>
+            //FORMATO MONEDA
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    const el = document.getElementById("ingresosTotales");
+
+                    const rawText = el.textContent.trim();
+                    const valor = parseFloat(rawText);
+
+                    if (!isNaN(valor)) {
+                        const valorFormateado = valor.toLocaleString("es-MX", {
+                            style: "currency",
+                            currency: "MXN",
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                        });
+
+                        el.textContent = valorFormateado;
+                    }
+                });
+            </script>
+
         {% endif %}
 
     </div>

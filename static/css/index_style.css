@@ -283,4 +283,15 @@ body.dark-mode .footer .text-muted {
 
 #calendar a, #calendar h2 {
   color: #000 !important;
+  font-size: 1.15rem !important;
+}
+
+.grafica-dashboard {
+height: 100% !important;
+}
+
+@media (min-width: 768px) {
+    .contenedor-main {
+        padding-left: 6rem !important;
+    }
 }
