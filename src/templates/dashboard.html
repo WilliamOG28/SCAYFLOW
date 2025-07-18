@@ -52,7 +52,7 @@
                         <span class="icon">📄</span>
                         <span class="label">Trámites</span>
                     </a></li>
-                    <li><a href="{% url 'pagos' %}">
+                    <li><a href="{% url 'pagos' %}" class="{% if '/pagos' in request.path %}selected{% endif %}">
                         <span class="icon">💳</span>
                         <span class="label">Pagos</span>
                     </a></li>
