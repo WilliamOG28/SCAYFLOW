@@ -87,28 +87,28 @@
     </div>
 
     <!-- Paginación -->
-    <nav aria-label="Paginación de trámites" class="paginacion-tabla">
+    <nav aria-label="Paginación de clientes" class="paginacion-tabla">
         <ul class="pagination justify-content-center">
-            {% if tramites.has_previous %}
+            {% if clientes.has_previous %}
             <li class="page-item">
                 <a class="page-link" href="?page=1{% if proyecto_seleccionado %}&proyecto={{ proyecto_seleccionado }}{% endif %}">« Primero</a>
             </li>
             <li class="page-item">
-                <a class="page-link" href="?page={{ tramites.previous_page_number }}{% if proyecto_seleccionado %}&proyecto={{ proyecto_seleccionado }}{% endif %}">‹ Anterior</a>
+                <a class="page-link" href="?page={{ clientes.previous_page_number }}{% if proyecto_seleccionado %}&proyecto={{ proyecto_seleccionado }}{% endif %}">‹ Anterior</a>
             </li>
             {% else %}
             <li class="page-item disabled"><span class="page-link">« Primero</span></li>
             <li class="page-item disabled"><span class="page-link">‹ Anterior</span></li>
             {% endif %}
 
-            <li class="page-item active"><span class="page-link">{{ tramites.number }}</span></li>
+            <li class="page-item active"><span class="page-link">{{ clientes.number }}</span></li>
 
-            {% if tramites.has_next %}
+            {% if clientes.has_next %}
             <li class="page-item">
-                <a class="page-link" href="?page={{ tramites.next_page_number }}{% if proyecto_seleccionado %}&proyecto={{ proyecto_seleccionado }}{% endif %}">Siguiente ›</a>
+                <a class="page-link" href="?page={{ clientes.next_page_number }}{% if proyecto_seleccionado %}&proyecto={{ proyecto_seleccionado }}{% endif %}">Siguiente ›</a>
             </li>
             <li class="page-item">
-                <a class="page-link" href="?page={{ tramites.paginator.num_pages }}{% if proyecto_seleccionado %}&proyecto={{ proyecto_seleccionado }}{% endif %}">Último »</a>
+                <a class="page-link" href="?page={{ clientes.paginator.num_pages }}{% if proyecto_seleccionado %}&proyecto={{ proyecto_seleccionado }}{% endif %}">Último »</a>
             </li>
             {% else %}
             <li class="page-item disabled"><span class="page-link">Siguiente ›</span></li>
@@ -116,6 +116,7 @@
             {% endif %}
         </ul>
     </nav>
+
 </section>
 
 <!-- Modal Editar Cliente -->
