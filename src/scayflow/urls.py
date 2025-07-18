@@ -52,6 +52,9 @@ urlpatterns = [
     #Urls para pagos
     path('pagos/pagos', views.pagos, name='pagos'),
     path('pagos/nuevo_pago', views.nuevo_pago, name='nuevo_pago'),
+    path('pagos/lista', views.lista_pagos, name='lista_pagos'),
+    path('pagos/editar/', views.editar_pago, name='editar_pago'),
+    path('pagos/eliminar/', views.eliminar_pago, name='eliminar_pago'),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

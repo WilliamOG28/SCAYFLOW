@@ -1,5 +1,8 @@
 # src/scayflow/views.py
+import calendar
+from datetime import timezone
 from itertools import count
+import locale
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.shortcuts import render
@@ -11,9 +14,12 @@ from scayflow.models import Cliente, Tramite, Proyecto, Pago
 import json
 from decimal import Decimal, InvalidOperation
 from django.core.paginator import Paginator
-from django.db.models import Sum, Count
+from django.db.models import Sum, Count, Min, Max
 from django.utils.dateformat import format as date_format
 from django.db.models import Q
+from django.utils import timezone
+from django.db.models import Avg
+
 
 @login_required
 def dashboard(request):
@@ -563,7 +569,98 @@ def eliminar_tramite(request):
 #Vistas para pagos
 @login_required
 def pagos(request):
-    return render(request,'pagos/pagos.html')
+    
+    try:
+        locale.setlocale(locale.LC_TIME, 'es_MX.UTF-8')  # Linux/macOS
+    except locale.Error:
+        try:
+            locale.setlocale(locale.LC_TIME, 'es_ES.UTF-8')  # Alternativa Linux/macOS
+        except locale.Error:
+            locale.setlocale(locale.LC_TIME, 'Spanish_Spain.1252')  # Windows
+
+    pagos_list = Pago.objects.all().order_by('-fecha')
+    total_pagos = Pago.objects.all().order_by('-fecha').count()
+    
+    hoy = timezone.now()
+    mes_actual = hoy.month
+    año_actual = hoy.year
+    
+    nombre_mes = calendar.month_name[mes_actual] 
+
+    # Pagos solo del mes actual
+    pagos_mes = Pago.objects.filter(
+        fecha__year=año_actual,
+        fecha__month=mes_actual
+    ).order_by('-fecha')
+    
+    pagos_mes_count = pagos_mes.count()
+    
+    monto_promedio_pago = Pago.objects.aggregate(promedio=Avg('monto'))['promedio'] or 0
+
+    #Pago max y min del mes
+    pago_minimo = pagos_mes.aggregate(minimo=Min('monto'))['minimo'] or 0
+    pago_maximo = pagos_mes.aggregate(maximo=Max('monto'))['maximo'] or 0
+    
+    eventos_calendario = []
+    for pago in pagos_list:
+        if pago.fecha:
+            eventos_calendario.append({
+                "title": f"{pago.tramite} ({pago.proyecto})",
+                "start": date_format(pago.fecha, 'Y-m-d'),
+                "allDay": True,
+            })
+
+    return render(request, 'pagos/pagos.html', {
+        'total_pagos': total_pagos,
+        'eventos_json': json.dumps(eventos_calendario),
+        'pagos_mes' : pagos_mes_count,
+        'nombre_mes' : nombre_mes,
+        'monto_promedio_pago' : monto_promedio_pago,
+        'pago_minimo' : pago_minimo,
+        'pago_maximo' : pago_maximo
+    })
+@login_required
+def lista_pagos(request):
+    tramite_id = request.GET.get('tramite')
+    tramites = Tramite.objects.select_related('proyecto').all()
+
+    if tramite_id and tramite_id.strip() != "":
+        pagos = Pago.objects.filter(tramite_id=tramite_id).order_by('-fecha')
+    else:
+        pagos = Pago.objects.all().order_by('-fecha')
+
+    paginator = Paginator(pagos, 10)  # 10 pagos por página
+    page_number = request.GET.get('page')
+    pagos_paginados = paginator.get_page(page_number)
+
+    context = {
+        'pagos': pagos_paginados,
+        'tramites': tramites,
+        'tramite_id': tramite_id  # Para mantener la selección
+    }
+    return render(request, 'pagos/lista_pagos.html', context)
+
+@login_required
+def editar_pago(request):
+    pago_id = request.POST.get('pago_id')
+    pago = get_object_or_404(Pago, pk=pago_id)
+
+    pago.monto = request.POST.get('monto')
+    pago.fecha = request.POST.get('fecha')
+    pago.metodo_pago = request.POST.get('metodo_pago')
+    pago.notas = request.POST.get('notas')
+
+    if 'comprobante' in request.FILES:
+        pago.comprobante = request.FILES['comprobante']
+
+    pago.save()
+    return redirect('lista_pagos')
+@login_required
+def eliminar_pago(request):
+    pago_id = request.POST.get('pago_id')
+    pago = get_object_or_404(Pago, pk=pago_id)
+    pago.delete()
+    return redirect('lista_pagos')
 @login_required
 def nuevo_pago(request):
     proyectos = Proyecto.objects.all()
