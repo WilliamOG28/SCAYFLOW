@@ -333,7 +333,7 @@ def lista_clientes(request):
     else:
         clientes_list = Cliente.objects.all().order_by('nombre')
 
-    paginator = Paginator(clientes_list, 1)
+    paginator = Paginator(clientes_list, 10)
     page_number = request.GET.get('page')
     clientes = paginator.get_page(page_number)
 
