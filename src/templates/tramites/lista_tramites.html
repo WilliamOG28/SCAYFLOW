@@ -10,7 +10,7 @@
 
 
 <section class="">
-    <h2 class="mb-3 text-dark text-center">Lista de Trámites</h2>
+    <h2 class="mb-3 list-header text-center">Lista de Trámites</h2>
     <form method="get" class="mb-3">
         <div class="row">
             <div class="col-md-4">
@@ -67,7 +67,7 @@
                     <th>Total</th>
                     <th>Pagado</th>
                     <th>Saldo</th>
-                    <th>Es gasto</th>
+                    <th>IVA</th>
                     <th>Estatus</th>
                     <th>Acciones</th>
                 </tr>
@@ -86,10 +86,10 @@
                     <td class="monetario">${{ tramite.total_pagado }}</td>
                     <td class="monetario">${{ tramite.saldo_pendiente }}</td>
                     <td>
-                        {% if tramite.es_gasto %}
-                            <span class="text-danger">❌ Gasto</span>
+                        {% if tramite.tarifa_porcentaje|floatformat:2 == "0.00" %}
+                            <span class="text-danger">❌</span>
                         {% else %}
-                            <span class="text-success">✅ Utilidad</span>
+                            <span class="text-success">✅</span>
                         {% endif %}
                     </td>
                     <td>
@@ -116,7 +116,6 @@
                             data-dependencia="{{ tramite.dependencia }}"
                             data-responsable="{{ tramite.responsable_dependencia }}"
                             data-estatus="{{ tramite.estatus }}"
-                            data-es-gasto="{{ tramite.es_gasto }}"
                         >
                             Editar
                         </button>
@@ -248,7 +247,7 @@
 
 <!-- Modal de Edición -->
 <div class="modal fade" id="modalEditarTramite" tabindex="-1" aria-labelledby="modalEditarTramiteLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
+  <div class="modal-dialog modal-lg">    
     <form method="post" action="{% url 'editar_tramite' %}">
       {% csrf_token %}
       <input type="hidden" name="tramite_id" id="editTramiteId">
@@ -270,10 +269,12 @@
             <label for="editCostoBase" class="form-label">Costo Base</label>
             <input type="number" class="form-control" name="costo_base" id="editCostoBase" step="0.01">
           </div>
+          <!--
           <div class="col-md-6">
             <label for="editTarifaPorcentaje" class="form-label">Tarifa %</label>
             <input type="number" class="form-control" name="tarifa_porcentaje" id="editTarifaPorcentaje" step="0.01">
           </div>
+         -->
           <div class="col-md-6">
             <label for="editDependencia" class="form-label">Dependencia</label>
             <input type="text" class="form-control" name="dependencia" id="editDependencia">
@@ -291,11 +292,11 @@
             </select>
           </div>
             <div class="mb-3 col-md-4">
-                <label class="form-label">Gasto</label>
+                <label class="form-label">IVA</label>
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="True" id="es_gasto" name="es_gasto">
-                    <label class="form-check-label" for="es_gasto">
-                        ¿Es gasto?
+                    <input class="form-check-input" type="checkbox" value="True" id="tarifa_porcentaje" name="tarifa_porcentaje">
+                    <label class="form-check-label" for="tarifa_porcentaje">
+                        IVA
                     </label>
                 </div>
             </div>
@@ -340,14 +341,15 @@
       document.getElementById('editNombre').value = btn.dataset.nombre;
       document.getElementById('editDescripcion').value = btn.dataset.descripcion;
       document.getElementById('editCostoBase').value = btn.dataset.costoBase;
-      document.getElementById('editTarifaPorcentaje').value = btn.dataset.tarifaPorcentaje;
       document.getElementById('editDependencia').value = btn.dataset.dependencia;
       document.getElementById('editResponsable').value = btn.dataset.responsable;
       document.getElementById('editEstatus').value = btn.dataset.estatus;
-    // Checkbox es_gasto
-      const esGastoCheckbox = document.getElementById('es_gasto');
-        const esGastoValue = btn.dataset.esGasto?.toLowerCase() || 'false'; // por seguridad
-        esGastoCheckbox.checked = (esGastoValue === 'true');
+    // Checkbox TIENE IVA
+    const esIVACheckbox = document.getElementById('tarifa_porcentaje'); // Asegúrate que el ID del checkbox es correcto
+    const tarifaPorcentaje = parseFloat(btn.dataset.tarifaPorcentaje || '0'); // valor como '0' o '0.16'
+    
+    // Si es 0.16 se marca, si no, se desmarca
+    esIVACheckbox.checked = tarifaPorcentaje === 0.16;
     });
   });
 </script>

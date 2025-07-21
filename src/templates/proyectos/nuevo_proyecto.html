@@ -3,7 +3,7 @@
 
 {% block proyectos_content %}
 <section>
-    <h2 class="text-center text-dark mb-3">Detalles del proyecto</h2>
+    <h2 class="text-center list-header mb-3">Detalles del proyecto</h2>
     <form id="projectForm" method="post" autocomplete="off">
         {% csrf_token %}
         <div class="form-container">
@@ -50,9 +50,20 @@
                     <label for="baseCost" class="form-label">Costo base</label>
                     <input type="number" step="0.01" class="form-control" id="baseCost" name="costo_base" required>
                 </div>
+                <!--
                 <div class="mb-3 col-md-4">
                     <label for="ratePercent" class="form-label">Tarifa (%)</label>
                     <input type="number" step="0.01" class="form-control" id="ratePercent" name="tarifa_porcentaje" required>
+                </div>
+                -->
+                <div class="mb-3 col-md-4">
+                    <label class="form-label">IVA</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="True" id="procedureRate" name="procedureRate">
+                        <label class="form-check-label list-header" for="procedureRate">
+                            IVA
+                        </label>
+                    </div>
                 </div>
                 <div class="mb-3 col-md-4">
                     <label for="description" class="form-label">Descripción</label>
@@ -65,7 +76,7 @@
             </div>
         </div>
 
-        <h2 class="text-center text-dark mb-3">Agregar trámites al proyecto</h2>
+        <h2 class="text-center list-header mb-3">Agregar trámites al proyecto</h2>
         <div class="form-container">
             <div class="row">
                 <div class="mb-3 col-md-4">
@@ -80,11 +91,6 @@
                     <label for="procedureBaseCost" class="form-label">Costo base</label>
                     <input type="number" step="0.01" class="form-control" id="procedureBaseCost">
                 </div>
-                <div class="mb-3 col-md-4">
-                    <label for="procedureRate" class="form-label">Tarifa (%)</label>
-                    <input type="number" step="0.01" class="form-control" id="procedureRate">
-                </div>
-
                 <div class="mb-3 col-md-4">
                     <label for="procedureDuration" class="form-label">Duración estimada (días)</label>
                     <input type="number" class="form-control" id="procedureDuration">
@@ -120,11 +126,11 @@
 
                 <div class="col-md-12">
                     <div class="mb-3 col-md-4">
-                        <label for="estatus" class="form-label">Gasto</label>
-                            <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="True" id="es_gasto">
-                            <label class="form-check-label" for="flexCheckDefault">
-                                Es gasto?
+                        <label class="list-header">IVA</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="True" id="tarifa_porcentaje" name="tarifa_porcentaje">
+                            <label class="list-header" for="tarifa_porcentaje">
+                                IVA
                             </label>
                         </div>
                     </div>
@@ -151,7 +157,6 @@
                                     <th>Nombre</th>
                                     <th>Descripción</th>
                                     <th>Costo base</th>
-                                    <th>Tarifa (%)</th>
                                     <th>Total</th>
                                     <th>Duración</th>
                                     <th>Resolución</th>
@@ -160,7 +165,7 @@
                                     <th>Documentos</th>
                                     <th>Inicio</th>
                                     <th>Fin</th>
-                                    <th>Es gasto</th>
+                                    <th>IVA</th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -209,7 +214,7 @@ function agregarTramite() {
         nombre: document.getElementById('procedureName').value,
         descripcion: document.getElementById('procedureDescription').value,
         costo_base: document.getElementById('procedureBaseCost').value,
-        tarifa_porcentaje: document.getElementById('procedureRate').value,
+        tarifa_porcentaje: document.getElementById('procedureRate').checked ? 0.16 : 0,
         duracion_estimada: parseInt(document.getElementById('procedureDuration').value || 0),
         tiempo_resolucion: parseInt(document.getElementById('procedureTime').value || 0),
         dependencia: document.getElementById('procedureDependencia').value,
@@ -219,7 +224,6 @@ function agregarTramite() {
         observaciones: document.getElementById('procedureObservaciones').value,
         fecha_inicio: document.getElementById('procedureStartDate').value,
         fecha_fin: document.getElementById('procedureEndDate').value,
-        es_gasto: document.getElementById('es_gasto').value
     };
     tramites.push(t);
     renderTramites();
@@ -228,7 +232,7 @@ function agregarTramite() {
     document.getElementById('procedureName').value = '';
     document.getElementById('procedureDescription').value = '';
     document.getElementById('procedureBaseCost').value = '';
-    document.getElementById('procedureRate').value = '';
+    document.getElementById('procedureRate').checked = false;
     document.getElementById('procedureDuration').value = '';
     document.getElementById('procedureTime').value = '';
     document.getElementById('procedureDependencia').value = '';
@@ -237,7 +241,6 @@ function agregarTramite() {
     document.getElementById('procedureObservaciones').value = '';
     document.getElementById('procedureStartDate').value = '';
     document.getElementById('procedureEndDate').value = '';
-    document.getElementById('es_gasto').value = false;
 }
 
 function renderTramites() {
@@ -252,7 +255,7 @@ function renderTramites() {
                 <td>${t.nombre}</td>
                 <td>${t.descripcion}</td>
                 <td>${base.toLocaleString(undefined, {minimumFractionDigits:2})}</td>
-                <td>${porcentaje}%<br><span class="text-success">$${monto_tarifa.toLocaleString(undefined, {minimumFractionDigits:2})}</span></td>
+                <td>${t.tarifa_porcentaje}</td>
                 <td>${(base + monto_tarifa).toLocaleString(undefined, {minimumFractionDigits:2})}</td>
                 <td>${t.duracion_estimada}</td>
                 <td>${t.tiempo_resolucion}</td>
@@ -261,7 +264,6 @@ function renderTramites() {
                 <td>${t.documentos_requeridos}</td>
                 <td>${t.fecha_inicio}</td>
                 <td>${t.fecha_fin}</td>
-                <td>${t.es_gasto}</td>
                 <td class="text-center">
                     <button type="button" class="btn btn-danger btn-sm" onclick="eliminarTramite(${idx})">Eliminar</button>
                 </td>
