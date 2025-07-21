@@ -35,7 +35,11 @@ Lista de Pagos
           <th>Método de Pago</th>
           <th>Trámite</th>
           <th>Comprobante</th>
+          <th>Naturaleza</th>
           <th>Notas</th>
+          <th>Es gasto</th>
+          <th>IVA</th>
+          <th>Tarifa</th>
           <th class="text-center">Acciones</th>
         </tr>
       </thead>
@@ -76,7 +80,27 @@ Lista de Pagos
             No adjunto
             {% endif %}
           </td>
+          <td> 
+            {{pago.get_naturaleza_display}}
+          </td>
           <td>{{ pago.notas|default:"-" }}</td>
+          <td>
+            {% if pago.es_gasto == 1 %}
+                ✅ Es gasto
+            {% elif pago.es_gasto == 0 %}
+                ❌ No es gasto
+            {% endif %}
+          </td>
+          <td>
+            {% if pago.IVA == 1 %}
+                ✅
+            {% elif pago.IVA == 0 %}
+                ❌
+            {% endif %}
+          </td>
+          <td> 
+            {{pago.tarifa }}
+          </td>
           <td class="d-flex justify-content-center align-items-center gap-1" height="100">
             <button class="btn btn-primary btn-sm"
               data-bs-toggle="modal"
@@ -85,7 +109,11 @@ Lista de Pagos
               data-monto="{{ pago.monto }}"
               data-fecha="{{ pago.fecha }}"
               data-metodo_pago="{{ pago.metodo_pago }}"
-              data-notas="{{ pago.notas|default:'' }}">
+              data-notas="{{ pago.notas|default:'' }}"
+              data-naturaleza="{{ pago.naturaleza }}"
+              data-tarifa="{{ pago.tarifa }}"
+              data-iva="{{ pago.IVA }}"
+              data-es-gasto="{{ pago.es_gasto }}">
               Editar
             </button>
             <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#modalEliminar" data-pago-id="{{ pago.pago_id }}">
@@ -173,6 +201,37 @@ Lista de Pagos
             <label class="form-label">Comprobante (opcional)</label>
             <input type="file" class="form-control" name="comprobante">
           </div>
+          <div class="col-12">
+            <div class="mb-3">
+                <label for="naturaleza" class="form-label">Naturaleza</label>
+                <select name="naturaleza" id="naturaleza" class="form-select form-control" required>
+                    <option value="1">Egreso</option>
+                    <option value="2">Ingreso</option>
+                </select>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Tarifa</label>
+            <input type="number" class="form-control" name="tarifa" id="tarifa" required>
+          </div>
+          <div class="mb-3 col-md-4">
+            <label class="form-label">Es gasto</label>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="True" id="es_gasto" name="es_gasto">
+                <label class="form-check-label" for="es_gasto">
+                    Es gasto
+                </label>
+            </div>
+          </div>
+          <div class="mb-3 col-md-4">
+            <label class="form-label">IVA</label>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="True" id="IVA" name="IVA">
+                <label class="form-check-label" for="IVA">
+                    IVA
+                </label>
+            </div>
+          </div>
         </div>
         <div class="modal-footer">
           <button type="submit" class="btn btn-success">Guardar cambios</button>
@@ -228,7 +287,19 @@ Lista de Pagos
         document.getElementById('editarFecha').value = convertirFecha(button.getAttribute('data-fecha'));
         document.getElementById('editarMetodoPago').value = button.getAttribute('data-metodo_pago');
         document.getElementById('editarNotas').value = button.getAttribute('data-notas') || '';
-    });
+        document.getElementById('tarifa').value = button.getAttribute('data-tarifa') * 100;
+
+        const ivaValue = button.getAttribute('data-iva');
+        document.getElementById('IVA').checked = (ivaValue === 'True');
+
+        const gastoValue = button.getAttribute('data-es-gasto');
+        document.getElementById('es_gasto').checked = (gastoValue === 'True');
+
+        var naturalezaValue = button.getAttribute('data-naturaleza');
+        if(naturalezaValue){
+          document.getElementById('naturaleza').value = naturalezaValue;
+        }
+        });
     });
 
     function convertirFecha(fechaTexto) {
