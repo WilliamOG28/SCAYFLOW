@@ -84,63 +84,64 @@
                     </div>
                 </div>
             </section>
+
+            <script>
+            //CALENDARIO
+            document.addEventListener('DOMContentLoaded', function () {
+                const calendarEl = document.getElementById('calendar');
+
+                const calendar = new FullCalendar.Calendar(calendarEl, {
+                    locale: 'es',
+                    initialView: 'dayGridMonth',
+                    height: 'auto',
+                    headerToolbar: {
+                        left: 'prev,next today',
+                        center: 'title',
+                        right: 'dayGridMonth,listMonth'
+                    },
+                    buttonText: {
+                        today: 'Hoy',
+                        month: 'Mes',
+                        week: 'Semana',
+                        day: 'Día',
+                        list: 'Lista'
+                    },
+                    events: {{ eventos_json|safe }},
+                    eventClick: function(info) {
+                        alert("Trámite: " + info.event.title + "\nFecha fin: " + info.event.startStr);
+                    }
+                });
+
+                calendar.render();
+            });
+            </script>
+
+            <script>
+            //FORMATO MONEDA
+            function formatearCeldasMonetarias(clase) {
+                    const elementos = document.querySelectorAll(`.${clase}`);
+                    elementos.forEach(el => {
+                        const rawText = el.textContent.trim().replace(/[^\d.-]/g, '');
+                        const valor = parseFloat(rawText);
+
+                        if (!isNaN(valor)) {
+                            const valorFormateado = valor.toLocaleString("es-MX", {
+                                style: "currency",
+                                currency: "MXN",
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2,
+                            });
+                            el.textContent = valorFormateado;
+                        }
+                    });
+                }
+
+                document.addEventListener("DOMContentLoaded", function () {
+                    formatearCeldasMonetarias('monetario');
+                });
+            </script>
         {% endblock %}
    </div>
 </div>
 
-<script>
-//CALENDARIO
-document.addEventListener('DOMContentLoaded', function () {
-    const calendarEl = document.getElementById('calendar');
-
-    const calendar = new FullCalendar.Calendar(calendarEl, {
-        locale: 'es',
-        initialView: 'dayGridMonth',
-        height: 'auto',
-        headerToolbar: {
-            left: 'prev,next today',
-            center: 'title',
-            right: 'dayGridMonth,listMonth'
-        },
-        buttonText: {
-            today: 'Hoy',
-            month: 'Mes',
-            week: 'Semana',
-            day: 'Día',
-            list: 'Lista'
-        },
-        events: {{ eventos_json|safe }},
-        eventClick: function(info) {
-            alert("Trámite: " + info.event.title + "\nFecha fin: " + info.event.startStr);
-        }
-    });
-
-    calendar.render();
-});
-</script>
-
-<script>
-//FORMATO MONEDA
-  function formatearCeldasMonetarias(clase) {
-        const elementos = document.querySelectorAll(`.${clase}`);
-        elementos.forEach(el => {
-            const rawText = el.textContent.trim().replace(/[^\d.-]/g, '');
-            const valor = parseFloat(rawText);
-
-            if (!isNaN(valor)) {
-                const valorFormateado = valor.toLocaleString("es-MX", {
-                    style: "currency",
-                    currency: "MXN",
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                });
-                el.textContent = valorFormateado;
-            }
-        });
-    }
-
-    document.addEventListener("DOMContentLoaded", function () {
-        formatearCeldasMonetarias('monetario');
-    });
-</script>
 {% endblock %}

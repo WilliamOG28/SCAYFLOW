@@ -161,6 +161,13 @@ def safe_decimal(value, default=Decimal('0.00')):
 def nuevo_proyecto(request):
     if request.method == 'POST':
         try:
+            tarifa_porcentajeIVA=request.POST.get('tarifa_porcentaje')
+            
+            if tarifa_porcentajeIVA in [True, 'true', 'True', 'on', 1, '1']:
+                tarifa_porcentajeIVA = Decimal('0.16')
+            else:
+                tarifa_porcentajeIVA = Decimal('0')
+                
             # Create project with safe decimal conversion
             proyecto = Proyecto.objects.create(
                 nombre=request.POST.get('nombre'),
@@ -172,7 +179,7 @@ def nuevo_proyecto(request):
                 descripcion=request.POST.get('descripcion'),
                 sector=request.POST.get('sector'),
                 costo_base=safe_decimal(request.POST.get('costo_base')),
-                tarifa_porcentaje=request.POST.get('tarifa_porcentaje'),
+                tarifa_porcentaje=tarifa_porcentajeIVA,
                 nota=request.POST.get('nota'),
             )
 
@@ -212,9 +219,8 @@ def nuevo_proyecto(request):
 
             # Calculate totals without refresh_from_db if it's causing issues
             proyecto.total = (
-                (proyecto.costo_base or Decimal('0')) + 
-                (proyecto.tarifa_monto or Decimal('0')) + 
-                (proyecto.iva_monto or Decimal('0'))
+                (proyecto.costo_base or Decimal('0')) +
+                ((proyecto.costo_base or Decimal('0')) * (proyecto.tarifa_porcentaje or Decimal('0')))
             )
             proyecto.save(update_fields=['total'])
 
@@ -276,15 +282,21 @@ def editar_proyecto(request):
             proyecto.descripcion = request.POST.get('descripcion')
             proyecto.sector = request.POST.get('sector')
             proyecto.nota = request.POST.get('nota')
+            tarifa_porcentajeIVA=request.POST.get('tarifa_porcentaje')
             
             # Decimal fields with proper handling
             proyecto.costo_base = get_decimal(request.POST.get('costo_base'))
-            proyecto.tarifa_porcentaje = get_decimal(request.POST.get('tarifa_porcentaje'))
+            
+            if tarifa_porcentajeIVA in [True, 'true', 'True', 'on', 1, '1']:
+                tarifa_porcentajeIVA = Decimal('0.16')
+            else:
+                tarifa_porcentajeIVA = Decimal('0')
+            proyecto.tarifa_porcentaje = tarifa_porcentajeIVA
 
             # Recalculate derived fields
-            proyecto.tarifa_monto = (proyecto.costo_base * proyecto.tarifa_porcentaje) / Decimal(100)
-            proyecto.iva_monto = (proyecto.costo_base + proyecto.tarifa_monto) * Decimal('0.16')
-            proyecto.total = proyecto.costo_base + proyecto.tarifa_monto + proyecto.iva_monto
+            proyecto.tarifa_monto = 0
+            proyecto.iva_monto = (proyecto.costo_base * tarifa_porcentajeIVA)
+            proyecto.total = proyecto.costo_base + proyecto.iva_monto
 
             proyecto.save()
             return redirect('lista_proyectos')
@@ -397,18 +409,12 @@ def nuevo_tramite(request):
         observaciones = request.POST.get('observaciones')
         fecha_inicio = request.POST.get('fecha_inicio')
         fecha_fin = request.POST.get('fecha_fin') or None
-        es_gasto = 'es_gasto' in request.POST
 
         # Convierte los valores numéricos y fechas con seguridad
         try:
             costo_base = Decimal(costo_base)
         except:
             costo_base = Decimal(0)
-
-        try:
-            tarifa_porcentaje = Decimal(tarifa_porcentaje)
-        except:
-            tarifa_porcentaje = Decimal(0)
 
         try:
             duracion_estimada = int(duracion_estimada)
@@ -419,18 +425,23 @@ def nuevo_tramite(request):
             tiempo_resolucion = int(tiempo_resolucion)
         except:
             tiempo_resolucion = 0
+            
+        if tarifa_porcentaje in [True, 'true', 'True', 'on', 1, '1']:
+            tarifa_porcentajeIVA = Decimal('0.16')
+        else:
+            tarifa_porcentajeIVA = Decimal('0')
 
         # Calcula tarifas e IVA
-        tarifa_monto = costo_base * tarifa_porcentaje / Decimal(100)
-        iva_monto = (costo_base + tarifa_monto) * Decimal('0.16')
-        total_tramite = costo_base + tarifa_monto + iva_monto
+        tarifa_monto = 0
+        iva_monto = (costo_base * tarifa_porcentajeIVA)
+        total_tramite = costo_base + iva_monto
 
         tramite = Tramite.objects.create(
             proyecto=proyecto,
             nombre=nombre,
             descripcion=descripcion,
             costo_base=costo_base,
-            tarifa_porcentaje=tarifa_porcentaje,
+            tarifa_porcentaje=tarifa_porcentajeIVA,
             duracion_estimada=duracion_estimada,
             tiempo_resolucion=tiempo_resolucion,
             dependencia=dependencia,
@@ -443,7 +454,7 @@ def nuevo_tramite(request):
             tarifa_monto=tarifa_monto,
             iva_monto=iva_monto,
             total_tramite=total_tramite,
-            es_gasto=es_gasto
+            es_gasto=False
         )
 
         return redirect('lista_tramites')
@@ -544,14 +555,20 @@ def editar_tramite(request):
     tramite.nombre = request.POST.get('nombre')
     tramite.descripcion = request.POST.get('descripcion')
     tramite.costo_base = Decimal(request.POST.get('costo_base') or 0)
-    tramite.tarifa_porcentaje = Decimal(request.POST.get('tarifa_porcentaje') or 0)
-    tramite.tarifa_monto = tramite.costo_base * tramite.tarifa_porcentaje / Decimal(100)
-    tramite.iva_monto = (tramite.costo_base + tramite.tarifa_monto) * Decimal('0.16')
-    tramite.total_tramite = tramite.costo_base + tramite.tarifa_monto + tramite.iva_monto
+    tarifa_porcentajeIVA = request.POST.get('tarifa_porcentaje')
+    
+    if tarifa_porcentajeIVA in [True, 'true', 'True', 'on', 1, '1']:
+        tramite.tarifa_porcentaje = Decimal('0.16')
+    else:
+        tramite.tarifa_porcentaje = Decimal('0')
+        
+    tramite.tarifa_monto = 0
+    tramite.iva_monto = (tramite.costo_base * tramite.tarifa_porcentaje)
+    tramite.total_tramite = tramite.costo_base + tramite.iva_monto
     tramite.dependencia = request.POST.get('dependencia')
     tramite.responsable_dependencia = request.POST.get('responsable_dependencia')
     tramite.estatus = request.POST.get('estatus')
-    tramite.es_gasto = 'es_gasto' in request.POST
+    tramite.es_gasto = False
 
     tramite.save()
     return redirect('lista_tramites')
@@ -644,11 +661,31 @@ def lista_pagos(request):
 def editar_pago(request):
     pago_id = request.POST.get('pago_id')
     pago = get_object_or_404(Pago, pk=pago_id)
-
-    pago.monto = request.POST.get('monto')
+    
+    monto = Decimal(request.POST.get('monto') or '0')
     pago.fecha = request.POST.get('fecha')
     pago.metodo_pago = request.POST.get('metodo_pago')
     pago.notas = request.POST.get('notas')
+    pago.naturaleza = request.POST.get('naturaleza')
+    pago.es_gasto = request.POST.get('es_gasto', '').lower() in ['true', '1', 'on']
+    
+    iva = request.POST.get('IVA')
+    if iva in [True, 'true', 'True', 'on', 1, '1']:
+        iva_aplica = Decimal('0.16')
+    else:
+        iva_aplica = Decimal('0')
+        iva = False
+
+    tarifa = Decimal(request.POST.get('tarifa') or '0')
+
+    tarifa_monto = monto * tarifa / Decimal('100')
+    iva_monto = (monto + tarifa_monto) * iva_aplica
+    pago.monto = monto + iva_monto + tarifa_monto
+    
+    pago.IVA=iva
+    pago.iva_monto= iva_monto
+    pago.tarifa= tarifa / Decimal('100')
+    pago.tarifa_monto= tarifa_monto
 
     if 'comprobante' in request.FILES:
         pago.comprobante = request.FILES['comprobante']
@@ -678,6 +715,9 @@ def nuevo_pago(request):
         nota = request.POST.get('nota')
         pago_tipo = request.POST.get('pago_tipo')
         tramite_id = request.POST.get('tramite_id')
+        naturaleza = request.POST.get('naturaleza')
+        es_gasto = request.POST.get('es_gasto', '').lower() in ['true', '1', 'on']
+
         tramite = Tramite.objects.get(pk=tramite_id) if (pago_tipo == 'tramite' and tramite_id) else None
 
         # Validación: que no pague más de lo pendiente
@@ -693,7 +733,21 @@ def nuevo_pago(request):
         # Responde error si es AJAX
         if error_msg and request.headers.get('x-requested-with') == 'XMLHttpRequest':
             return JsonResponse({'success': False, 'error': error_msg})
+        
+        # Detectar si IVA está marcado y valro de tarifa
+        iva = request.POST.get('IVA')
+        if iva in [True, 'true', 'True', 'on', 1, '1']:
+            iva_aplica = Decimal('0.16')
+        else:
+            iva_aplica = Decimal('0')
+            iva = False
 
+        tarifa = Decimal(request.POST.get('tarifa') or '0')
+
+        tarifa_monto = monto * tarifa / Decimal('100')
+        iva_monto = (monto + tarifa_monto) * iva_aplica
+        monto = monto + iva_monto + tarifa_monto
+            
         if not error_msg:
             Pago.objects.create(
                 proyecto=proyecto if pago_tipo == 'proyecto' else None,
@@ -702,7 +756,14 @@ def nuevo_pago(request):
                 fecha=fecha,
                 metodo_pago=metodo_pago,
                 comprobante=comprobante,
-                notas=nota
+                notas=nota,
+                naturaleza=naturaleza,
+                IVA=iva,
+                iva_monto= iva_monto,
+                tarifa= tarifa / Decimal('100'),
+                tarifa_monto= tarifa_monto,
+                es_gasto=es_gasto
+              
             )
 
             # Refresca y recalcula los datos necesarios

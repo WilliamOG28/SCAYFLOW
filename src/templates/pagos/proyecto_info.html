@@ -7,13 +7,13 @@
     </div>
     <div class="row mb-4">
         <div class="col-md-6 col-lg-4">
-            <p class="label"><b>Cliente:</b> {{ proyecto.cliente.nombre }}</p>
-            <p class="label"><b>Estado:</b> {{ proyecto.estado }}</p>
-            <p class="label"><b>Fecha Inicio:</b> {{ proyecto.fecha_inicio }}</p>
+            <p class="label list-header"><b>Cliente:</b> {{ proyecto.cliente.nombre }}</p>
+            <p class="label list-header"><b>Estado:</b> {{ proyecto.estado }}</p>
+            <p class="label list-header"><b>Fecha Inicio:</b> {{ proyecto.fecha_inicio }}</p>
         </div>
         <div class="col-md-6 col-lg-4">
-            <p class="label"><b>ID Proyecto:</b> {{ proyecto.proyecto_id }}</p>
-            <p class="label"><b>Fecha Fin:</b> {{ proyecto.fecha_fin }}</p>
+            <p class="label list-header"><b>ID Proyecto:</b> {{ proyecto.proyecto_id }}</p>
+            <p class="label list-header"><b>Fecha Fin:</b> {{ proyecto.fecha_fin }}</p>
         </div>
     </div>
     <div class="row mb-2">
@@ -26,7 +26,7 @@
             <div class="card card-financiero border-success shadow-sm h-100">
                 <div class="card-body text-center">
                     <i class="bi bi-cash-stack fs-2 text-success mb-2"></i>
-                    <h6 class="label">Costo Total</h6>
+                    <h6 class="label list-header">Costo Total</h6>
                     <h3 class="fw-bold text-success mb-1">${{ proyecto.total|floatformat:2|intcomma }}</h3>
                     <span class="badge rounded-pill bg-success-subtle text-success">
                         IVA: ${{ proyecto.iva_monto|default:"0.00"|floatformat:2|intcomma }}
@@ -38,7 +38,7 @@
             <div class="card card-financiero border-primary shadow-sm h-100">
                 <div class="card-body text-center">
                     <i class="bi bi-check2-circle fs-2 text-primary mb-2"></i>
-                    <h6 class="label">Pagado</h6>
+                    <h6 class="label list-header">Pagado</h6>
                     <h3 class="fw-bold text-primary mb-1">${{ proyecto.total_pagado|floatformat:2|intcomma }}</h3>
                     <span class="badge rounded-pill bg-primary-subtle text-primary">
                         {{ porcentaje_pagado|default:"0" }}%
@@ -50,7 +50,8 @@
             <div class="card card-financiero border-danger shadow-sm h-100">
                 <div class="card-body text-center">
                     <i class="bi bi-exclamation-circle fs-2 text-danger mb-2"></i>
-                    <h6 class="label">Pendiente</h6>
+                    <h6 class="label list-header">Pagado</h6>
+                    <h6 class="label ">Pendiente</h6>
                     <h3 class="fw-bold text-danger mb-1">${{ proyecto.saldo_pendiente|floatformat:2|intcomma }}</h3>
                     <span class="badge rounded-pill bg-danger-subtle text-danger">
                         {{ porcentaje_pendiente|default:"0" }}%
@@ -181,6 +182,38 @@
                 <input type="text" name="nota" id="nota" class="form-control">
             </div>
         </div>
+        <div class="col-12 col-md-6">
+            <div class="mb-3">
+                <label for="naturaleza" class="form-label">Naturaleza</label>
+                    <select name="naturaleza" id="naturaleza" class="form-select form-control" required>
+                        <option value="1">Egreso</option>
+                        <option value="2">Ingreso</option>
+                    </select>
+            </div>
+        </div>
+        <div class="mb-3 col-md-4">
+            <label for="tarifa_porcentaje" class="form-label">Tarifa (%)</label>
+            <input type="number" step="0.01" class="form-control" id="tarifa" name="tarifa" placeholder="Ingrese la tarifa (%)" required>
+        </div>
+        <div class="mb-3 col-md-4">
+            <label class="form-label">IVA</label>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="True" id="IVA" name="IVA">
+                <label class="form-check-label" for="IVA">
+                    IVA
+                </label>
+            </div>
+        </div>
+        <div class="mb-3 col-md-4">
+            <label class="form-label">Es gasto</label>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="True" id="es_gasto" name="es_gasto">
+                <label class="form-check-label" for="es_gasto">
+                    Es gasto
+                </label>
+            </div>
+        </div>
+    </div>
     </div>
     <div class="d-flex justify-content-end gap-2">
         <button type="submit" class="btn btn-primary">Guardar</button>

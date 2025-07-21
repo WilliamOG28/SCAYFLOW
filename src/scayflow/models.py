@@ -113,6 +113,8 @@ class Pago(models.Model):
         (1, 'Egreso'),
         (2, 'Ingreso')
     ]
+    tarifa = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    tarifa_monto = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     pago_id = models.AutoField(primary_key=True)
     proyecto = models.ForeignKey('Proyecto', on_delete=models.CASCADE, null=True, blank=True, related_name='pagos')
     tramite = models.ForeignKey('Tramite', on_delete=models.CASCADE, null=True, blank=True, related_name='pagos')
@@ -121,10 +123,10 @@ class Pago(models.Model):
     metodo_pago = models.CharField(max_length=100)
     comprobante = models.FileField(upload_to='comprobantes/', blank=True, null=True)
     notas = models.TextField(blank=True, null=True)
-    naturaleza = models.IntegerField(
-        choices=NATURALEZA_CHOICES,
-        default=2
-    )
+    naturaleza = models.IntegerField(choices=NATURALEZA_CHOICES, default=2)
+    es_gasto = models.BooleanField(default=False)
+    IVA = models.BooleanField(default=False)
+    iva_monto = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     def __str__(self):
         if self.proyecto:
             return f"Pago de ${self.monto} a Proyecto {self.proyecto.nombre}"

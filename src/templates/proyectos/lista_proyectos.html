@@ -152,10 +152,21 @@
               <label for="baseCost" class="form-label">Costo base</label>
               <input type="number" step="0.01" class="form-control" id="baseCost" name="costo_base" required>
             </div>
+            <!--
             <div class="mb-3 col-md-4">
               <label for="ratePercent" class="form-label">Tarifa (%)</label>
               <input type="number" step="0.01" class="form-control" id="ratePercent" name="tarifa_porcentaje" required>
             </div>
+            -->
+            <div class="mb-3 col-md-4">
+                    <label class="form-label">IVA</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="True" id="ratePercent" name="tarifa_porcentaje">
+                        <label class="form-check-label" for="tarifa_porcentaje">
+                            IVA
+                        </label>
+                    </div>
+                </div>
             <div class="mb-3 col-md-4">
               <label for="description" class="form-label">Descripción</label>
               <textarea class="form-control" id="description" name="descripcion" required></textarea>
@@ -218,7 +229,7 @@
     document.getElementById('endDate').value = convertirFecha(fecha_fin);
     document.getElementById('sector').value = sector;
     document.getElementById('baseCost').value = costo;
-    document.getElementById('ratePercent').value = tarifa;
+    document.getElementById('ratePercent').checked = parseFloat(tarifa) === 0.16;
     document.getElementById('description').value = descripcion;
     document.getElementById('note').value = nota;
   }
