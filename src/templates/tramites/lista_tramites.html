@@ -247,7 +247,7 @@
 
 <!-- Modal de Edición -->
 <div class="modal fade" id="modalEditarTramite" tabindex="-1" aria-labelledby="modalEditarTramiteLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
+  <div class="modal-dialog modal-lg">    
     <form method="post" action="{% url 'editar_tramite' %}">
       {% csrf_token %}
       <input type="hidden" name="tramite_id" id="editTramiteId">

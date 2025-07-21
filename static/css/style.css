@@ -490,17 +490,71 @@ body.dark-mode .sidebar-nav a.selected .label,
 }
 
 body.dark-mode .list-header {
-    color: #FFFFFF;
+    color: #FFFFFF !important; 
 }
 
 .list-header {
-    color: #1E1E1E;
+    color: #1E1E1E !important;
 }
 
 body.dark-mode .list-header-inverted {
-    color: #1E1E1E;
+    color: #1E1E1E !important;
 }
 
 .list-header-inverted {
-    color: #FFFFFF;
+    color: #FFFFFF !important;
 }
+
+/* Modal dark mode styles */
+body.dark-mode .modal-content {
+    background-color: #1C1C1C;
+    border: 1px solid #3C3C3C;
+    color: #E5E8E8;
+}
+
+body.dark-mode .modal-header {
+    border-bottom: 1px solid #3C3C3C;
+}
+
+body.dark-mode .modal-footer {
+    border-top: 1px solid #3C3C3C;
+}
+
+body.dark-mode .modal-title {
+    color: #E5E8E8 !important; /* Override the text-dark class */
+}
+
+body.dark-mode .btn-close {
+    filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+/* Form elements in modal */
+body.dark-mode .modal-body .form-label {
+    color: #E5E8E8;
+}
+
+body.dark-mode .modal-body .form-control,
+body.dark-mode .modal-body .form-select {
+    background-color: #1C1C1C;
+    color: #E5E8E8;
+    border: 1px solid #3C3C3C;
+}
+
+body.dark-mode .modal-body .form-control:focus,
+body.dark-mode .modal-body .form-select:focus {
+    background-color: #1C1C1C;
+    color: #E5E8E8;
+    border-color: #4F5D61;
+    box-shadow: 0 0 0 0.25rem rgba(79, 93, 97, 0.25);
+}
+
+/* Checkbox styling */
+body.dark-mode .form-check-input {
+    background-color: #1C1C1C;
+    border: 1px solid #3C3C3C;
+}
+
+body.dark-mode .form-check-label {
+    color: #E5E8E8;
+}
+
