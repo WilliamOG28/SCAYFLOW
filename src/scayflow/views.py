@@ -756,7 +756,11 @@ def nuevo_pago(request):
         porcentaje_pendiente = round(Decimal(proyecto.saldo_pendiente) / Decimal(proyecto.total) * 100, 1) if proyecto.total > 0 else 0
 
     # ==== RESUMEN TRÁMITES ====
-    total_tramites = sum([t.total_tramite for t in tramites]) if tramites else 0
+    total_tramites = sum(
+        float(t.total_tramite) 
+        for t in tramites or [] 
+        if hasattr(t, 'total_tramite') and t.total_tramite is not None
+    )    
     total_pagado_tramites = sum([t.total_pagado for t in tramites]) if tramites else 0
     total_pendiente_tramites = sum([t.saldo_pendiente for t in tramites]) if tramites else 0
     n_tramites = len(tramites)

@@ -144,7 +144,7 @@ body.dark-mode .dashboard-title{
     font-size: 1rem;
 }
 .label{
-    color: #1C1C1C;
+    color: #f6f7f7;
     font-size: 1rem;
 }
 input.form-control::placeholder {
@@ -350,4 +350,157 @@ body.dark-mode .table tbody tr:last-child td:first-child {
 }
 body.dark-mode .table tbody tr:last-child td:last-child {
     border-radius: 0 0 12px 0;
+}
+
+/* Add these styles to your CSS file */
+
+/* Sidebar styles - Light mode */
+.sidebar {
+    background-color: #4F5D61;
+    color: #E5E8E8;
+    transition: all 0.3s ease;
+}
+
+.sidebar-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-nav a {
+    color: #E5E8E8;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    transition: all 0.2s ease;
+}
+
+.sidebar-nav a:hover {
+    background-color: #3d4a4e;
+    color: #FFFFFF;
+}
+
+.sidebar-nav a.selected {
+    background-color: #3d4a4e;
+    color: #FFFFFF;
+    border-left: 4px solid #FFFFFF;
+}
+
+.sidebar-nav .icon {
+    margin-right: 10px;
+    font-size: 1.2rem;
+}
+
+.brand {
+    padding: 20px 15px;
+    text-align: center;
+    border-bottom: 1px solid #3d4a4e;
+}
+
+.brand-logo {
+    max-width: 80%;
+    height: auto;
+    margin-bottom: 10px;
+}
+
+.brand-logo-nombre {
+    max-width: 80%;
+    height: auto;
+}
+
+.logout-list {
+    border-top: 1px solid #3d4a4e;
+    margin-top: 20px;
+    padding-top: 10px;
+}
+
+.btn-logout {
+    background: none;
+    border: none;
+    color: inherit;
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+    padding: 12px 15px;
+}
+
+/* Dark mode styles for sidebar */
+body.dark-mode .sidebar {
+    background-color: #1C1C1C;
+    color: #E5E8E8;
+}
+
+body.dark-mode .sidebar-nav a {
+    color: #E5E8E8;
+}
+
+body.dark-mode .sidebar-nav a:hover {
+    background-color: #2C2C2C;
+    color: #FFFFFF;
+}
+
+body.dark-mode .sidebar-nav a.selected {
+    background-color: #2C2C2C;
+    border-left-color: #FFFFFF;
+}
+
+body.dark-mode .brand {
+    border-bottom-color: #3C3C3C;
+}
+
+body.dark-mode .logout-list {
+    border-top-color: #3C3C3C;
+}
+
+body.dark-mode .btn-logout:hover {
+    background-color: #2C2C2C;
+}
+
+
+/* Light mode hover styles */
+.sidebar-nav a:hover .label,
+.sidebar-nav a:hover .icon {
+    color: #1E1E1E; /* Dark font color on hover */
+}
+
+/* Dark mode hover styles - override to keep light text */
+body.dark-mode .sidebar-nav a:hover .label,
+body.dark-mode .sidebar-nav a:hover .icon {
+    color: #FFFFFF !important; /* Keep white text in dark mode */
+}
+
+/* Selected state styles (keep these consistent) */
+.sidebar-nav a.selected .label,
+.sidebar-nav a.selected .icon {
+    color: #1E1E1E;
+}
+
+/* Selected state styles (keep these consistent) */
+body.dark-mode .sidebar-nav a.selected .label,
+.sidebar-nav a.selected .icon {
+    color: #FFFFFF;
+}
+
+
+/* Add transition for smooth color change */
+.sidebar-nav .label,
+.sidebar-nav .icon {
+    transition: color 0.2s ease;
+}
+
+body.dark-mode .list-header {
+    color: #FFFFFF;
+}
+
+.list-header {
+    color: #1E1E1E;
+}
+
+body.dark-mode .list-header-inverted {
+    color: #1E1E1E;
+}
+
+.list-header-inverted {
+    color: #FFFFFF;
 }

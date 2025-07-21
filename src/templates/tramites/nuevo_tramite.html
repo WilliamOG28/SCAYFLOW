@@ -4,7 +4,7 @@
 {% block tramites_content %}
 <section>
     <!-- Sección: Agregar trámites al proyecto -->
-    <h2 class="text-center text-dark mb-3">Agregar trámite</h2>
+    <h2 class="text-center list-header mb-3">Agregar trámite</h2>
 
     <form id="procedureForm" method="POST">
         {% csrf_token %}
@@ -57,10 +57,12 @@
                     <input type="number" step="0.01" class="form-control" id="costo_base" name="costo_base" placeholder="Ingrese el costo base" required>
                 </div>
                 <!-- Tarifa (%) del trámite -->
+                <!--
                 <div class="mb-3 col-md-4">
                     <label for="tarifa_porcentaje" class="form-label">Tarifa (%)</label>
                     <input type="number" step="0.01" class="form-control" id="tarifa_porcentaje" name="tarifa_porcentaje" placeholder="Ingrese la tarifa (%)" required>
                 </div>
+                -->
                 <!-- Descripción del trámite -->
                 <div class="mb-3 col-md-4">
                     <label for="descripcion" class="form-label">Descripción</label>

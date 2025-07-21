@@ -3,7 +3,7 @@
 
 {% block proyectos_content %}
 <section>
-    <h2 class="text-center text-dark mb-3">Detalles del proyecto</h2>
+    <h2 class="text-center list-header mb-3">Detalles del proyecto</h2>
     <form id="projectForm" method="post" autocomplete="off">
         {% csrf_token %}
         <div class="form-container">
@@ -65,7 +65,7 @@
             </div>
         </div>
 
-        <h2 class="text-center text-dark mb-3">Agregar trámites al proyecto</h2>
+        <h2 class="text-center list-header mb-3">Agregar trámites al proyecto</h2>
         <div class="form-container">
             <div class="row">
                 <div class="mb-3 col-md-4">
@@ -123,7 +123,7 @@
                         <label for="estatus" class="form-label">Gasto</label>
                             <div class="form-check">
                             <input class="form-check-input" type="checkbox" value="True" id="es_gasto">
-                            <label class="form-check-label" for="flexCheckDefault">
+                            <label class="form-check-label list-header" for="flexCheckDefault">
                                 Es gasto?
                             </label>
                         </div>
@@ -187,7 +187,7 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title text-dark" id="modalConfirmLabel">Confirmar guardado</h5>
+        <h5 class="modal-title" id="modalConfirmLabel">Confirmar guardado</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
       </div>
       <div class="modal-body" id="modalConfirmTexto">
